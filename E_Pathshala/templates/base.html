@@ -15,7 +15,7 @@
     <title>E-Pathshala: {% block title %}{% endblock %}</title>
     <link rel="canonical" href="https://getbootstrap.com/docs/4.4/examples/album/">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'iconic\font\css\open-iconic-bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'open-iconic\font\css\open-iconic-bootstrap.css' %}">
     <!--<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"> -->
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <!-- Favicons -->
@@ -65,7 +65,7 @@
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
               <div class="navbar-nav ml-auto">
                
-      
+                <a class="nav-item nav-link {% block actcourses %}active{% endblock %}" href="">Courses <span class="oi oi-caret-bottom"></span></a>
                 <a class="nav-item nav-link {% block actsignup %}active{% endblock %}" href="">Sign Up </a>
                 <a class="nav-item nav-link {% block actlogin %}active{% endblock %}" href="">Log In</a>
                 
