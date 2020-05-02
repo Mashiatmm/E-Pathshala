@@ -51,31 +51,26 @@
     <header>
         
         <nav class="navbar navbar-expand-lg navbar-light " style="background-color: lightblue;">
-            <div class="container-fluid">
-            <a class="navbar-brand " href="">
+          <div class="container-fluid">
+            <a class="nav-item nav-link {% block actcourses %}active{% endblock %}" href="">Courses <span class="oi oi-caret-bottom"></span></a>
+            <a class="navbar-brand" href="">
               <img src="{% static 'e.png'%}" height="35" width="35" class="d-inline-block align-top">Pathshala
               
-              
-            
+            </a>
 
-          </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
               <div class="navbar-nav ml-auto">
                
-                <a class="nav-item nav-link {% block actcourses %}active{% endblock %}" href="">Courses <span class="oi oi-caret-bottom"></span></a>
                 <a class="nav-item nav-link {% block actsignup %}active{% endblock %}" href="">Sign Up </a>
                 <a class="nav-item nav-link {% block actlogin %}active{% endblock %}" href="">Log In</a>
-                
-         
-                
                
               </div>
             </div>
         </div>
-          </nav>
+       </nav>
         
 </header>
 <main>
