@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}Log In{% endblock %}
+{% block body %}
+
+
+
+<form class="form-signin" action="{% url 'accounts:login'%}" method="POST" >
+
+  {% csrf_token %}
+  <div class="container " style="background-color: #F8F9F9 ;">
+
+    {% if error %}
+    <div style="padding-top: 50px;"></div>
+    <div class="alert alert-danger" style="padding-left: 400px;padding-top: 50;">{{error}}</div>
+    {% endif %}
+  
+
+    <div class="row pb-3 pt-5" style="padding-left: 400px;">
+
+      <div class="col-md-4">
+    <div class="text-center mb-4"><h1 class="h3 mb-3 font-weight-normal" >Log In</h1></div>
+  
+      </div>
+    </div>
+    
+
+    
+    <div class="row pb-3" style="padding-left: 340px;">
+    <div class="col-md-6">
+      <input type="text" id="email" name="email" class="form-control" placeholder="Email address or Username" required autofocus>
+    <label for="email" class="sr-only">Email address or Username</label>
+    </div>
+    </div>
+    
+    <div class="row pb-3" style="padding-left: 340px;">
+  
+      <div class="col-md-6">
+  
+        <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
+      <label for="inputPassword" class="sr-only">Password</label>
+  
+      </div>
+      
+    </div>
+    
+    
+   
+    
+    <div class="row  pt-3" style="padding-left: 340px;">
+      
+      <div class="col-md-6" >
+      
+       
+    <button class="btn btn-lg btn-outline-primary btn-block mb-5" type="submit">Log In</button> 
+      </div>
+    </div>
+
+  </div>
+ 
+  </form>                          
+  
+
+
+
+
+
+{% endblock %}
