@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class Student(models.Model):
+
     GRADE = [
     ("1", "1"), 
     ("2", "2"), 
@@ -21,6 +22,8 @@ class Student(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     #Class can be imported from Grade entity 
     grade = models.CharField( max_length=20, choices=GRADE,default='1')
+
+     
 
 
 class Teacher(models.Model):
