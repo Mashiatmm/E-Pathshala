@@ -16,25 +16,28 @@ def signup(request):
         c = conn.cursor()
     
         if request.POST['password1']==request.POST['password2']:
-            
-
             statement = 'select email from USERS where email = :mail_id'
             c.execute(statement, {'mail_id': request.POST['email']})
             mail_exists = c.fetchall()
+    
 
-            if mail_exists is None:
+            if mail_exists == [] :
 
                 statement = 'select name from USERS where name = :username'
                 c.execute(statement, {'username': request.POST['username']})
                 name_exists = c.fetchall()
 
-                if name_exists is None:
+                if name_exists == []:
 
                     count=conn.cursor()
                     count.execute("select count(*) from USERS")
                     val,=count.fetchone()
                     statement = 'insert into USERS(id,name,email, password,role) values (:1,:2, :3, :4,:5)'
-                    c.execute(statement, (val, request.POST['username'], request.POST['email'],request.POST['password2'],'teacher'))
+                    c.execute(statement, (val, request.POST['username'], request.POST['email'],request.POST['password2'],request.POST['acctype']))
+                    if request.POST['acctype']=='teacher':
+                        pass
+                    else:
+                        pass
 
                     conn.commit()
                     conn.close()
@@ -59,12 +62,43 @@ def signup(request):
 
 def login(request):
     if request.method=='POST':
+        dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+        conn = cx_Oracle.connect(user='hr',password='hr',dsn=dsn_tns)
+        c = conn.cursor()
+        email_or_name= request.POST['email_or_name']
+        password=request.POST['password']
+        statement= 'select email from USERS where email=:mail_id'
+        c.execute(statement,{'mail_id':email_or_name})
+        mail_exists=c.fetchall()
+        if mail_exists == [] :
+            statement= 'select name from USERS where name=:username'
+            c.execute(statement,{'username':email_or_name})
+            name_exists=c.fetchall()
+            if name_exists == []:
+                conn.close()
+                return render(request,'accounts/login.html',{'error':"User Does Not Exist!!!"})
+            else:
+                conn.close()
+                return redirect('home')
+                
+
+        else:
+            conn.close()
+            return render(request,'accounts/login.html',{'error':"User Does Not Exist!!!"})
+                
+    
+    else:
+        return render(request,'accounts/login.html')
+
+
+'''
+if request.method=='POST':
         try:
-            user=User.objects.get(email=request.POST['email'])
+            user=User.objects.get(email=request.POST['email_or_name'])
             
         except User.DoesNotExist:
             try:
-                user=User.objects.get(username=request.POST['email'])  
+                user=User.objects.get(username=request.POST['email_or_name'])  
                    
             except User.DoesNotExist:
                 return render(request,'accounts/login.html',{'error':"User Does Not Exist!!!"})
@@ -76,11 +110,8 @@ def login(request):
        
             
 
-    else:
-        return render(request,'accounts/login.html')
 
-
-    
+'''
 
 
     
