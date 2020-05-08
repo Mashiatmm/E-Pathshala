@@ -65,8 +65,18 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
               <div class="navbar-nav ml-auto">
+                <div class="dropdown">
+                  <button class="btn btn-secondary dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Sign Up 
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="{% url 'accounts:signup' 'teacher'  %}">as Teacher</a>
+                    <a class="dropdown-item" href="{% url 'accounts:signup' 'student'  %}">as Student</a>
+                    
+                  </div>
+                </div>
                
-                <a class="nav-item nav-link {% block actsignup %}active{% endblock %}" href="{% url 'accounts:signup' %}">Sign Up </a>
+                
                 <a class="nav-item nav-link {% block actlogin %}active{% endblock %}" href="{% url 'accounts:login' %}">Log In</a>
                
               </div>

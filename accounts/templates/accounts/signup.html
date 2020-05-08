@@ -4,7 +4,7 @@
 
 
 
-<form class="form-signin" action="{% url 'accounts:signup'%}" method="POST" >
+<form class="form-signin" action="{% url 'accounts:signup' role %}" method="POST" >
 
   {% csrf_token %}
   <div class="container " style="background-color: #F8F9F9 ;">
@@ -23,15 +23,16 @@
       </div>
     </div>
 
-    <div class="row  pt-3 pb-3" style="padding-left: 370px;">
+  <!--  <div class="row  pt-3 pb-3" style="padding-left: 370px;">
       <div class="col-md-6" >
         Sign Up as :&emsp;
-        <input type="radio" id="teacher" name="acctype" value="teacher" required autofocus>
+        <input type="radio" id="teacher" name="role" value="teacher" required autofocus>
         <label for="teacher">Teacher&emsp;</label>
-        <input type="radio" id="student" name="acctype" value="student" required autofocus>
+        <input type="radio" id="student" name="role" value="student" required autofocus>
         <label for="student">Student</label><br>
       </div>
     </div>
+    -->
     
     <div class="row pb-3" style="padding-left: 340px;">
       <div class="col-md-6">
@@ -39,7 +40,45 @@
       <label for="username" class="sr-only">User Name</label>
       </div>
     </div>
+
+    {% if role == 'teacher' %}
+    <div class="row pb-3" style="padding-left: 340px;">
+      <div class="col-md-6">
+        <input list="all_specialties" type="text" id="specialty" name="specialty" class="form-control" placeholder="Specialty" required autofocus>
+        <datalist id="all_specialties">
+          {% for spec in all_specialties %}
+          <option value="{{spec}}">{{spec}}</option>
+          {% endfor %}
+
+        </datalist>
+     
+
+      </div>
+    </div>
+    {% else %}
+    <div class="row pb-3" style="padding-left: 340px;">
+      <div class="col-md-6">
+        <select class="custom-select" id="grade" name="grade">
+          <option selected>Choose Grade...</option>
+          <option value="1">One</option>
+          <option value="2">Two</option>
+          <option value="3">Three</option>
+          <option value="4">Four</option>
+          <option value="5">Five</option>
+          <option value="6">Six</option>
+          <option value="7">Seven</option>
+          <option value="8">Eight</option>
+          <option value="9">Nine</option>
+          <option value="10">Ten</option>
+          <option value="11">Eleven</option>
+          <option value="12">Twelve</option>
+          
+        </select>
+      </div>
+    </div>
+  
     
+    {% endif %}    
     <div class="row pb-3" style="padding-left: 340px;">
     <div class="col-md-6">
       <input type="email" id="email" name="email" class="form-control" placeholder="Email address" required autofocus>
@@ -76,7 +115,7 @@
       <div class="col-md-6" >
       
        
-    <button class="btn btn-lg btn-outline-primary btn-block mb-5" type="submit">Sign Up!</button> 
+    <button class="btn btn-lg btn-outline-primary btn-block mb-5" type="submit">Sign Up !</button> 
       </div>
     </div>
 

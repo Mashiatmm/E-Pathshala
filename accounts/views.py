@@ -8,12 +8,14 @@ def home(request):
     return render(request,'accounts/home.html')
 
 
-def signup(request):
+def signup(request,role):
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    conn = cx_Oracle.connect(user='hr',password='hr',dsn=dsn_tns)
+    c = conn.cursor()
 
     if request.method=='POST':
-        dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
-        conn = cx_Oracle.connect(user='hr',password='hr',dsn=dsn_tns)
-        c = conn.cursor()
+        print('Recieved\n')
+        
     
         if request.POST['password1']==request.POST['password2']:
             statement = 'select email from USERS where email = :mail_id'
@@ -33,16 +35,18 @@ def signup(request):
                     count.execute("select count(*) from USERS")
                     val,=count.fetchone()
                     statement = 'insert into USERS(id,name,email, password,role) values (:1,:2, :3, :4,:5)'
-                    c.execute(statement, (val, request.POST['username'], request.POST['email'],request.POST['password2'],request.POST['acctype']))
-                    if request.POST['acctype']=='teacher':
-                        pass
+                    c.execute(statement, (val, request.POST['username'], request.POST['email'],request.POST['password2'],role))
+                    if role== 'student':
+                        statement='insert into STUDENT(id,grade) values (:1,:2)'
+                        c.execute(statement,(val,request.POST['grade']))
                     else:
-                        pass
+                        statement='insert into TEACHER(id,specialty) values (:1,:2)'
+                        c.execute(statement,(val,request.POST['specialty']))
 
+                    
                     conn.commit()
                     conn.close()
-                    return redirect('home')#redirecting to a url                 
-
+                    return redirect('home')
                 else:
                     conn.close()
                     return render(request,'accounts/signup.html',{'error':"Username already taken!"})
@@ -54,10 +58,27 @@ def signup(request):
                 return render(request,'accounts/signup.html',{'error':"Email already taken!"})
         
         else:
+
             return render(request,'accounts/signup.html',{'error':"Passwords didn't match!"})
     
     else:
-        return render(request,'accounts/signup.html')
+        if role == 'student':
+            conn.close()
+            return render(request,'accounts/signup.html',{'role':role})
+        else:
+            statement='select distinct specialty from TEACHER'
+            c.execute(statement)
+            all_spec=c.fetchall()
+            all_specialties=[]
+            for spec in all_spec:
+                all_specialties.append(spec[0])
+            conn.close()
+            return render(request,'accounts/signup.html',{
+                'role':role,
+                'all_specialties':all_specialties
+            })
+
+        
 
 
 def login(request):

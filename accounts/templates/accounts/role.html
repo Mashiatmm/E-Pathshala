@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block title %}Role{% endblock %}
+{% block body %}
+
+
+
+<form class="form-signin" action="{% url 'accounts:signup'%}" method="POST" >
+
+  {% csrf_token %}
+  <div class="container " style="background-color: #F8F9F9 ;">
+
+    {% if error %}
+    <div style="padding-top: 50px;"></div>
+    <div class="alert alert-danger" style="padding-left: 400px;padding-top: 50;">{{error}}</div>
+    {% endif %}
+  
+
+    <div class="row pb-3 pt-5" style="padding-left: 400px;">
+
+      <div class="col-md-4">
+    <div class="text-center mb-4"><h1 class="h3 mb-3 font-weight-normal" >Sign up</h1></div>
+  
+      </div>
+    </div>
+
+
+
+    {% if role == 'student' %}
+    <h2>Select Grade: </h2>
+    {%else %}
+    <div class="row pb-3 pt-5" style="padding-left: 400px;">
+
+        <div class="col-md-4">
+      <div class="text-center mb-4"><h1 class="h3 mb-3 font-weight-normal" >Your Specialty ?</h1></div>
+    
+        </div>
+      </div>
+      
+  
+      
+      <div class="row pb-3" style="padding-left: 340px;">
+      <div class="col-md-6">
+        <input type="text" id="specialty" name="specialty" class="form-control" placeholder="Provide Your Specialty" required autofocus>
+      <label for="specialty" class="sr-only">Provide Your Specialty</label>
+      </div>
+      </div>
+    
+    
+    {%endif%}
+    
+    
+  </div>
+ 
+  </form>                          
+  
+
+
+
+
+
+{% endblock %}
