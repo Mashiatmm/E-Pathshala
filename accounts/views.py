@@ -32,8 +32,9 @@ def signup(request,role):
                 if name_exists == []:
 
                     count=conn.cursor()
-                    count.execute("select count(*) from USERS")
+                    count.execute("select max(id) from USERS")
                     val,=count.fetchone()
+                    val+=1
                     statement = 'insert into USERS(id,name,email, password,role) values (:1,:2, :3, :4,:5)'
                     c.execute(statement, (val, request.POST['username'], request.POST['email'],request.POST['password2'],role))
                     if role== 'student':
@@ -49,17 +50,28 @@ def signup(request,role):
                     return redirect('home')
                 else:
                     conn.close()
-                    return render(request,'accounts/signup.html',{'error':"Username already taken!"})
+                    return render(request,'accounts/signup.html',{
+                        'error':"Username already taken!",
+                        'role':role
+                        
+                        })
 
 
 
             else:    
                 conn.close()
-                return render(request,'accounts/signup.html',{'error':"Email already taken!"})
+                return render(request,'accounts/signup.html',{
+                    'error':"Email already taken!",
+                    'role':role
+                    
+                    })
         
         else:
 
-            return render(request,'accounts/signup.html',{'error':"Passwords didn't match!"})
+            return render(request,'accounts/signup.html',{
+                'error':"Passwords didn't match!",
+                'role':role
+                })
     
     else:
         if role == 'student':
