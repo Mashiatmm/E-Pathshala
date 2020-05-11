@@ -14,7 +14,7 @@ def signup(request,role):
     c = conn.cursor()
 
     if request.method=='POST':
-        print('Recieved\n')
+        print('Recieved1\n')
         
     
         if request.POST['password1']==request.POST['password2']:
