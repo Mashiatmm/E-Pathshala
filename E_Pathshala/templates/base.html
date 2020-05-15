@@ -64,6 +64,26 @@
               <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+
+              {%  if role %}
+
+              <div class="navbar-nav ml-auto">
+
+                <div class="dropdown">
+                  <button class="btn dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="oi oi-people"></span>
+                    {{name}}
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="{% url 'home' %}">Logout</a>
+                    
+                  </div>
+                </div>
+
+              </div>
+
+
+              {%  else %}
               <div class="navbar-nav ml-auto">
                 <div class="dropdown">
                   <button class="btn dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -80,6 +100,9 @@
                 <a class="nav-item nav-link {% block actlogin %}active{% endblock %}" href="{% url 'accounts:login' %}">Log In</a>
                
               </div>
+
+              {%  endif  %}
+
             </div>
         </div>
        </nav>
