@@ -32,7 +32,7 @@ def signup(request,role):
                 statement = 'select name from USERS where name = :username'
                 c.execute(statement, {'username': request.POST['username']})
                 name_exists = c.fetchall()
-
+                
                 if name_exists == []:
                     
                     print(request.POST['username'], request.POST['email'],request.POST['password2'],role)
@@ -103,8 +103,8 @@ def login(request):
         c = connection.cursor()
         email= request.POST['email_or_name']
         password=request.POST['password']
-        statement= 'select name from USERS where email=:username'
-        c.execute(statement,{'username':email})
+        statement= 'select email from USERS where email=:mail'
+        c.execute(statement,{'mail':email})
         user_exists=c.fetchall()
 
         if user_exists == [] :
@@ -112,10 +112,10 @@ def login(request):
             return render(request,'accounts/login.html',{'error':"Mail ID Does Not Exist!!!"})
 
         else:
-            statement="select password,role,id from USERS where name=:username"
-            c.execute(statement,{'username':user_exists})
+            statement="select password,role,id from USERS where email=:mail"
+            c.execute(statement,{'mail':email})
             info= c.fetchone()
-        
+
             if(password==info[0]):
                 c.close()
                 return redirect('/accounts/'+info[1]+'/'+str(info[2]))
