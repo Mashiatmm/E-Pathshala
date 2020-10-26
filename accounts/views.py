@@ -32,7 +32,6 @@ def signup(request,role):
                 statement = 'select name from USERS where name = :username'
                 c.execute(statement, {'username': request.POST['username']})
                 name_exists = c.fetchall()
-                
                 if name_exists == []:
                     
                     print(request.POST['username'], request.POST['email'],request.POST['password2'],role)
