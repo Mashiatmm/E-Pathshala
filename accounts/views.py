@@ -28,43 +28,32 @@ def signup(request,role):
     
 
             if mail_exists == [] :
+                    
+                print(request.POST['username'], request.POST['email'],request.POST['password2'],role)
+                statement = 'insert into USERS(name,email, password,role) values (%s,%s, %s,%s)'
+                c.execute(statement, (request.POST['username'], request.POST['email'],request.POST['password2'],role))
+                
+                count=connection.cursor()
+                count.execute("select id from USERS where email = :usermail",{'usermail':request.POST['email']})
+                val,=count.fetchone()
+                count.close()
 
-                statement = 'select name from USERS where name = :username'
-                c.execute(statement, {'username': request.POST['username']})
-                name_exists = c.fetchall()
-                if name_exists == []:
+                
+                if role== 'student':
+                    statement='insert into STUDENTS(id,class) values (%s,%s)'
+                    c.execute(statement,(val,request.POST['grade']))
                     
-                    print(request.POST['username'], request.POST['email'],request.POST['password2'],role)
-                    statement = 'insert into USERS(name,email, password,role) values (%s,%s, %s,%s)'
-                    c.execute(statement, (request.POST['username'], request.POST['email'],request.POST['password2'],role))
-                    
-                    count=connection.cursor()
-                    count.execute("select id from USERS where email = :usermail",{'usermail':request.POST['email']})
-                    val,=count.fetchone()
-                    count.close()
-
-                    
-                    if role== 'student':
-                        statement='insert into STUDENTS(id,class) values (%s,%s)'
-                        c.execute(statement,(val,request.POST['grade']))
-                    
-                    else:
-                        statement='insert into TEACHERS(id,specialty) values (%s,%s)'
-                        c.execute(statement,(val,request.POST['specialty']))
-                    
-                    
-                    
-                    connection.commit()
-                    c.close()
-
-                    
-                    return render(request,'accounts/profile.html',{'role':role,'name':request.POST['username'],'email':request.POST['email'],'password':request.POST['password2']})
                 else:
-                    c.close()
-                    return render(request,'accounts/signup.html',{'role':role,'error':"Username already taken!"})
+                    statement='insert into TEACHERS(id,specialty) values (%s,%s)'
+                    c.execute(statement,(val,request.POST['specialty']))
+                
+                
+                
+                connection.commit()
+                c.close()
 
-
-
+                
+                return render(request,'accounts/profile.html',{'id':id,'role':role,'name':request.POST['username'],'email':request.POST['email'],'password':request.POST['password2']})
             else:    
                 c.close()
                 return render(request,'accounts/signup.html',{'role':role,'error':"Email already taken!"})
@@ -149,6 +138,6 @@ def profile(request,role,id):
     c.execute(statement,{'userid':id})
     user,=c.fetchall()
     c.close()
-    return render(request,'accounts/profile.html',{'role':role,'name':user[1],'email':user[2],'password':user[3]})
+    return render(request,'accounts/profile.html',{'role':role,'name':user[1],'email':user[2],'password':user[3],'t_id':id})
 
 

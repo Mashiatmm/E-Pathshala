@@ -10,6 +10,9 @@
 {{email}}
 <br>
 {{password}}
-
+<br>
+{% if role == 'teacher' %}
+<a href="{% url 'courses:add_course'  %}">Add Course</a><!--id-->
+{% endif %}
 
 {% endblock %}
