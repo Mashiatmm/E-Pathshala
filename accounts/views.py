@@ -3,10 +3,27 @@ from django.contrib.auth.hashers import check_password
 from django.contrib import auth
 from django.db import connection
 import cx_Oracle
+from passlib.hash import argon2
+
 
 #Mashiat Virtual Env - 'myvenv'
 
 def home(request):
+    '''
+    c = connection.cursor()
+    statement = 'select id,password from USERS'
+    c.execute(statement)
+    passwords = c.fetchall()
+  
+    
+    for i in range(len(passwords)):
+        hash_pass = argon2.hash(passwords[i][1])
+       
+        statement = 'update USERS set password = :p where id = :i '
+        c.execute(statement, {'p': hash_pass, 'i': passwords[i][0]})
+    
+    c.close()
+    '''
     return render(request,'accounts/home.html')
 
 
@@ -19,7 +36,6 @@ def signup(request,role):
 
     if request.method=='POST':
         
-        
     
         if request.POST['password1']==request.POST['password2']:
             statement = 'select email from USERS where email = :mail_id'
@@ -30,8 +46,9 @@ def signup(request,role):
             if mail_exists == [] :
                     
                 print(request.POST['username'], request.POST['email'],request.POST['password2'],role)
+                hash_pass = argon2.hash(request.POST['password2'])
                 statement = 'insert into USERS(name,email, password,role) values (%s,%s, %s,%s)'
-                c.execute(statement, (request.POST['username'], request.POST['email'],request.POST['password2'],role))
+                c.execute(statement, (request.POST['username'], request.POST['email'],hash_pass,role))
                 
                 count=connection.cursor()
                 count.execute("select id from USERS where email = :usermail",{'usermail':request.POST['email']})
@@ -90,7 +107,6 @@ def login(request):
         '''
         c = connection.cursor()
         email= request.POST['email_or_name']
-        password=request.POST['password']
         statement= 'select email from USERS where email=:mail'
         c.execute(statement,{'mail':email})
         user_exists=c.fetchall()
@@ -104,7 +120,7 @@ def login(request):
             c.execute(statement,{'mail':email})
             info= c.fetchone()
 
-            if(password==info[0]):
+            if(argon2.verify(request.POST['password'],info[0])):
                 c.close()
                 return redirect('/accounts/'+info[1]+'/'+str(info[2]))
 
