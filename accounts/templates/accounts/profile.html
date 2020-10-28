@@ -12,7 +12,7 @@
 {{password}}
 <br>
 {% if role == 'teacher' %}
-<a href="{% url 'courses:add_course'  %}">Add Course</a><!--id-->
+<a href="{% url 'courses:add_course' t_id  %}">Add Course</a><!--id-->
 {% endif %}
 
 {% endblock %}
