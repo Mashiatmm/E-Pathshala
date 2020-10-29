@@ -78,12 +78,8 @@ WSGI_APPLICATION = 'E_Pathshala.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'ORCL',
-        'USER' : 'EPATHSHALA',
-        'PASSWORD': '123',
-        'HOST' : 'localhost',
-        'PORT' : '1521'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'mydatabase',
     }
 }
 

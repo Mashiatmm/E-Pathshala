@@ -1,7 +1,4 @@
 from django.shortcuts import render,redirect
-from django.contrib.auth.hashers import check_password
-from django.contrib import auth
-from django.db import connection
 import cx_Oracle
 from passlib.hash import argon2
 
@@ -24,14 +21,18 @@ def home(request):
     
     c.close()
     '''
+    try:
+      del request.session['usermail']
+    except:
+      pass
     return render(request,'accounts/home.html')
 
 
 def signup(request,role):
-    '''
+
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
-    conn = cx_Oracle.connect(user='hr',password='hr',dsn=dsn_tns)
-    '''
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    
     c = connection.cursor()
 
     if request.method=='POST':
@@ -45,43 +46,44 @@ def signup(request,role):
 
             if mail_exists == [] :
                     
-                print(request.POST['username'], request.POST['email'],request.POST['password2'],role)
                 hash_pass = argon2.hash(request.POST['password2'])
-                statement = 'insert into USERS(name,email, password,role) values (%s,%s, %s,%s)'
+                statement = 'insert into USERS(name,email, password,role) values (:0,:1,:2,:3)'
                 c.execute(statement, (request.POST['username'], request.POST['email'],hash_pass,role))
                 
-                count=connection.cursor()
-                count.execute("select id from USERS where email = :usermail",{'usermail':request.POST['email']})
-                val,=count.fetchone()
-                count.close()
+                c.execute("select id from USERS where email = :usermail",{'usermail':request.POST['email']})
+                val,=c.fetchone()
 
                 
                 if role== 'student':
-                    statement='insert into STUDENTS(id,class) values (%s,%s)'
+                    statement='insert into STUDENTS(id,class) values (:0,:1)'
                     c.execute(statement,(val,request.POST['grade']))
                     
                 else:
-                    statement='insert into TEACHERS(id,specialty) values (%s,%s)'
+                    statement='insert into TEACHERS(id,specialty) values (:0,:1)'
                     c.execute(statement,(val,request.POST['specialty']))
                 
-                
-                
-                connection.commit()
                 c.close()
 
-                
-                return render(request,'accounts/profile.html',{'id':id,'role':role,'name':request.POST['username'],'email':request.POST['email'],'password':request.POST['password2']})
+                connection.commit()
+                connection.close()
+                if request.session.has_key('usermail'):
+                    del request.session['usermail']
+                request.session['usermail'] = request.POST['email']
+                return redirect('/accounts/profile/'+role)
+                #return render(request,'accounts/profile.html',{'id':val,'role':role,'name':request.POST['username'],'email':request.POST['email'],'password':request.POST['password2']})
             else:    
-                c.close()
+                connection.close()
                 return render(request,'accounts/signup.html',{'role':role,'error':"Email already taken!"})
         
         else:
-
+            c.close()
+            connection.close()
             return render(request,'accounts/signup.html',{'role':role,'error':"Passwords didn't match!"})
     
     else:
         if role == 'student':
             c.close()
+            connection.close()
             return render(request,'accounts/signup.html',{'role':role})
         else:
             statement='select distinct specialty from TEACHERS'
@@ -90,7 +92,11 @@ def signup(request,role):
             all_specialties=[]
             for spec in all_spec:
                 all_specialties.append(spec[0])
+
             c.close()
+
+            connection.commit()
+            connection.close()
             return render(request,'accounts/signup.html',{
                 'role':role,
                 'all_specialties':all_specialties
@@ -101,10 +107,10 @@ def signup(request,role):
 
 def login(request):
     if request.method=='POST':
-        '''
+
         dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
-        conn = cx_Oracle.connect(user='hr',password='hr',dsn=dsn_tns)
-        '''
+        connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+        
         c = connection.cursor()
         email= request.POST['email_or_name']
         statement= 'select email from USERS where email=:mail'
@@ -113,6 +119,7 @@ def login(request):
 
         if user_exists == [] :
             c.close()
+            connection.close()
             return render(request,'accounts/login.html',{'error':"Mail ID Does Not Exist!!!"})
 
         else:
@@ -122,10 +129,19 @@ def login(request):
 
             if(argon2.verify(request.POST['password'],info[0])):
                 c.close()
-                return redirect('/accounts/'+info[1]+'/'+str(info[2]))
+
+                if request.session.has_key('usermail'):
+                    del request.session['usermail']
+
+                request.session['usermail'] = email
+                
+                connection.close()
+                return redirect('/accounts/profile/'+info[1])
+                #return redirect('/accounts/'+info[1]+'/'+str(info[2]))
 
             else:
                 c.close()
+                connection.close()
                 return render(request,'accounts/login.html',{'error':"Incorrect Password!!"})
                 
     
@@ -134,26 +150,35 @@ def login(request):
 
 
 
-def profile(request,role,id):
-    '''
-    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
-    c = cx_Oracle.connect(user='hr',password='hr',dsn=dsn_tns)
-    '''
-    c = connection.cursor()
-    print(role,id)
-    statement=""
-    if role=="student":
-        statement="""Select U.ID AS "ID",U.NAME,U.EMAIL,U.PASSWORD,S.CLASS 
-                    FROM USERS U, STUDENTS S 
-                    WHERE S.ID=U.ID AND U.ID=:userid"""
-    else:
-        statement="""Select  U.ID AS "ID",U.NAME,U.EMAIL,U.PASSWORD,T.Specialty 
-                    FROM USERS U, TEACHERS T
-                    WHERE T.ID=U.ID AND U.ID=:userid"""
+def profile(request,role):
 
-    c.execute(statement,{'userid':id})
-    user,=c.fetchall()
-    c.close()
-    return render(request,'accounts/profile.html',{'role':role,'name':user[1],'email':user[2],'password':user[3],'t_id':id})
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+
+    if request.session.has_key('usermail'):
+        usermail = request.session['usermail']
+
+        c = connection.cursor()
+
+        print(role,id)
+        statement=""
+        if role=="student":
+            statement="""Select U.ID AS "ID",U.NAME,U.EMAIL,U.PASSWORD,S.CLASS 
+                        FROM USERS U, STUDENTS S 
+                        WHERE S.ID=U.ID AND U.EMAIL=:user_email"""
+        else:
+            statement="""Select  U.ID AS "ID",U.NAME,U.EMAIL,U.PASSWORD,T.Specialty 
+                        FROM USERS U, TEACHERS T
+                        WHERE T.ID=U.ID AND U.EMAIL=:user_email"""
+
+        c.execute(statement,{'user_email': usermail})
+        user,=c.fetchall()
+        c.close()
+        #print(role,user[0],user[1],user[2],user[3])
+        return render(request,'accounts/profile.html',{'role':role,'name':user[1],'email':user[2],'password':user[3],'t_id':user[0]})
+    
+    else:
+        return render(request,'accounts/profile.html',{'error': 'Not Logged In'})
+
 
 

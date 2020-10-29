@@ -2,6 +2,15 @@
 {% block title %}Profile{% endblock %}
 {% block body %}
 
+<div class="container " style="background-color: #F8F9F9 ;">
+
+    {% if error %}
+    <div style="padding-top: 50px;"></div>
+    <div class="alert alert-danger" style="padding-left: 400px;padding-top: 50;">{{error}}</div>
+    {% endif %}
+    
+</div>
+
 {{role}}
 
 <br>
