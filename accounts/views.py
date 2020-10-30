@@ -21,10 +21,9 @@ def home(request):
     
     c.close()
     '''
-    try:
-      del request.session['usermail']
-    except:
-      pass
+    if request.session.has_key('usermail'):
+        usermail = request.session['usermail']
+        return render(request,'accounts/home.html',{'usermail':usermail})
     return render(request,'accounts/home.html')
 
 
@@ -69,7 +68,7 @@ def signup(request,role):
                 if request.session.has_key('usermail'):
                     del request.session['usermail']
                 request.session['usermail'] = request.POST['email']
-                return redirect('/accounts/profile/'+role)
+                return redirect('/accounts/profile',{'usermail':request.session['usermail']})
                 #return render(request,'accounts/profile.html',{'id':val,'role':role,'name':request.POST['username'],'email':request.POST['email'],'password':request.POST['password2']})
             else:    
                 connection.close()
@@ -136,7 +135,7 @@ def login(request):
                 request.session['usermail'] = email
                 
                 connection.close()
-                return redirect('/accounts/profile/'+info[1])
+                return redirect('/accounts/profile',{'usermail':email})
                 #return redirect('/accounts/'+info[1]+'/'+str(info[2]))
 
             else:
@@ -146,11 +145,15 @@ def login(request):
                 
     
     else:
+        try:
+            del request.session['usermail']
+        except:
+            pass
         return render(request,'accounts/login.html')
 
 
 
-def profile(request,role):
+def profile(request):
 
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
@@ -160,8 +163,10 @@ def profile(request,role):
 
         c = connection.cursor()
 
-        print(role,id)
-        statement=""
+        statement = "select role from USERS where email=:mail"
+        c.execute(statement,{'mail':usermail})  
+        role, = c.fetchone()
+        print(role)
         if role=="student":
             statement="""Select U.ID AS "ID",U.NAME,U.EMAIL,U.PASSWORD,S.CLASS 
                         FROM USERS U, STUDENTS S 
@@ -175,10 +180,10 @@ def profile(request,role):
         user,=c.fetchall()
         c.close()
         #print(role,user[0],user[1],user[2],user[3])
-        return render(request,'accounts/profile.html',{'role':role,'name':user[1],'email':user[2],'password':user[3],'t_id':user[0]})
+        return render(request,'accounts/profile.html',{'usermail':usermail,'role':role,'name':user[1],'email':user[2],'password':user[3],'t_id':user[0]})
     
     else:
-        return render(request,'accounts/profile.html',{'error': 'Not Logged In'})
+        return render(request,'accounts/login.html',{'error': 'Not Logged In'})
 
 
 
