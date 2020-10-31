@@ -2,17 +2,22 @@
 {% block title %}Profile{% endblock %}
 {% block body %}
 
+<div class="container " style="background-color: #F8F9F9 ;">
+
+    {% if error %}
+    <div style="padding-top: 50px;"></div>
+    <div class="alert alert-danger" style="padding-left: 400px;padding-top: 50;">{{error}}</div>
+    {% endif %}
+    
+</div>
+
 {{role}}
 
 <br>
 {{name}}
 <br>
-{{email}}
-<br>
-{{password}}
-<br>
 {% if role == 'teacher' %}
-<a href="{% url 'courses:add_course'  %}">Add Course</a><!--id-->
+<a href="{% url 'courses:add_course' t_id  %}">Add Course</a><!--id-->
 {% endif %}
 
 {% endblock %}
