@@ -69,7 +69,16 @@
 
               <div class="navbar-nav ml-auto">
 
-                <a class="nav-item nav-link {% block actprofile %}active{% endblock %}" href="{% url 'accounts:profile' %}"><span class="oi oi-people"></span></a>
+                <div class="dropdown">
+                  <button class="btn dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="oi oi-people"></span>
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="{% url 'accounts:profile' %}">My Profile</a>
+                    <a class="dropdown-item" href="{% url 'accounts:settings' %}">Settings</a>
+                  </div>
+                </div>
+
                 <a class="nav-item nav-link {% block actlogout %}active{% endblock %}" href="{% url 'accounts:login' %}">Logout</a>
 
               </div>

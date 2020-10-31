@@ -37,7 +37,7 @@ def add_course(request,id):
             connection.commit()
             connection.close()
        
-            return render(request,'courses/add_course.html',{'usermail':usermail,'name': name,'t_id':id})
+            return render(request,'courses/add_course.html',{'usermail':usermail,'t_id':id})
 
         except:
             c.close()
@@ -50,5 +50,5 @@ def add_course(request,id):
     else:
         c.close()
         connection.close()
-        return render(request,'courses/add_course.html',{'usermail':usermail,'name': name,'t_id':id})
+        return render(request,'courses/add_course.html',{'usermail':usermail,'t_id':id})
 

@@ -170,11 +170,11 @@ def profile(request):
         c.execute(statement,{'mail':usermail})  
         role, = c.fetchone()
         if role=="student":
-            statement="""Select U.ID AS "ID",U.NAME,U.EMAIL,U.PASSWORD,S.CLASS 
+            statement="""Select U.ID AS "ID",U.NAME,S.CLASS 
                         FROM USERS U, STUDENTS S 
                         WHERE S.ID=U.ID AND U.EMAIL=:user_email"""
         else:
-            statement="""Select  U.ID AS "ID",U.NAME,U.EMAIL,U.PASSWORD,T.Specialty 
+            statement="""Select  U.ID AS "ID",U.NAME,T.Specialty 
                         FROM USERS U, TEACHERS T
                         WHERE T.ID=U.ID AND U.EMAIL=:user_email"""
 
@@ -182,23 +182,33 @@ def profile(request):
         user,=c.fetchall()
         c.close()
         #print(role,user[0],user[1],user[2],user[3])
-        return render(request,'accounts/profile.html',{'usermail':usermail,'role':role,'name':user[1],'email':user[2],'password':user[3],'t_id':user[0]})
+        return render(request,'accounts/profile.html',{'usermail':usermail,'role':role,'name':user[1],'t_id':user[0]})
     
     else:
         return render(request,'accounts/login.html',{'error': 'Not Logged In'})
 
-'''
-<div class="dropdown">
-                  <button class="btn dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="oi oi-people"></span>
-                    {{name}}
-                  </button>
-                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="{% url 'accounts:login' %}">Logout</a>
-                    
-                  </div>
-                </div>
-'''
+
+def settings(request):
+    if request.session.has_key('usermail') == False:
+            return render(request,'accounts/login.html',{'error': 'Not Logged In'})
+
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor()
+
+    usermail = request.session['usermail']
+    statement = 'SELECT role,name,password FROM USERS WHERE email = : user_email'
+    c.execute(statement,{'user_email':usermail})
+    userinfo,= c.fetchall()
+    
+    c.close()
+    connection.close()
+
+    return render(request,'accounts/settings.html',{'usermail':usermail,'role':userinfo[0],'name':userinfo[1],'password':userinfo[2]})
+
+
+
+
 
 
 
