@@ -4,9 +4,13 @@ from passlib.hash import argon2
 
 
 #Mashiat Virtual Env - 'myvenv'
+#Teacher Specialty Multivalued?? Checkbox??
 
 def home(request):
     '''
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    
     c = connection.cursor()
     statement = 'select id,password from USERS'
     c.execute(statement)
@@ -20,7 +24,10 @@ def home(request):
         c.execute(statement, {'p': hash_pass, 'i': passwords[i][0]})
     
     c.close()
+    connection.commit()
+    connection.close()
     '''
+    
     if request.session.has_key('usermail'):
         usermail = request.session['usermail']
         return render(request,'accounts/home.html',{'usermail':usermail})
@@ -38,12 +45,8 @@ def signup(request,role):
         
     
         if request.POST['password1']==request.POST['password2']:
-            statement = 'select email from USERS where email = :mail_id'
-            c.execute(statement, {'mail_id': request.POST['email']})
-            mail_exists = c.fetchall()
-    
 
-            if mail_exists == [] :
+            try:
                     
                 hash_pass = argon2.hash(request.POST['password2'])
                 statement = 'insert into USERS(name,email, password,role) values (:0,:1,:2,:3)'
@@ -70,7 +73,7 @@ def signup(request,role):
                 request.session['usermail'] = request.POST['email']
                 return redirect('/accounts/profile',{'usermail':request.session['usermail']})
                 #return render(request,'accounts/profile.html',{'id':val,'role':role,'name':request.POST['username'],'email':request.POST['email'],'password':request.POST['password2']})
-            else:    
+            except:    
                 connection.close()
                 return render(request,'accounts/signup.html',{'role':role,'error':"Email already taken!"})
         
@@ -166,7 +169,6 @@ def profile(request):
         statement = "select role from USERS where email=:mail"
         c.execute(statement,{'mail':usermail})  
         role, = c.fetchone()
-        print(role)
         if role=="student":
             statement="""Select U.ID AS "ID",U.NAME,U.EMAIL,U.PASSWORD,S.CLASS 
                         FROM USERS U, STUDENTS S 
