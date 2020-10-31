@@ -187,5 +187,18 @@ def profile(request):
     else:
         return render(request,'accounts/login.html',{'error': 'Not Logged In'})
 
+'''
+<div class="dropdown">
+                  <button class="btn dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="oi oi-people"></span>
+                    {{name}}
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="{% url 'accounts:login' %}">Logout</a>
+                    
+                  </div>
+                </div>
+'''
+
 
 
