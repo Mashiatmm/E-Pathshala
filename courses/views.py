@@ -27,8 +27,8 @@ def add_course(request,id):
             statement='INSERT INTO COURSES VALUES(1,:0,:1,:2)'
             c.execute(statement,(course_title,course_class,'0'))
 
-            statement = 'SELECT id FROM COURSES WHERE NAME = : title'
-            c.execute(statement,{'title':course_title})
+            statement = 'SELECT id FROM COURSES WHERE NAME = : title and class = :c'
+            c.execute(statement,{'title':course_title,'c': course_class})
             c_id, = c.fetchone()
             statement = 'INSERT INTO TAKE_COURSE VALUES(:0,:1)'
             c.execute(statement,(c_id,id))
