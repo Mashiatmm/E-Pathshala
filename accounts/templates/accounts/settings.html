@@ -2,57 +2,93 @@
 {% block title %}Settings{% endblock %}
 {% block body %}
 
-<div class="container " style="background-color: #F8F9F9 ;">
+
+
+<form class="form-settings" action="{% url 'accounts:settings'%}" method="POST" >
+
+  {% csrf_token %}
+  <div class="container " style="background-color: #F8F9F9 ;">
 
     {% if error %}
     <div style="padding-top: 50px;"></div>
     <div class="alert alert-danger" style="padding-left: 400px;padding-top: 50;">{{error}}</div>
     {% endif %}
- 
-    
-</div>
+  
 
-<div class="container mt-5">
-    <div class="row">
-       
-        <!-- Profile Settings-->
-        <div class="col-lg-8 pb-5">
-            <form class="row">
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label for="account-fn">UserName</label>
-                        <input class="form-control" type="text" id="account-fn" value={{name}} required="">
-                    </div>
-                </div>
-                
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label for="account-email">E-mail Address</label>
-                        <input class="form-control" type="email" id="account-email" value={{usermail}} disabled="">
-                    </div>
-                </div>
-                
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="account-pass">New Password</label>
-                        <input class="form-control" type="password" id="account-pass">
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="account-confirm-pass">Confirm Password</label>
-                        <input class="form-control" type="password" id="account-confirm-pass">
-                    </div>
-                </div>
-                <div class="col-12">
-                    <hr class="mt-2 mb-3">
-                    <div class="d-flex flex-wrap justify-content-between align-items-center">
-                        
-                        <button class="btn btn-style-1 btn-primary" type="button" data-toast="" data-toast-position="topRight" data-toast-type="success" data-toast-icon="fe-icon-check-circle" data-toast-title="Success!" data-toast-message="Your profile updated successfuly.">Update Profile</button>
-                    </div>
-                </div>
-            </form>
-        </div>
+    <div class="row pb-3 pt-5">
+
+      <div class="col-md-4">
+    <div class="text-center mb-4"><h1 class="h3 mb-3 font-weight-normal" >Settings</h1></div>
+  
+      </div>
     </div>
-</div>
+    
+
+  
+    <div class="row pb-3" >
+      <div class="col-md-6">
+        <label for="username">Username</label> 
+        <input type="text" id="username" name="username" class="form-control" value = {{name}}>
+      
+      </div>
+      </div>
+   
+    
+    <div class="row pb-3" >
+    <div class="col-md-6">
+      <label for="useremail" >Email address</label> 
+      <input type="text" id="useremail" name="useremail" readonly class="form-control-plaintext" value = {{usermail}}  required autofocus>
+    
+    </div>
+    </div>
+    
+    <div class="row pb-3">
+  
+      <div class="col-md-6">
+  
+        <label for="password" >Password</label>
+        <input type="password" name="password" id="password" class="form-control"  placeholder="Password" required>
+      </div>
+      
+    </div>
+
+    <div class="row pb-3">
+  
+      <div class="col-md-3">
+  
+        <label for="newPassword">New Password</label>
+        <input type="password" name="newPassword" id="newPassword" class="form-control" >
+  
+      </div>
+
+      <div class="col-md-3">
+  
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" name="confirmPassword" id="confirmPassword" class="form-control" >
+      
+      </div>
+      
+    </div>
+    
+    
+   
+    
+    <div class="row  pt-3" >
+      
+      <div class="col-md-6" >
+      
+       
+    <button class="btn btn-lg btn-outline-primary btn-block mb-5" type="submit">Update Profile</button> 
+      </div>
+    </div>
+
+  </div>
+ 
+  </form>                          
+  
+
+
+
+
+
 {% endblock %}

@@ -73,7 +73,8 @@ def signup(request,role):
                 request.session['usermail'] = request.POST['email']
                 return redirect('/accounts/profile',{'usermail':request.session['usermail']})
                 #return render(request,'accounts/profile.html',{'id':val,'role':role,'name':request.POST['username'],'email':request.POST['email'],'password':request.POST['password2']})
-            except:    
+            except:  
+                c.close()  
                 connection.close()
                 return render(request,'accounts/signup.html',{'role':role,'error':"Email already taken!"})
         
@@ -192,6 +193,8 @@ def settings(request):
     if request.session.has_key('usermail') == False:
             return render(request,'accounts/login.html',{'error': 'Not Logged In'})
 
+    
+
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
     c = connection.cursor()
@@ -201,14 +204,48 @@ def settings(request):
     c.execute(statement,{'user_email':usermail})
     userinfo,= c.fetchall()
     
-    c.close()
-    connection.close()
+    print(userinfo)
 
-    return render(request,'accounts/settings.html',{'usermail':usermail,'role':userinfo[0],'name':userinfo[1],'password':userinfo[2]})
+    if request.method == 'POST':
+        message = ""
+        oldpass = request.POST['password']
+        username = request.POST.get('username')
+        newpass = request.POST.get('newPassword')
+        confirmpass = request.POST.get('confirmPassword')
+        
+        if(argon2.verify(oldpass,userinfo[2])):
+            if username == userinfo[1] and newpass == "" and confirmpass == "":
+                message = "No changes made"
+            else:
+                if newpass == confirmpass and newpass != "":
+                    hash_pass = argon2.hash(newpass)
+                    statement = 'UPDATE USERS SET password = :p , name = :u WHERE email = :e'
+                    c.execute(statement,{'p':hash_pass,'u':username,'e':usermail})
+                    message = 'User info updated'
+                    oldpass = newpass
+                elif newpass != confirmpass:
+                    message = "New password didn't match!"
+                elif username != userinfo[1]:
+                   
+                    statement = 'UPDATE USERS SET  name = :u WHERE email = :e'
+                    c.execute(statement,{'u':username,'e':usermail})
+                    
+                    message = 'User info updated'
+       
 
 
+        else:
+            message = "Password not verified"
 
+        c.close()
+        connection.commit()
+        connection.close()
+        return render(request,'accounts/settings.html',{'error':message,'usermail':usermail,'name':username,'password':oldpass})
 
-
+        
+    else:
+        c.close()
+        connection.close()
+        return render(request,'accounts/settings.html',{'usermail':usermail,'role':userinfo[0],'name':userinfo[1],'password':userinfo[2]})
 
 
