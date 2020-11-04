@@ -49,11 +49,11 @@ def signup(request,role):
             try:
                     
                 hash_pass = argon2.hash(request.POST['password2'])
-                statement = 'insert into USERS(name,email, password,role) values (:0,:1,:2,:3)'
+                statement = 'insert into USERS(name,email, password,role,sign_up_time) values (:0,:1,:2,:3,sysdate)'
                 c.execute(statement, (request.POST['username'], request.POST['email'],hash_pass,role))
                 
-                c.execute("select id from USERS where email = :usermail",{'usermail':request.POST['email']})
-                #c.execute("select seq_user.currval from dual")
+                #c.execute("select id from USERS where email = :usermail",{'usermail':request.POST['email']})
+                c.execute("select seq_user.currval from dual")
                 val,=c.fetchone()
 
                 

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Course Contents{% endblock %}
+{% block body %}
+
+{{course_id}}<br>
+<h1>contents</h1>
+<ul>
+{% for content in contents %}
+
+    <li><a href="">{{content.1}} :&nbsp;{{ content.3 }}:&nbsp;{{ content.5 }}</a></li>
+
+{% endfor %}
+</ul>
+<a href="">Add Content</a>
+
+{% endblock %} 

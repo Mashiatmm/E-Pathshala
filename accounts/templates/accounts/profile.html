@@ -17,7 +17,8 @@
 {{name}}
 <br>
 {% if role == 'teacher' %}
-<a href="{% url 'courses:add_course' t_id  %}">Add Course</a><!--id-->
+<a href="{% url 'courses:all_courses' t_id  %}">All Courses</a>
+<!--id-->
 {% endif %}
 
 {% endblock %}

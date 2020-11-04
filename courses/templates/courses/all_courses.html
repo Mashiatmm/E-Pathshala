@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}All Courses{% endblock %}
+{% block body %}
+
+{{t_id}}&nbsp;
+
+
+
+<h1>courses</h1>
+<ul>
+{% for course in courses %}
+
+    <li><a href="{% url 'courses:course_contents' course.0 %}">{{ course.1 }}</a></li>
+
+{% endfor %}
+</ul>
+<a href="{% url 'courses:add_course' t_id  %}">Add Course</a>
+
+
+{% endblock %} 

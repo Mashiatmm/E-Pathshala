@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
-{% block title %}Add Course{% endblock %}
+{% block title %}Add Content{% endblock %}
 {% block body %}
 
 
 
-<form class="form-add_course" action="{% url 'courses:add_course' t_id %}" method="POST" >
+<form class="form-signin" action="{% url 'courses:add_content' role %}" method="POST" >
 
   {% csrf_token %}
   <div class="container " style="background-color: #F8F9F9 ;">
@@ -18,43 +18,29 @@
     <div class="row pb-3 pt-5" style="padding-left: 400px;">
 
       <div class="col-md-4">
-    <div class="text-center mb-4"><h1 class="h3 mb-3 font-weight-normal" >Add Course</h1></div>
+    <div class="text-center mb-4"><h1 class="h3 mb-3 font-weight-normal" >Sign up</h1></div>
   
       </div>
     </div>
 
-
-
-
+  <!--  <div class="row  pt-3 pb-3" style="padding-left: 370px;">
+      <div class="col-md-6" >
+        Sign Up as :&emsp;
+        <input type="radio" id="teacher" name="role" value="teacher" required autofocus>
+        <label for="teacher">Teacher&emsp;</label>
+        <input type="radio" id="student" name="role" value="student" required autofocus>
+        <label for="student">Student</label><br>
+      </div>
+    </div>
+    -->
+    
     <div class="row pb-3" style="padding-left: 340px;">
       <div class="col-md-6">
-        <input type="text" id="course_title" name="course_title" class="form-control" placeholder="Course Title" required autofocus>
-      <label for="course_title" class="sr-only">Course Title</label>
+        <input type="text" id="username" name="username" class="form-control" placeholder="User Name" required autofocus>
+      <label for="username" class="sr-only">User Name</label>
       </div>
     </div>
 
-    <div class="row pb-3" style="padding-left: 340px;">
-        <div class="col-md-6">
-          <select class="custom-select" id="class" name="class">
-            <option selected>Choose Class...</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12e</option>
-            
-          </select>
-        </div>
-      </div>
-
-  <!--  
     {% if role == 'teacher' %}
     <div class="row pb-3" style="padding-left: 340px;">
       <div class="col-md-6">
@@ -85,7 +71,7 @@
           <option value="9">9</option>
           <option value="10">10</option>
           <option value="11">11</option>
-          <option value="12">12e</option>
+          <option value="12">12</option>
           
         </select>
       </div>
@@ -132,22 +118,14 @@
     <button class="btn btn-lg btn-outline-primary btn-block mb-5" type="submit">Sign Up !</button> 
       </div>
     </div>
-    -->
-    <div class="row  pt-3" style="padding-left: 340px;">
-      
-        <div class="col-md-6" >
-        
-         
-      <button class="btn btn-lg btn-outline-primary btn-block mb-5" type="submit">Add The Course !</button> 
-        </div>
-      </div>
+
   </div>
  
-  </form>
+  </form>                          
   
 
 
 
 
 
-{% endblock %} 
+{% endblock %}
