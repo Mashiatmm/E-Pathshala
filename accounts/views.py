@@ -53,6 +53,7 @@ def signup(request,role):
                 c.execute(statement, (request.POST['username'], request.POST['email'],hash_pass,role))
                 
                 c.execute("select id from USERS where email = :usermail",{'usermail':request.POST['email']})
+                #c.execute("select seq_user.currval from dual")
                 val,=c.fetchone()
 
                 
@@ -169,7 +170,7 @@ def profile(request):
 
         statement = "select role from USERS where email=:mail"
         c.execute(statement,{'mail':usermail})  
-        role, = c.fetchone()
+        role,= c.fetchone()
         if role=="student":
             statement="""Select U.ID AS "ID",U.NAME,S.CLASS 
                         FROM USERS U, STUDENTS S 
