@@ -49,6 +49,7 @@ def signup(request,role):
             try:
                     
                 hash_pass = argon2.hash(request.POST['password2'])
+                print(request.POST['username'], request.POST['email'],hash_pass,role)
                 statement = 'insert into USERS(name,email, password,role,sign_up_time) values (:0,:1,:2,:3,sysdate)'
                 c.execute(statement, (request.POST['username'], request.POST['email'],hash_pass,role))
                 
@@ -74,7 +75,8 @@ def signup(request,role):
                 request.session['usermail'] = request.POST['email']
                 return redirect('/accounts/profile',{'usermail':request.session['usermail']})
                 #return render(request,'accounts/profile.html',{'id':val,'role':role,'name':request.POST['username'],'email':request.POST['email'],'password':request.POST['password2']})
-            except:  
+            except Exception as E: 
+                print(E) 
                 c.close()  
                 connection.close()
                 return render(request,'accounts/signup.html',{'role':role,'error':"Email already taken!"})
