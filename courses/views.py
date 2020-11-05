@@ -4,8 +4,12 @@ import cx_Oracle
 #course title and class unique combo????
 
 def all_courses(request,id):
-    if request.session.has_key('usermail') == False:
-            return render(request,'accounts/login.html',{'error': 'Not Logged In'})
+    if request.session.has_key('usermail'):
+        usermail = request.session['usermail']
+    else:
+        return render(request,'accounts/login.html',{'error': 'Not Logged In'})
+
+            
     
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
@@ -17,13 +21,15 @@ def all_courses(request,id):
     c.close()
     connection.close()
     
-    return render(request,'courses/all_courses.html',{'t_id':id,'courses':courses})
+    return render(request,'courses/all_courses.html',{'t_id':id,'courses':courses,'usermail':usermail})
 
 
 def add_course(request,id):
 
-    if request.session.has_key('usermail') == False:
-            return render(request,'accounts/login.html',{'error': 'Not Logged In'})
+    if request.session.has_key('usermail'):
+        usermail = request.session['usermail']
+    else:
+        return render(request,'accounts/login.html',{'error': 'Not Logged In'})
     
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
@@ -54,12 +60,16 @@ def add_course(request,id):
             
             statement = "INSERT INTO TAKE_COURSE VALUES(:0,:1)"
             c.execute(statement,(c_id,id))
+
+            statement="select id,name,class from courses where id in (select course_id from take_course where teacher_id =: t_id) "
+            c.execute(statement,{'t_id':id})
+            courses=c.fetchall()
        
             c.close()
             connection.commit()
             connection.close()
        
-            return render(request,'courses/all_courses.html',{'t_id':id})
+            return render(request,'courses/all_courses.html',{'t_id':id,'courses':courses,'usermail':usermail})
 
         except:
             c.close()
@@ -76,15 +86,18 @@ def add_course(request,id):
 
 
 def course_contents(request,course_id):
-    if request.session.has_key('usermail') == False:
-            return render(request,'accounts/login.html',{'error': 'Not Logged In'})
+    if request.session.has_key('usermail'):
+        usermail = request.session['usermail']
+    else:
+        return render(request,'accounts/login.html',{'error': 'Not Logged In'})
+    
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
     c = connection.cursor()
     statement="select C.id,T.topic_title,C.sl_no,C.title,C.description,C.content_type,C.duration  from contents C,topics T where T.course_id =: course_id and C.topic_id = T.id"
     c.execute(statement,{'course_id':course_id})
     contents=c.fetchall()
-    return render(request,'courses/course_contents.html',{'course_id':course_id,'contents':contents})
+    return render(request,'courses/course_contents.html',{'course_id':course_id,'contents':contents,'usermail':usermail})
 
 def add_content(request,course_id):
     if request.session.has_key('usermail') == False:
