@@ -2,16 +2,117 @@
 {% block title %}Course Contents{% endblock %}
 {% block body %}
 
-{{course_id}}<br>
-<h1>contents</h1>
+<h2 class="text-center">{{courseinfo.0}}</h2>
+<h4 class="text-center">Class {{courseinfo.1}}</h4>
+
+{% if error %}
+<div style="padding-top: 50px;"></div>
+<div class="alert alert-danger" style="padding-left: 400px;padding-top: 50;">{{error}}</div>
+{% endif %}
+
+<form class="form-settings" action="{% url 'courses:course_contents' course_id %}" method="POST" >
+
+    {% csrf_token %}
+    <div class="container " style="background-color: #F8F9F9 ;">
+  
+     
+    
+      <div class="row pb-3" >
+        <div class="col-md-9">
+          <label for="topic">Topic Title</label> 
+          <input type="text" id="topic" name="topic" class="form-control" >
+        
+        </div>
+      </div>
+      <div class="row  pt-3" >
+      
+        <div class="col-md-3" >
+        
+        <button class="btn btn-lg btn-outline-primary btn-block mb-5" type="submit">Add a new Topic</button> 
+        </div>
+      </div>
+  
+    </div>
+   
+</form>       
+
+<h3>Topics</h3><br>
 <ul>
     
-{% for content in contents %}
+{% for topic in topics %}
+    <div class="row  pt-3" >
+      
+        <div class="col-md-6" >
+            <h4>{{topic.1}}</h4>
+        </div>
+    
+        {% if topic.2 %}
+        <div class="col-md-3" >
+           <h5>{{topic.3}}</h5>
+        </div>
+        <div class="col-md-3" >
+            
+        </div>
 
-    <li><a href="">{{content.1}} :&nbsp;{{ content.3 }}:&nbsp;{{ content.5 }}</a></li>
+        {% else %}
+          
+        <div class="modal fade" id="modalSubscriptionForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header text-center">
+                        <h4 class="modal-title w-100 font-weight-bold">{{topic.1}}</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                    </div>
+                    <div class="modal-body mx-3">
+                        <form class="form-settings" action="{% url 'courses:add_content' course_id topic.0 %}" method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="md-form mb-4">
+                            <label data-error="wrong" data-success="right" for="videotitle">Video Title</label>
+                            <input type="text" id='text' name = 'videotitle' class="form-control validate" required>
+                            
+                        </div>
 
+                        <div class="md-form mb-4">
+                            <label data-error="wrong" data-success="right" for="videourl">Video URL</label>
+                            <input type="url" id='videourl' name = 'videourl' class="form-control validate" required>
+                            
+                        </div>
+
+                        <div class="md-form mb-4">
+                            <label data-error="wrong" data-success="right" for="Description">Video Description</label>
+                            <input type="text" id='text' name = 'Description' class="form-control validate" required>
+                            
+                        </div>
+
+                        <div class="modal-footer d-flex justify-content-center">
+                            <button class="btn btn-lg btn-outline-primary btn-block mb-5" type="submit">Confirm</button> 
+                            
+                        </div>
+                        </form>
+
+                    </div>
+                    
+                </div>
+            
+            </div>
+        </div>
+
+        <div class="col-md-3" >
+            <a href="" class="btn btn-lg btn-outline-primary btn-block mb-5" data-toggle="modal" data-target="#modalSubscriptionForm">Add Video</a>
+        </div>
+           
+        <div class="col-md-3" >
+            <button class="btn btn-lg btn-outline-primary btn-block mb-5" type="submit">Add Exam</button> 
+        </div>
+        {% endif %}
+
+    </div>
+    <br>   
 {% endfor %}
 </ul>
-<a href="">Add Content</a>
+
 
 {% endblock %} 

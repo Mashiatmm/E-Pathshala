@@ -3,8 +3,7 @@
 {% block body %}
 
 
-
-<form class="form-signin" action="{% url 'courses:add_content' role %}" method="POST" >
+<form class="form-settings" action="{% url 'courses:add_content' course_id %}" method="POST" >
 
   {% csrf_token %}
   <div class="container " style="background-color: #F8F9F9 ;">
@@ -14,118 +13,70 @@
     <div class="alert alert-danger" style="padding-left: 400px;padding-top: 50;">{{error}}</div>
     {% endif %}
   
-
-    <div class="row pb-3 pt-5" style="padding-left: 400px;">
-
-      <div class="col-md-4">
-    <div class="text-center mb-4"><h1 class="h3 mb-3 font-weight-normal" >Sign up</h1></div>
-  
-      </div>
-    </div>
-
-  <!--  <div class="row  pt-3 pb-3" style="padding-left: 370px;">
-      <div class="col-md-6" >
-        Sign Up as :&emsp;
-        <input type="radio" id="teacher" name="role" value="teacher" required autofocus>
-        <label for="teacher">Teacher&emsp;</label>
-        <input type="radio" id="student" name="role" value="student" required autofocus>
-        <label for="student">Student</label><br>
-      </div>
-    </div>
-    -->
-    
-    <div class="row pb-3" style="padding-left: 340px;">
-      <div class="col-md-6">
-        <input type="text" id="username" name="username" class="form-control" placeholder="User Name" required autofocus>
-      <label for="username" class="sr-only">User Name</label>
-      </div>
-    </div>
-
-    {% if role == 'teacher' %}
-    <div class="row pb-3" style="padding-left: 340px;">
-      <div class="col-md-6">
-        <input list="all_specialties" type="text" id="specialty" name="specialty" class="form-control" placeholder="Specialty" required autofocus>
-        <datalist id="all_specialties">
-          {% for spec in all_specialties %}
-          <option value="{{spec}}">{{spec}}</option>
-          {% endfor %}
-
-        </datalist>
-     
-
-      </div>
-    </div>
-    {% else %}
-    <div class="row pb-3" style="padding-left: 340px;">
-      <div class="col-md-6">
-        <select class="custom-select" id="grade" name="grade">
-          <option selected>Choose Grade...</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-          <option value="8">8</option>
-          <option value="9">9</option>
-          <option value="10">10</option>
-          <option value="11">11</option>
-          <option value="12">12</option>
-          
-        </select>
-      </div>
-    </div>
-  
-    
-    {% endif %}    
-    <div class="row pb-3" style="padding-left: 340px;">
-    <div class="col-md-6">
-      <input type="email" id="email" name="email" class="form-control" placeholder="Email address" required autofocus>
-    <label for="email" class="sr-only">Email address</label>
-    </div>
-    </div>
-    
-    <div class="row pb-3" style="padding-left: 340px;">
-  
-      <div class="col-md-6">
-  
-        <input type="password" name="password1" id="password1" class="form-control" placeholder="Password" required>
-      <label for="inputPassword" class="sr-only">Password</label>
-  
-      </div>
+    <div class="row pb-3" >
+      <div class="col-md-9">
+        <label for="topic">Topic Title</label> 
+        <input type="text" id="topic" name="topic" class="form-control" >
       
-    </div>
-    
-    <div class="row pb-3" style="padding-left: 340px;">
-      
-      <div class="col-md-6">
-        <input type="password" name="password2" id="password2" class="form-control" placeholder="Confirm Password" required>
-      <label for="inputPassword" class="sr-only ">Confirm Password</label>
       </div>
     </div>
 
-    
-
+    <div class="row pb-3">
+      <div class="col-md-9">
+        <div class="checkbox">
+          <label><input type="checkbox" value="">  Video</label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox" value="">  Exam</label>
+        </div>
+      </div>
+    </div>  
     
    
     
-    <div class="row  pt-3" style="padding-left: 340px;">
+    <div class="row pb-3" >
+    <div class="col-md-6" >
+      <label for="useremail" >Video URL</label> 
+      <input type="url" id="video_url" name="video_url" class="form-control" disabled>
+    
+    </div>
+  </div>
+
+
+
+<div class="form-group ">
+  <label class="control-label" for="date">Student</label>
+  <div class="input-group">
+      <span class="input-group-addon">
+          <input type="checkbox" id="radio">
+      </span>
+      <input id="prependedcheckbox" name="prependedcheckbox" class="form-control"
+                    type="text" placeholder="" disabled />
+  </div>
+</div>
+    
+  
+
+    
+  
+
+    
+      
+
+      
+    <div class="row  pt-3" >
       
       <div class="col-md-6" >
       
        
-    <button class="btn btn-lg btn-outline-primary btn-block mb-5" type="submit">Sign Up !</button> 
+    <button class="btn btn-lg btn-outline-primary btn-block mb-5" type="submit">Add Topic</button> 
       </div>
     </div>
 
   </div>
  
-  </form>                          
+</form>                          
   
 
 
-
-
-
-{% endblock %}
+{%endblock%}
