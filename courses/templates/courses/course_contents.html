@@ -41,20 +41,19 @@
     
 {% for topic in topics %}
     <div class="row  pt-3" >
-      
+        
         <div class="col-md-6" >
-            <h4>{{topic.1}}</h4>
-        </div>
-    
-        {% if topic.2 %}
-        <div class="col-md-3" >
-           <h5>{{topic.3}}</h5>
-        </div>
-        <div class="col-md-3" >
+            <div class="row  pt-2" >
+                <h4>{{topic.1}}</h4>
+            </div>
+            
+            <div class="row  pt-2" >
+                Contents : {{topic.2}}
+            </div>
             
         </div>
+    
 
-        {% else %}
           
         <div class="modal fade" id="modalSubscriptionForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -105,9 +104,9 @@
         </div>
            
         <div class="col-md-3" >
-            <button class="btn btn-lg btn-outline-primary btn-block mb-5" type="submit">Add Exam</button> 
+            <a href="{% url 'courses:add_exams' course_id topic.0 %}" class="btn btn-lg btn-outline-primary btn-block mb-5" >Add Exam</a>
         </div>
-        {% endif %}
+        
 
     </div>
     <br>   

@@ -111,11 +111,22 @@ def course_contents(request,course_id):
     statement = "select name,class from Courses where id = :id "
     c.execute(statement,{'id':course_id})
     courseinfo, = c.fetchall()
-
+    '''
     statement = """SELECT T.ID,T.TOPIC_TITLE,C.CONTENT_TYPE, C.TITLE, C.DESCRIPTION,C.ID
                     FROM TOPICS T, CONTENTS C
                     WHERE T.ID = C.TOPIC_ID(+) AND T.COURSE_ID = :course_id
                     ORDER BY NVL(C.SL_NO,0)"""
+
+                     {% if topic.2 %}
+            <div class="row  pt-2" >
+                <h6>{{topic.3}}</h6>
+            </div>
+            {% endif %}
+    '''
+    statement = """SELECT T.ID,T.TOPIC_TITLE,COUNT(C.ID)
+                    FROM TOPICS T, CONTENTS C
+                    WHERE T.COURSE_ID = :course_id AND C.TOPIC_ID(+) = T.ID
+                    GROUP BY(T.ID,T.TOPIC_TITLE)"""
     c.execute(statement,{'course_id':course_id})
     topics = c.fetchall()
     print(topics)
@@ -127,25 +138,69 @@ def course_contents(request,course_id):
     else:
         return render(request,'courses/course_contents.html',{'course_id':course_id,'courseinfo':courseinfo,'topics':topics,'usermail':usermail,'error':error})
 
-
-def add_content(request,course_id,topic_id):
+def add_exams(request,course_id,topic_id):
     if request.session.has_key('usermail') == False:
             return render(request,'accounts/login.html',{'error': 'Not Logged In'})
-
     usermail = request.session.has_key('usermail')
+    
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
     c = connection.cursor()
 
     if request.method == 'POST':
-        statement = """INSERT INTO CONTENTS(TOPIC_ID,ID,SL_NO,TITLE,DESCRIPTION,CONTENT_TYPE)
-                     VALUES(:0,0,1,:1,:2,'video')"""
-        c.execute(statement,(topic_id,request.POST['videotitle'],request.POST['Description']))
-        statement = "SELECT seq_content.currval FROM dual"
-        c.execute(statement)
-        content_id, = c.fetchone()
-        statement = "INSERT INTO VIDEOS VALUES(:0,:1)"
-        c.execute(statement,(content_id,request.POST['videourl']))
+        if 'title' in request.POST:
+            try:
+                statement = """INSERT INTO CONTENTS(TOPIC_ID,ID,SL_NO,TITLE,DESCRIPTION,CONTENT_TYPE)
+                            VALUES(:0,0,1,:1,:2,'exam')"""
+                c.execute(statement,(topic_id,request.POST['title'],request.POST['details']))
+                statement = "SELECT seq_content.currval FROM dual"
+                c.execute(statement)
+                content_id, = c.fetchone()
+                print(content_id)
+                statement = "INSERT INTO EXAMS VALUES(:0,:1)"
+                c.execute(statement,(content_id,request.POST['totalmarks']))
+                examinfo = [request.POST['title'],request.POST['details'],request.POST['totalmarks']]
+            
+                c.close()
+                connection.commit()
+                connection.close()
+
+                return render(request,'courses/add_exam.html',{'usermail':usermail,'course_id':course_id,'topic_id':topic_id,'examinfo':examinfo})
+            except:
+                c.close()
+                connection.close()
+                error = "Same Title exists"
+                return render(request,'courses/add_exam.html',{'usermail':usermail,'course_id':course_id,'topic_id':topic_id,'error':error})
+            
+        else:
+            print('not in')
+    return render(request,'courses/add_exam.html',{'usermail':usermail,'course_id':course_id,'topic_id':topic_id})
+
+    
+
+def add_content(request,course_id,topic_id):
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor()
+
+    if request.method == 'POST':
+        
+        try:
+            statement = """INSERT INTO CONTENTS(TOPIC_ID,ID,SL_NO,TITLE,DESCRIPTION,CONTENT_TYPE)
+                         VALUES(:0,0,1,:1,:2,'video')"""
+            c.execute(statement,(topic_id,request.POST['videotitle'],request.POST['Description']))
+            statement = "SELECT seq_content.currval FROM dual"
+            c.execute(statement)
+            content_id, = c.fetchone()
+            print(content_id)
+            statement = "INSERT INTO VIDEOS VALUES(:0,:1)"
+            c.execute(statement,(content_id,request.POST['videourl']))
+        except:
+            error = "Same video/ title exists "
+            print(error)
+            #show message
+
+
 
     c.close()
     connection.commit()
