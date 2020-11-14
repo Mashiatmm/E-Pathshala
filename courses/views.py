@@ -4,8 +4,8 @@ import cx_Oracle
 #course title and class unique combo????
 
 def all_courses(request,id):
-    if request.session.has_key('usermail'):
-        usermail = request.session['usermail']
+    if request.session.has_key('userid'):
+        userid = request.session['userid']
     else:
         return render(request,'accounts/login.html',{'error': 'Not Logged In'})
 
@@ -21,13 +21,13 @@ def all_courses(request,id):
     c.close()
     connection.close()
     
-    return render(request,'courses/all_courses.html',{'t_id':id,'courses':courses,'usermail':usermail})
+    return render(request,'courses/all_courses.html',{'t_id':id,'courses':courses,'userid':userid})
 
 
 def add_course(request,id):
 
-    if request.session.has_key('usermail'):
-        usermail = request.session['usermail']
+    if request.session.has_key('userid'):
+        userid = request.session['userid']
     else:
         return render(request,'accounts/login.html',{'error': 'Not Logged In'})
     
@@ -35,9 +35,9 @@ def add_course(request,id):
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
     c = connection.cursor()
 
-    usermail = request.session['usermail']
-    statement = "SELECT name FROM USERS WHERE email = : user_email"
-    c.execute(statement,{'user_email':usermail})
+    userid = request.session['userid']
+    statement = "SELECT name FROM USERS WHERE id = : user_id"
+    c.execute(statement,{'user_id':userid})
     name, = c.fetchone()
 
 
@@ -69,12 +69,12 @@ def add_course(request,id):
             connection.commit()
             connection.close()
        
-            return render(request,'courses/all_courses.html',{'t_id':id,'courses':courses,'usermail':usermail})
+            return render(request,'courses/all_courses.html',{'t_id':id,'courses':courses,'userid':userid})
 
         except:
             c.close()
             connection.close()
-            return render(request,'courses/add_course.html',{'usermail':usermail,'t_id':id,'error': 'Course name already exists'})
+            return render(request,'courses/add_course.html',{'userid':userid,'t_id':id,'error': 'Course name already exists'})
             
         
 
@@ -82,12 +82,12 @@ def add_course(request,id):
     else:
         c.close()
         connection.close()
-        return render(request,'courses/add_course.html',{'usermail':usermail,'t_id':id})
+        return render(request,'courses/add_course.html',{'userid':userid,'t_id':id})
 
 
 def course_contents(request,course_id):
-    if request.session.has_key('usermail'):
-        usermail = request.session['usermail']
+    if request.session.has_key('userid'):
+        userid = request.session['userid']
     else:
         return render(request,'accounts/login.html',{'error': 'Not Logged In'})
     
@@ -134,14 +134,14 @@ def course_contents(request,course_id):
     connection.commit()
     connection.close()
     if error == "":
-        return render(request,'courses/course_contents.html',{'course_id':course_id,'courseinfo':courseinfo,'topics':topics,'usermail':usermail})
+        return render(request,'courses/course_contents.html',{'course_id':course_id,'courseinfo':courseinfo,'topics':topics,'userid':userid})
     else:
-        return render(request,'courses/course_contents.html',{'course_id':course_id,'courseinfo':courseinfo,'topics':topics,'usermail':usermail,'error':error})
+        return render(request,'courses/course_contents.html',{'course_id':course_id,'courseinfo':courseinfo,'topics':topics,'userid':userid,'error':error})
 
 def add_exams(request,course_id,topic_id):
-    if request.session.has_key('usermail') == False:
+    if request.session.has_key('userid') == False:
             return render(request,'accounts/login.html',{'error': 'Not Logged In'})
-    usermail = request.session.has_key('usermail')
+    userid = request.session.has_key('userid')
     
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
@@ -159,22 +159,22 @@ def add_exams(request,course_id,topic_id):
                 print(content_id)
                 statement = "INSERT INTO EXAMS VALUES(:0,:1)"
                 c.execute(statement,(content_id,request.POST['totalmarks']))
-                examinfo = [request.POST['title'],request.POST['details'],request.POST['totalmarks']]
+                examinfo = [request.POST['title'],request.POST['details'],request.POST['totalmarks'] ]
             
                 c.close()
                 connection.commit()
                 connection.close()
 
-                return render(request,'courses/add_exam.html',{'usermail':usermail,'course_id':course_id,'topic_id':topic_id,'examinfo':examinfo})
+                return render(request,'courses/add_exam.html',{'userid':userid,'course_id':course_id,'topic_id':topic_id,'examinfo':examinfo})
             except:
                 c.close()
                 connection.close()
                 error = "Same Title exists"
-                return render(request,'courses/add_exam.html',{'usermail':usermail,'course_id':course_id,'topic_id':topic_id,'error':error})
+                return render(request,'courses/add_exam.html',{'userid':userid,'course_id':course_id,'topic_id':topic_id,'error':error})
             
         else:
             print('not in')
-    return render(request,'courses/add_exam.html',{'usermail':usermail,'course_id':course_id,'topic_id':topic_id})
+    return render(request,'courses/add_exam.html',{'userid':userid,'course_id':course_id,'topic_id':topic_id})
 
     
 

@@ -28,9 +28,9 @@ def home(request):
     connection.close()
     '''
     
-    if request.session.has_key('usermail'):
-        usermail = request.session['usermail']
-        return render(request,'accounts/home.html',{'usermail':usermail})
+    if request.session.has_key('userid'):
+        userid = request.session['userid']
+        return render(request,'accounts/home.html',{'userid':userid})
     return render(request,'accounts/home.html')
 
 
@@ -70,10 +70,10 @@ def signup(request,role):
 
                 connection.commit()
                 connection.close()
-                if request.session.has_key('usermail'):
-                    del request.session['usermail']
-                request.session['usermail'] = request.POST['email']
-                return redirect('/accounts/profile',{'usermail':request.session['usermail']})
+                if request.session.has_key('userid'):
+                    del request.session['userid']
+                request.session['userid'] = val
+                return redirect('/accounts/profile',{'userid':val})
                 #return render(request,'accounts/profile.html',{'id':val,'role':role,'name':request.POST['username'],'email':request.POST['email'],'password':request.POST['password2']})
             except Exception as E: 
                 print(E) 
@@ -136,13 +136,13 @@ def login(request):
             if(argon2.verify(request.POST['password'],info[0])):
                 c.close()
 
-                if request.session.has_key('usermail'):
-                    del request.session['usermail']
+                if request.session.has_key('userid'):
+                    del request.session['userid']
 
-                request.session['usermail'] = email
+                request.session['userid'] = info[2]
                 
                 connection.close()
-                return redirect('/accounts/profile',{'usermail':email})
+                return redirect('/accounts/profile',{'userid':info[2]})
                 #return redirect('/accounts/'+info[1]+'/'+str(info[2]))
 
             else:
@@ -153,7 +153,7 @@ def login(request):
     
     else:
         try:
-            del request.session['usermail']
+            del request.session['userid']
         except:
             pass
         return render(request,'accounts/login.html')
@@ -165,35 +165,35 @@ def profile(request):
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
 
-    if request.session.has_key('usermail'):
-        usermail = request.session['usermail']
+    if request.session.has_key('userid'):
+        userid = request.session['userid']
 
         c = connection.cursor()
 
-        statement = "select role from USERS where email=:mail"
-        c.execute(statement,{'mail':usermail})  
+        statement = "select role from USERS where id=:id"
+        c.execute(statement,{'id':userid})  
         role,= c.fetchone()
         if role=="student":
             statement="""Select U.ID AS "ID",U.NAME,S.CLASS 
                         FROM USERS U, STUDENTS S 
-                        WHERE S.ID=U.ID AND U.EMAIL=:user_email"""
+                        WHERE S.ID=U.ID AND U.ID=:user_id"""
         else:
             statement="""Select  U.ID AS "ID",U.NAME,T.Specialty 
                         FROM USERS U, TEACHERS T
-                        WHERE T.ID=U.ID AND U.EMAIL=:user_email"""
+                        WHERE T.ID=U.ID AND U.ID=:user_id"""
 
-        c.execute(statement,{'user_email': usermail})
+        c.execute(statement,{'user_id': userid})
         user,=c.fetchall()
         c.close()
         #print(role,user[0],user[1],user[2],user[3])
-        return render(request,'accounts/profile.html',{'usermail':usermail,'role':role,'name':user[1],'t_id':user[0]})
+        return render(request,'accounts/profile.html',{'userid':userid,'role':role,'name':user[1],'t_id':user[0]})
     
     else:
         return render(request,'accounts/login.html',{'error': 'Not Logged In'})
 
 
 def settings(request):
-    if request.session.has_key('usermail') == False:
+    if request.session.has_key('userid') == False:
             return render(request,'accounts/login.html',{'error': 'Not Logged In'})
 
     
@@ -202,9 +202,9 @@ def settings(request):
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
     c = connection.cursor()
 
-    usermail = request.session['usermail']
-    statement = 'SELECT role,name,password FROM USERS WHERE email = : user_email'
-    c.execute(statement,{'user_email':usermail})
+    userid = request.session['userid']
+    statement = 'SELECT role,name,password FROM USERS WHERE id = : user_id'
+    c.execute(statement,{'user_id':userid})
     userinfo,= c.fetchall()
     
     print(userinfo)
@@ -243,12 +243,12 @@ def settings(request):
         c.close()
         connection.commit()
         connection.close()
-        return render(request,'accounts/settings.html',{'error':message,'usermail':usermail,'name':username,'password':oldpass})
+        return render(request,'accounts/settings.html',{'error':message,'userid':userid,'name':username,'password':oldpass})
 
         
     else:
         c.close()
         connection.close()
-        return render(request,'accounts/settings.html',{'usermail':usermail,'role':userinfo[0],'name':userinfo[1],'password':userinfo[2]})
+        return render(request,'accounts/settings.html',{'userid':userid,'role':userinfo[0],'name':userinfo[1],'password':userinfo[2]})
 
 
