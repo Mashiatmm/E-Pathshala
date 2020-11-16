@@ -323,8 +323,7 @@ def course_contents_student(request,topic_id):
     statement= "SELECT ID,TITLE,DESCRIPTION,CONTENT_TYPE,DURATION FROM CONTENTS WHERE TOPIC_ID = :topic_id order by sl_no"
     c.execute(statement,{'topic_id':topic_id})
     contents= c.fetchall() 
-
-    return render(request,'courses/course_contents_student.html',{'contents': contents,'course_id':course_id})
-
     c.close()
     connection.close() 
+    return render(request,'courses/course_contents_student.html',{'contents': contents,'course_id':course_id})
+
