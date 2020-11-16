@@ -5,8 +5,14 @@ app_name='courses'
 
 urlpatterns = [
         path('add_course/',views.add_course,name='add_course'),
+<<<<<<< HEAD
         path('all_courses/teacher/',views.all_courses,name='all_courses'),
         path('course_contents/teacher/<int:course_id>/',views.course_contents,name='course_contents'),
+=======
+        path('enroll_course/',views.enroll_course,name='enroll_course'),
+        path('all_courses/student/<int:id>',views.all_courses_student,name='all_courses_student'),
+        path('course_contents/<int:course_id>/',views.course_contents,name='course_contents'),
+>>>>>>> a3e83f28c50d4e72a991358df2ebc2cd69826768
         path('add_content/<int:course_id>/<int:topic_id>/',views.add_content,name='add_content'),
         path('add_exams/<int:course_id>/<int:topic_id>/',views.add_exams,name='add_exams'),
         path('add_ques/<int:exam_id>/',views.add_ques,name='add_ques'),

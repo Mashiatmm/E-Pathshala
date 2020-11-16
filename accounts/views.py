@@ -181,9 +181,16 @@ def profile(request):
             statement="""Select U.NAME,T.Specialty 
                         FROM USERS U, TEACHERS T
                         WHERE T.ID=U.ID AND U.ID=:user_id"""
+            c.execute(statement,{'user_id': userid})
+            user,=c.fetchall()
+            statement="select id,name,class from courses where id in (select course_id from take_course where teacher_id =: t_id) "
+            c.execute(statement,{'t_id':userid})
+            courses=c.fetchall()
+            return render(request,'accounts/profile.html',{'userid':userid,'role':role,'name':user[0],'courses':courses})
 
         c.execute(statement,{'user_id': userid})
         user,=c.fetchall()
+
         c.close()
         #print(role,user[0],user[1],user[2],user[3])
         return render(request,'accounts/profile.html',{'userid':userid,'role':role,'name':user[0]})

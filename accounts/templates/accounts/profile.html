@@ -20,7 +20,17 @@
 {{name}}
 <br>
 {% if role == 'teacher' %}
-<a href="{% url 'courses:all_courses'%}">My Courses</a>
+    <h1>Courses</h1>
+    <a href="{% url 'courses:add_course'%}">Add Course</a>
+    <ul>
+    {% for course in courses %}
+
+        <li><a href="{% url 'courses:course_contents' course.0 %}">{{ course.1 }} Class {{course.2}}</a></li>
+
+    {% endfor %}
+    </ul>
+    
+
 <!--id-->
 {% else %}
 <a href="{% url 'courses:all_courses_student' userid %}">My Courses</a>
