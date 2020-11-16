@@ -45,11 +45,12 @@ def add_course(request,id):
 
         course_title=request.POST['course_title']
         course_class=request.POST['class']
+        course_description=request.POST['course_description']
 
         try:
-            statement="INSERT INTO COURSES VALUES(1,:0,:1,:2,sysdate)"
+            statement="INSERT INTO COURSES VALUES(1,:0,:1,:2,:3,sysdate)"
             
-            c.execute(statement,(course_title,course_class,'0'))
+            c.execute(statement,(course_title,course_class,'0',course_description))
             print('007')
 
             #statement = 'SELECT id FROM COURSES WHERE NAME = : title and class = :c'
@@ -100,8 +101,8 @@ def course_contents(request,course_id):
     if request.method == 'POST':
         try:
             
-            statement="Insert into TOPICS(COURSE_ID,TOPIC_TITLE) VALUES(:0,:1)"
-            c.execute(statement,(course_id,request.POST['topic']))
+            statement="Insert into TOPICS(COURSE_ID,TOPIC_TITLE) VALUES(:0,:1,:2)"
+            c.execute(statement,(course_id,request.POST['topic'],request.POST['topic_description']))
 
         except Exception as e:
             error = "Topic name for the same course exists"
