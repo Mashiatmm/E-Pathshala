@@ -242,9 +242,49 @@ def add_content(request,course_id,topic_id):
     return redirect('/courses/course_contents/'+str(course_id)+'/')
     
       
+def enroll_course(request):
+    if request.session.has_key('userid'):
+        userid = request.session['userid']
+    else:
+        return render(request,'accounts/login.html',{'error': 'Not Logged In'})
+
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor()
+    if request.method == 'POST':
+        statement = "insert into enroll values(:0,:1,0,sysdate)"
+        c.execute(statement,(userid,request.POST['course_id']))
+
+    connection.commit()
+    statement = """ select id,name,total_marks 
+                    from courses c 
+                    where c.class = (select class from students where id = :st_id)
+                            and c.id not in(select course_id from enroll where st_id = :st_id )"""
+    c.execute(statement,{'st_id':userid})
+    available_courses = c.fetchall()
+    print(available_courses)
+    c.close()
+    connection.close()
+    #,{'userid':userid,'available_courses':available_courses}
+    return render(request,'courses/enroll_course.html',{'userid':userid,'available_courses':available_courses}) 
 
 
+def all_courses_student(request,id):
+    if request.session.has_key('userid'):
+        userid = request.session['userid']
+    else:
+        return render(request,'accounts/login.html',{'error': 'Not Logged In'})
 
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor()
+    statement="select id,name from courses where id in (select course_id from enroll where st_id = :s_id) "
+    c.execute(statement,{'s_id':userid})
+    courses=c.fetchall()
+    c.close()
+    connection.close()
+    
+    return render(request,'courses/all_courses_student.html',{'courses':courses,'userid':userid})
 
 
 

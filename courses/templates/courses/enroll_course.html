@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Enroll Courses{% endblock %}
+{% block body %}
+
+{{userid}}&nbsp;
+
+
+
+<h1>Available Courses</h1>
+
+<ul>
+{% for course in available_courses %}
+
+    <li><a href="">{{ course.1 }}</a>
+        <form class="form-enroll_course" action="{% url 'courses:enroll_course' %}" method="POST" >
+            {% csrf_token %}
+            <input type="hidden" id="course_id" value="{{course.0}}" name="course_id" class="form-control" placeholder="Course ID">
+            <button class="btn btn-lg btn-outline-primary btn-block mb-5" type="submit">Add The Course !</button> 
+        </form>
+    </li>
+
+{% endfor %}
+</ul>
+
+
+
+{% endblock %} 
