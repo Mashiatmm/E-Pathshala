@@ -2,27 +2,6 @@ from django.shortcuts import render,redirect
 import cx_Oracle
 
 
-def all_courses(request):
-    userid = 0
-    if request.session.has_key('userid'):
-        userid = request.session['userid']
-    else:
-        return render(request,'accounts/login.html',{'error': 'Not Logged In','role':'teacher'})
-
-            
-    
-    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
-    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
-    c = connection.cursor()
-    statement="select id,name,class from courses where id in (select course_id from take_course where teacher_id =: t_id) "
-    c.execute(statement,{'t_id':userid})
-    courses=c.fetchall()
-    print(len(courses))
-    c.close()
-    connection.close()
-    
-    return render(request,'courses/all_courses.html',{'courses':courses,'userid':userid,'role':'teacher'})
-
 
 def add_course(request):
     userid = 0
@@ -45,11 +24,12 @@ def add_course(request):
 
         course_title=request.POST['course_title']
         course_class=request.POST['class']
+        course_des = request.POST['course_description']
 
         try:
-            statement="INSERT INTO COURSES VALUES(1,:0,:1,:2,sysdate)"
+            statement="INSERT INTO COURSES VALUES(1,:0,:1,:2,sysdate,:3)"
             
-            c.execute(statement,(course_title,course_class,'0'))
+            c.execute(statement,(course_title,course_class,'0',course_des))
             print('007')
 
             statement = "SELECT seq_course.currval FROM dual"
@@ -99,8 +79,8 @@ def course_contents(request,course_id):
     if request.method == 'POST':
         
         try:   
-            statement="Insert into TOPICS(COURSE_ID,TOPIC_TITLE) VALUES(:0,:1)"
-            c.execute(statement,(course_id,request.POST['topic']))
+            statement="Insert into TOPICS(COURSE_ID,TOPIC_TITLE,TOPIC_DESCRIPTION) VALUES(:0,:1,:2)"
+            c.execute(statement,(course_id,request.POST['topic'],request.POST['topic_description']))
 
         
         except Exception as e:
@@ -204,6 +184,8 @@ def add_ques(request,exam_id):
 
         statement = "UPDATE QAS SET RIGHT_OPTION = :r WHERE ID = :i"
         c.execute(statement,{'r':right_opt_id,'i':ques_id})
+
+        statement = "SELECT Q.QUESTION_DESCRIPTION,Q.RIGHT_OPTION,"
 
         c.close()
         connection.commit()
