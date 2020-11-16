@@ -70,7 +70,7 @@ def add_course(request,id):
             connection.close()
        
             return render(request,'courses/all_courses.html',{'t_id':id,'courses':courses,'userid':userid})
-
+        
         except:
             c.close()
             connection.close()
@@ -111,18 +111,7 @@ def course_contents(request,course_id):
     statement = "select name,class from Courses where id = :id "
     c.execute(statement,{'id':course_id})
     courseinfo, = c.fetchall()
-    '''
-    statement = """SELECT T.ID,T.TOPIC_TITLE,C.CONTENT_TYPE, C.TITLE, C.DESCRIPTION,C.ID
-                    FROM TOPICS T, CONTENTS C
-                    WHERE T.ID = C.TOPIC_ID(+) AND T.COURSE_ID = :course_id
-                    ORDER BY NVL(C.SL_NO,0)"""
-
-                     {% if topic.2 %}
-            <div class="row  pt-2" >
-                <h6>{{topic.3}}</h6>
-            </div>
-            {% endif %}
-    '''
+   
     statement = """SELECT T.ID,T.TOPIC_TITLE,COUNT(C.ID)
                     FROM TOPICS T, CONTENTS C
                     WHERE T.COURSE_ID = :course_id AND C.TOPIC_ID(+) = T.ID
@@ -139,6 +128,7 @@ def course_contents(request,course_id):
         return render(request,'courses/course_contents.html',{'course_id':course_id,'courseinfo':courseinfo,'topics':topics,'userid':userid,'error':error})
 
 def add_exams(request,course_id,topic_id):
+    print(request.POST)
     if request.session.has_key('userid') == False:
             return render(request,'accounts/login.html',{'error': 'Not Logged In'})
     userid = request.session.has_key('userid')
@@ -148,35 +138,78 @@ def add_exams(request,course_id,topic_id):
     c = connection.cursor()
 
     if request.method == 'POST':
-        if 'title' in request.POST:
-            try:
+        try:
                 statement = """INSERT INTO CONTENTS(TOPIC_ID,ID,SL_NO,TITLE,DESCRIPTION,CONTENT_TYPE)
-                            VALUES(:0,0,1,:1,:2,'exam')"""
+                                VALUES(:0,0,1,:1,:2,'exam')"""
                 c.execute(statement,(topic_id,request.POST['title'],request.POST['details']))
+                connection.commit()
+                
                 statement = "SELECT seq_content.currval FROM dual"
                 c.execute(statement)
                 content_id, = c.fetchone()
                 print(content_id)
                 statement = "INSERT INTO EXAMS VALUES(:0,:1)"
-                c.execute(statement,(content_id,request.POST['totalmarks']))
-                examinfo = [request.POST['title'],request.POST['details'],request.POST['totalmarks'] ]
+                c.execute(statement,(content_id,0))
+            
+                examinfo = [request.POST['title'],request.POST['details'],content_id]
             
                 c.close()
-                connection.commit()
+                connection.commit()   
                 connection.close()
 
                 return render(request,'courses/add_exam.html',{'userid':userid,'course_id':course_id,'topic_id':topic_id,'examinfo':examinfo})
-            except:
+            
+        except:
                 c.close()
                 connection.close()
                 error = "Same Title exists"
                 return render(request,'courses/add_exam.html',{'userid':userid,'course_id':course_id,'topic_id':topic_id,'error':error})
             
-        else:
-            print('not in')
+            
+            
     return render(request,'courses/add_exam.html',{'userid':userid,'course_id':course_id,'topic_id':topic_id})
 
+def add_ques(request,exam_id):
+    if request.session.has_key('userid') == False:
+            return render(request,'accounts/login.html',{'error': 'Not Logged In'})
+    userid = request.session.has_key('userid')
     
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor()
+    statement = "SELECT TITLE,DESCRIPTION FROM CONTENTS WHERE ID = :i"
+    c.execute(statement,{'i':exam_id})
+    info, = c.fetchall()
+    print(info)
+    examinfo = [info[0],info[1],exam_id]
+
+    if request.method == 'POST':
+        answer_options = [request.POST['option1'],request.POST['option2'],request.POST['option3'],request.POST['option4']]
+        right_option = request.POST[request.POST.get('Radios')]
+        print(right_option)
+        statement = "INSERT INTO QAS(EXAM_ID,QUESTION_DESCRIPTION) VALUES(:0,:1)"
+        c.execute(statement,(exam_id,request.POST['questiontitle']))
+        statement = "SELECT seq_ques.currval FROM dual"
+        c.execute(statement)
+        ques_id, = c.fetchone()
+        right_opt_id = 0
+        statement = "INSERT INTO QA_ANS(QA_ID,ANS_OPTION) VALUES(:0,:1)"
+        for i in range(len(answer_options)):
+            c.execute(statement,(ques_id,answer_options[i]))
+            if right_option == answer_options[i]:
+                right_opt_id = c.execute("SELECT seq_ans.currval FROM dual")
+                right_opt_id, = c.fetchone()
+        
+
+        statement = "UPDATE QAS SET RIGHT_OPTION = :r WHERE ID = :i"
+        c.execute(statement,{'r':right_opt_id,'i':ques_id})
+
+        c.close()
+        connection.commit()
+        connection.close()
+
+        return render(request,'courses/add_exam.html',{'userid':userid,'examinfo':examinfo})
+
 
 def add_content(request,course_id,topic_id):
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')

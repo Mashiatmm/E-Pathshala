@@ -203,10 +203,10 @@ def settings(request):
     c = connection.cursor()
 
     userid = request.session['userid']
-    statement = 'SELECT role,name,password FROM USERS WHERE id = : user_id'
+    statement = 'SELECT role,name,password,email FROM USERS WHERE id = : user_id'
     c.execute(statement,{'user_id':userid})
     userinfo,= c.fetchall()
-    
+    usermail = userinfo[3]
     print(userinfo)
 
     if request.method == 'POST':
@@ -243,12 +243,12 @@ def settings(request):
         c.close()
         connection.commit()
         connection.close()
-        return render(request,'accounts/settings.html',{'error':message,'userid':userid,'name':username,'password':oldpass})
+        return render(request,'accounts/settings.html',{'error':message,'userid':userid,'name':username,'password':oldpass,'usermail':usermail})
 
         
     else:
         c.close()
         connection.close()
-        return render(request,'accounts/settings.html',{'userid':userid,'role':userinfo[0],'name':userinfo[1],'password':userinfo[2]})
+        return render(request,'accounts/settings.html',{'userid':userid,'role':userinfo[0],'name':userinfo[1],'password':userinfo[2],'usermail':usermail})
 
 

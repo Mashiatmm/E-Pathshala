@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
-{% block title %}Add Content{% endblock %}
+{% block title %}Add Exam{% endblock %}
 {% block body %}
 
-
-<form class="form-settings" action="{% url 'courses:add_exams' course_id topic_id %}" method="POST" >
+{% if examinfo %}
+<form class="form-settings" action="{% url 'courses:add_ques' examinfo.2 %}" method="POST" >
 
   {% csrf_token %}
   <div class="container " style="background-color: #F8F9F9 ;">
@@ -13,7 +13,6 @@
     <div class="alert alert-danger" style="padding-left: 400px;padding-top: 50;">{{error}}</div>
     {% endif %}
 
-    {% if examinfo %}
       <h2 class="text-center">{{examinfo.0}}</h2>
       <h6 class="text-center">{{examinfo.1}}</h6>
 
@@ -24,8 +23,63 @@
         
         </div>
       </div>
+
+      <div class="row pb-3" >
+        <div class="col-md-3">
+          <input class="form-check-input" type="radio" name="Radios" id="Radios1" value="option1" checked>
+          <label for="option1">Option 1 </label> 
+          <input type="text" id="option1" name="option1" class="form-control" required >
         
-    {% else %}
+        </div>
+
+        <div class="col-md-3">
+          <input class="form-check-input" type="radio" name="Radios" id="Radios2" value="option2">
+          <label for="option1">Option 2 </label> 
+          <input type="text" id="option2" name="option2" class="form-control" required >
+        
+        </div>
+
+
+        <div class="col-md-3">
+          <input class="form-check-input" type="radio" name="Radios" id="Radios3" value="option3">
+          <label for="option1">Option 3 </label> 
+          <input type="text" id="option3" name="option3" class="form-control" required >
+        
+        </div>
+
+
+        <div class="col-md-3">
+          <input class="form-check-input" type="radio" name="Radios" id="Radios4" value="option4">
+          <label for="option1">Option 4 </label> 
+          <input type="text" id="option4" name="option4" class="form-control" required >
+        
+        </div>
+
+      </div>
+        
+      <div class="row  pt-3" >
+      
+        <div class="col-md-6" >
+          <button class="btn btn-lg btn-outline-primary btn-block mb-5" type="submit">Add This Question</button> 
+        </div>
+      </div>
+  </div>
+ 
+</form>
+
+{% else %}
+<form class="form-settings" action="{% url 'courses:add_exams' course_id topic_id %}" method="POST" >
+
+  {% csrf_token %}
+  <div class="container " style="background-color: #F8F9F9 ;">
+
+    {% if error %}
+    <div style="padding-top: 50px;"></div>
+    <div class="alert alert-danger" style="padding-left: 400px;padding-top: 50;">{{error}}</div>
+    {% endif %}
+
+    
+    
   
     <div class="row pb-3" >
       <div class="col-md-9">
@@ -43,27 +97,17 @@
       </div>
     </div>
 
-
-    <div class="row pb-3" >
-      <div class="col-md-3">
-        <label for="totalmarks">Total Questions</label> 
-        <input type="number" id="totalmarks" name="totalmarks" class="form-control" placeholder = 0>
-      
-      </div>
-    </div>
-    {% endif %} 
     <div class="row  pt-3" >
       
       <div class="col-md-6" >
         <button class="btn btn-lg btn-outline-primary btn-block mb-5" type="submit">Add Questions</button> 
       </div>
-    </div>
-
-    
+    </div>    
 
   </div>
  
-</form>                          
+</form>
+{% endif %}                           
   
 
 
