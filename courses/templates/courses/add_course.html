@@ -4,7 +4,7 @@
 
 
 
-<form class="form-add_course" action="{% url 'courses:add_course' t_id %}" method="POST" >
+<form class="form-add_course" action="{% url 'courses:add_course'%}" method="POST" >
 
   {% csrf_token %}
   <div class="container " style="background-color: #F8F9F9 ;">

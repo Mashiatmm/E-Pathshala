@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
+
 {% block title %}Profile{% endblock %}
+
+  
 {% block body %}
 
 <div class="container " style="background-color: #F8F9F9 ;">
@@ -17,7 +20,7 @@
 {{name}}
 <br>
 {% if role == 'teacher' %}
-<a href="{% url 'courses:all_courses' t_id  %}">My Courses</a>
+<a href="{% url 'courses:all_courses'%}">My Courses</a>
 <!--id-->
 {% else %}
 <a href="{% url 'courses:all_courses_student' userid %}">My Courses</a>

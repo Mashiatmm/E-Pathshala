@@ -16,6 +16,7 @@
     <link rel="canonical" href="https://getbootstrap.com/docs/4.4/examples/album/">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'open-iconic\font\css\open-iconic-bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css\sidenav.css' %}">
     <!--<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"> -->
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <!-- Favicons -->
@@ -69,16 +70,7 @@
 
               <div class="navbar-nav ml-auto">
 
-                <div class="dropdown">
-                  <button class="btn dropdown-toggle"  id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="oi oi-people"></span>
-                  </button>
-                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="{% url 'accounts:profile' %}">My Profile</a>
-                    <a class="dropdown-item" href="{% url 'accounts:settings' %}">Settings</a>
-                  </div>
-                </div>
-
+                <a class="nav-item nav-link {% block actprofile %}active{% endblock %}" href="{% url 'accounts:profile' %}"> <span class="oi oi-people"></span></a>
                 <a class="nav-item nav-link {% block actlogout %}active{% endblock %}" href="{% url 'accounts:login' %}">Logout</a>
 
               </div>
@@ -109,8 +101,25 @@
        </nav>
         
 </header>
+{%  if userid %}
+
+<div class="sidebar">
+  <a href="{% url 'accounts:profile' %}">Profile</a>
+  {% if role == 'teacher' %}
+    <a href="{% url 'courses:add_course'%}">Add Course</a>
+    <a href="">My Students</a>
+  {% elif role == 'student' %}
+    <a href="">My Courses</a>
+  {% endif %}
+  <a href="">Forum</a>
+  <a href="{% url 'accounts:settings' %}">Settings</a>
+</div>
+
+{% endif %}
 <main>
-<div class="container">
+
+
+<div class="content">
 {% block body %}
 
 {% endblock %}

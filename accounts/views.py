@@ -174,11 +174,11 @@ def profile(request):
         c.execute(statement,{'id':userid})  
         role,= c.fetchone()
         if role=="student":
-            statement="""Select U.ID AS "ID",U.NAME,S.CLASS 
+            statement="""Select U.NAME,S.CLASS 
                         FROM USERS U, STUDENTS S 
                         WHERE S.ID=U.ID AND U.ID=:user_id"""
         else:
-            statement="""Select  U.ID AS "ID",U.NAME,T.Specialty 
+            statement="""Select U.NAME,T.Specialty 
                         FROM USERS U, TEACHERS T
                         WHERE T.ID=U.ID AND U.ID=:user_id"""
 
@@ -186,7 +186,7 @@ def profile(request):
         user,=c.fetchall()
         c.close()
         #print(role,user[0],user[1],user[2],user[3])
-        return render(request,'accounts/profile.html',{'userid':userid,'role':role,'name':user[1],'t_id':user[0]})
+        return render(request,'accounts/profile.html',{'userid':userid,'role':role,'name':user[0]})
     
     else:
         return render(request,'accounts/login.html',{'error': 'Not Logged In'})
@@ -243,7 +243,7 @@ def settings(request):
         c.close()
         connection.commit()
         connection.close()
-        return render(request,'accounts/settings.html',{'error':message,'userid':userid,'name':username,'password':oldpass,'usermail':usermail})
+        return render(request,'accounts/settings.html',{'error':message,'userid':userid,'name':username,'password':oldpass,'usermail':usermail,'role':userinfo[0]})
 
         
     else:
