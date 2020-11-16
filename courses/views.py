@@ -286,3 +286,45 @@ def all_courses_student(request,id):
     connection.close()
     
     return render(request,'courses/all_courses_student.html',{'courses':courses,'userid':userid,'role':'student'})
+
+def course_topics_student(request,course_id):
+    if request.session.has_key('userid'):
+        userid = request.session['userid']
+    else:
+        return render(request,'accounts/login.html',{'error': 'Not Logged In'})
+
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor()  
+    statement= "SELECT ID,TOPIC_TITLE,TOPIC_DESCRIPTION FROM TOPICS WHERE COURSE_ID = :course_id"
+    c.execute(statement,{'course_id':course_id})
+    topics= c.fetchall()
+    c.close()
+    connection.close() 
+
+    return render(request,'courses/course_topics_student.html',{'topics': topics,'course_id':course_id})
+
+
+
+def course_contents_student(request,topic_id):
+    if request.session.has_key('userid'):
+        userid = request.session['userid']
+    else:
+        return render(request,'accounts/login.html',{'error': 'Not Logged In'})
+
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor() 
+
+    statement = "SELECT COURSE_ID FROM TOPICS WHERE ID = :topic_id"
+    c.execute(statement,{'topic_id':topic_id})
+    course_id ,= c.fetchone()
+
+    statement= "SELECT ID,TITLE,DESCRIPTION,CONTENT_TYPE,DURATION FROM CONTENTS WHERE TOPIC_ID = :topic_id order by sl_no"
+    c.execute(statement,{'topic_id':topic_id})
+    contents= c.fetchall() 
+
+    return render(request,'courses/course_contents_student.html',{'contents': contents,'course_id':course_id})
+
+    c.close()
+    connection.close() 
