@@ -3,7 +3,8 @@
 {% block body %}
 
 {% if examinfo %}
-<form class="form-settings" action="{% url 'courses:add_ques' examinfo.2 %}" method="POST" >
+
+<form class="form-settings" name = "addQues" action="{% url 'courses:add_ques' examinfo.2 %}" method="POST" >
 
   {% csrf_token %}
   <div class="container " style="background-color: #F8F9F9 ;">
@@ -60,40 +61,58 @@
       <div class="row  pt-3" >
       
         <div class="col-md-6" >
-          <button class="btn btn-lg btn-outline-primary btn-block mb-5" type="submit">Add This Question</button> 
+          <button class="btn btn-lg btn-outline-primary btn-block mb-5"  type="submit">Add This Question</button> 
         </div>
       </div>
   </div>
  
 </form>
 <ul>
+  <br>
+<h3>Questions</h3>
 {% for ques in ques_list %}
     <div class="row  pt-3" >
         <div class="col-md-12" >
-          <input type="text" id="question" name="question" class="form-control" value = {{ques.0}}>
+          <h6><span class="oi oi-paperclip"></span> {{ques.0}}</h6>
         </div>
     </div>
     <div class="row  pt-3" >
       <div class="col-md-3" >
-        <input type="text" id="ans1" name="ans1" class="form-control" value = {{ques.1}}>
+        <input type="radio" name="optradio"> {{ques.1}}
       </div>
 
       <div class="col-md-3" >
-        <input type="text" id="ans1" name="ans1" class="form-control" value = {{ques.2}}>
+        <input type="radio" name="optradio"> {{ques.2}}
       </div>
 
       <div class="col-md-3" >
-        <input type="text" id="ans1" name="ans1" class="form-control" value = {{ques.3}}>
+        <input type="radio" name="optradio"> {{ques.3}}
       </div>
 
       <div class="col-md-3" >
-        <input type="text" id="ans1" name="ans1" class="form-control" value = {{ques.4}}>
+        <input type="radio" name="optradio"> {{ques.4}}
+      </div>
+    </div>
+    <div class="row  pt-3" >
+      <div class="col-md-12" >
+        Ans : 
+        {% if ques.5 == 'option1' %}
+        {{ques.1}}
+        {% elif ques.5 == 'option2' %}
+        {{ques.2}}
+        {% elif ques.5 == 'option3' %}
+        {{ques.3}}
+        {% else %}
+        {{ques.4}}
+        {% endif %}
       </div>
     </div>
     <div class="row  pt-3" >
       <div class="col-md-3" >
         <a href="" class="btn btn-lg btn-outline-primary btn-block mb-5"><span class="oi oi-pencil"></span> Edit</a>
       </div>
+
+      
        
       <div class="col-md-3" >
         <a href="" class="btn btn-lg btn-outline-primary btn-block mb-5">Delete</a>

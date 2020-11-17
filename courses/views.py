@@ -175,13 +175,15 @@ def add_ques(request,exam_id):
         c.execute(statement,(ques_id,right_option))
         #Handle Multiple values
         connection.commit()
+        return redirect('/courses/add_ques/'+str(exam_id)+'/')
 
     statement = """SELECT Q.QUESTION_DESCRIPTION,Q.OPTION1,Q.OPTION2,Q.OPTION3,Q.OPTION4,A.RIGHT_OPTION
                     FROM QAS Q, QA_ANS A
                     WHERE Q.EXAM_ID = :e AND A.ID = Q.ID
                     ORDER BY Q.ID"""
     c.execute(statement,{'e':exam_id})
-    ques_list = c.fetchall()     
+    ques_list = c.fetchall() 
+    print(ques_list[0])    
     c.close()
     connection.close()
 
