@@ -11,7 +11,7 @@
 <ul>
 {% for course in available_courses %}
 
-    <li><a href="">{{ course.1 }}</a>
+    <li><a href="{% url 'courses:course_topics_student' course.0 %}">{{ course.1 }}</a>
         <form class="form-enroll_course" action="{% url 'courses:enroll_course' %}" method="POST" >
             {% csrf_token %}
             <input type="hidden" id="course_id" value="{{course.0}}" name="course_id" class="form-control" placeholder="Course ID">
