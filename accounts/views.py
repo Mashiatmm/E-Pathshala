@@ -30,7 +30,15 @@ def home(request):
     
     if request.session.has_key('userid'):
         userid = request.session['userid']
-        return render(request,'accounts/home.html',{'userid':userid})
+        dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+        connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    
+        c = connection.cursor()
+        statement = 'select role from USERS where id = :i'
+        c.execute(statement,{'i':userid})
+        role, = c.fetchone()
+        return render(request,'accounts/home.html',{'userid':userid,'role':role})
+
     return render(request,'accounts/home.html')
 
 

@@ -154,44 +154,38 @@ def add_ques(request,exam_id):
     if request.session.has_key('userid') == False:
             return render(request,'accounts/login.html',{'error': 'Not Logged In'})
     userid = request.session['userid']
-    
+    print(request.method)
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
     c = connection.cursor()
     statement = "SELECT TITLE,DESCRIPTION FROM CONTENTS WHERE ID = :i"
     c.execute(statement,{'i':exam_id})
     info, = c.fetchall()
-    print(info)
+    
     examinfo = [info[0],info[1],exam_id]
 
     if request.method == 'POST':
-        answer_options = [request.POST['option1'],request.POST['option2'],request.POST['option3'],request.POST['option4']]
-        right_option = request.POST[request.POST.get('Radios')]
-        print(right_option)
-        statement = "INSERT INTO QAS(EXAM_ID,QUESTION_DESCRIPTION) VALUES(:0,:1)"
-        c.execute(statement,(exam_id,request.POST['questiontitle']))
+        right_option = request.POST.get('Radios')
+        statement = "INSERT INTO QAS(EXAM_ID,QUESTION_DESCRIPTION,OPTION1,OPTION2,OPTION3,OPTION4) VALUES(:0,:1,:2,:3,:4,:5)"
+        c.execute(statement,(exam_id,request.POST['questiontitle'],request.POST['option1'],request.POST['option2'],request.POST['option3'],request.POST['option4']))
         statement = "SELECT seq_ques.currval FROM dual"
         c.execute(statement)
         ques_id, = c.fetchone()
-        right_opt_id = 0
-        statement = "INSERT INTO QA_ANS(QA_ID,ANS_OPTION) VALUES(:0,:1)"
-        for i in range(len(answer_options)):
-            c.execute(statement,(ques_id,answer_options[i]))
-            if right_option == answer_options[i]:
-                right_opt_id = c.execute("SELECT seq_ans.currval FROM dual")
-                right_opt_id, = c.fetchone()
-        
-
-        statement = "UPDATE QAS SET RIGHT_OPTION = :r WHERE ID = :i"
-        c.execute(statement,{'r':right_opt_id,'i':ques_id})
-
-        statement = "SELECT Q.QUESTION_DESCRIPTION,Q.RIGHT_OPTION,"
-
-        c.close()
+        statement = "INSERT INTO QA_ANS(ID,RIGHT_OPTION) VALUES(:0,:1)"
+        c.execute(statement,(ques_id,right_option))
+        #Handle Multiple values
         connection.commit()
-        connection.close()
 
-        return render(request,'courses/add_exam.html',{'userid':userid,'examinfo':examinfo,'role':'teacher'})
+    statement = """SELECT Q.QUESTION_DESCRIPTION,Q.OPTION1,Q.OPTION2,Q.OPTION3,Q.OPTION4,A.RIGHT_OPTION
+                    FROM QAS Q, QA_ANS A
+                    WHERE Q.EXAM_ID = :e AND A.ID = Q.ID
+                    ORDER BY Q.ID"""
+    c.execute(statement,{'e':exam_id})
+    ques_list = c.fetchall()     
+    c.close()
+    connection.close()
+
+    return render(request,'courses/add_exam.html',{'userid':userid,'examinfo':examinfo,'role':'teacher','ques_list':ques_list})
 
 
 def add_content(request,course_id,topic_id):

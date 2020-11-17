@@ -66,6 +66,43 @@
   </div>
  
 </form>
+<ul>
+{% for ques in ques_list %}
+    <div class="row  pt-3" >
+        <div class="col-md-12" >
+          <input type="text" id="question" name="question" class="form-control" value = {{ques.0}}>
+        </div>
+    </div>
+    <div class="row  pt-3" >
+      <div class="col-md-3" >
+        <input type="text" id="ans1" name="ans1" class="form-control" value = {{ques.1}}>
+      </div>
+
+      <div class="col-md-3" >
+        <input type="text" id="ans1" name="ans1" class="form-control" value = {{ques.2}}>
+      </div>
+
+      <div class="col-md-3" >
+        <input type="text" id="ans1" name="ans1" class="form-control" value = {{ques.3}}>
+      </div>
+
+      <div class="col-md-3" >
+        <input type="text" id="ans1" name="ans1" class="form-control" value = {{ques.4}}>
+      </div>
+    </div>
+    <div class="row  pt-3" >
+      <div class="col-md-3" >
+        <a href="" class="btn btn-lg btn-outline-primary btn-block mb-5"><span class="oi oi-pencil"></span> Edit</a>
+      </div>
+       
+      <div class="col-md-3" >
+        <a href="" class="btn btn-lg btn-outline-primary btn-block mb-5">Delete</a>
+      </div>
+    </div>
+ 
+       
+{% endfor %}
+</ul>
 
 {% else %}
 <form class="form-settings" action="{% url 'courses:add_exams' course_id topic_id %}" method="POST" >
