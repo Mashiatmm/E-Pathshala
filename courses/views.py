@@ -177,18 +177,30 @@ def add_ques(request,exam_id):
         connection.commit()
         return redirect('/courses/add_ques/'+str(exam_id)+'/')
 
-    statement = """SELECT Q.QUESTION_DESCRIPTION,Q.OPTION1,Q.OPTION2,Q.OPTION3,Q.OPTION4,A.RIGHT_OPTION
+    statement = """SELECT Q.QUESTION_DESCRIPTION,Q.OPTION1,Q.OPTION2,Q.OPTION3,Q.OPTION4,A.RIGHT_OPTION,Q.ID
                     FROM QAS Q, QA_ANS A
                     WHERE Q.EXAM_ID = :e AND A.ID = Q.ID
                     ORDER BY Q.ID"""
     c.execute(statement,{'e':exam_id})
-    ques_list = c.fetchall() 
-    print(ques_list[0])    
+    ques_list = c.fetchall()     
     c.close()
     connection.close()
 
     return render(request,'courses/add_exam.html',{'userid':userid,'examinfo':examinfo,'role':'teacher','ques_list':ques_list})
 
+
+def del_ques(request,exam_id,ques_id):
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor()
+
+    statement = "DELETE FROM QAS WHERE ID = :i"
+    c.execute(statement,{'i':ques_id})
+    c.close()
+    connection.commit()
+    connection.close()
+    return redirect('/courses/add_ques/'+str(exam_id)+'/')
+    
 
 def add_content(request,course_id,topic_id):
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
