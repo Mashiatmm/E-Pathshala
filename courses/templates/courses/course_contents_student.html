@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Contents of {{courseNtopic.1}} : {{courseNtopic.2}}{% endblock %}
+{% block body %}
+
+
+<h1>Contents of {{courseNtopic.1}} : Topic - {{courseNtopic.2}}</h1>
+{% if enroll_record == None %}
+<ul>
+{% for content in contents %}
+
+    <li><a href="">{{ content.1 }} ({{ content.3 }}) : {{content.2}}</a></li>
+
+{% endfor %}
+</ul>
+<form class="form-enroll_course" action="{% url 'courses:enroll_course' %}" method="POST" >
+    {% csrf_token %}
+    <input type="hidden" id="course_id" value="{{courseNtopic.0}}" name="course_id" class="form-control" placeholder="Course ID">
+    <button class="btn btn-lg btn-outline-primary btn-block mb-5" type="submit">Add The Course !</button> 
+</form>
+{% else %}
+<ul>
+    {% for content in contents %}
+        {% if content.3 == "video" %}
+        <li><a href="http://youtube.com">{{ content.1 }} ({{ content.3 }}) : {{content.2}}</a></li>
+        {% else %}
+        <li><a href="">{{ content.1 }} ({{ content.3 }}) : {{content.2}}</a></li>
+        {% endif %}
+    {% endfor %}
+    </ul>
+{% endif %}
+
+{% endblock %} 

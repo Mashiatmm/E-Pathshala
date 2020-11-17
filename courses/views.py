@@ -216,7 +216,7 @@ def add_content(request,course_id,topic_id):
     connection.commit()
     connection.close()
     
-    return redirect('/courses/course_contents/'+str(course_id)+'/')
+    return redirect('/courses/course_contents/teacher/'+str(course_id)+'/')
     
       
 def enroll_course(request):
@@ -262,3 +262,61 @@ def all_courses_student(request,id):
     connection.close()
     
     return render(request,'courses/all_courses_student.html',{'courses':courses,'userid':userid,'role':'student'})
+
+def course_topics_student(request,course_id):
+    if request.session.has_key('userid'):
+        userid = request.session['userid']
+    else:
+        return render(request,'accounts/login.html',{'error': 'Not Logged In'})
+
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor()  
+
+    statement= "SELECT ID,NAME FROM COURSES WHERE ID = :course_id"
+    c.execute(statement,{'course_id':course_id})
+    course = c.fetchone()
+
+    statement = "SELECT * FROM ENROLL WHERE ST_ID = :userid AND COURSE_ID = :course_id"
+    c.execute(statement,{'userid':userid,'course_id':course_id})
+    enroll_record = c.fetchone()   
+    
+
+    statement= "SELECT ID,TOPIC_TITLE,TOPIC_DESCRIPTION FROM TOPICS WHERE COURSE_ID = :course_id"
+    c.execute(statement,{'course_id':course_id})
+    topics= c.fetchall()
+    c.close()
+    connection.close() 
+
+    return render(request,'courses/course_topics_student.html',{'userid':userid,'topics': topics,'course':course,'enroll_record':enroll_record})
+
+
+
+def course_contents_student(request,topic_id):
+    if request.session.has_key('userid'):
+        userid = request.session['userid']
+    else:
+        return render(request,'accounts/login.html',{'error': 'Not Logged In'})
+
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor() 
+
+    statement = "SELECT T.COURSE_ID,C.NAME,T.TOPIC_TITLE FROM TOPICS T,COURSES C WHERE T.COURSE_ID = C.ID AND T.ID = :topic_id"
+    c.execute(statement,{'topic_id':topic_id})
+    courseNtopic = c.fetchone()#stores info about the topic and course
+
+    statement = "SELECT * FROM ENROLL WHERE ST_ID = :userid AND COURSE_ID = :course_id"
+    c.execute(statement,{'userid':userid,'course_id':courseNtopic[0]})
+    enroll_record = c.fetchone()
+
+
+
+
+    statement= "SELECT ID,TITLE,DESCRIPTION,CONTENT_TYPE,DURATION FROM CONTENTS WHERE TOPIC_ID = :topic_id order by sl_no"
+    c.execute(statement,{'topic_id':topic_id})
+    contents= c.fetchall() 
+    c.close()
+    connection.close() 
+    return render(request,'courses/course_contents_student.html',{'userid':userid,'contents': contents,'courseNtopic':courseNtopic,'enroll_record':enroll_record})
+

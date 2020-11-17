@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Topics of {{course.1}}{% endblock %}
+{% block body %}
+
+
+
+
+
+<h1>Topics of {{course.1}}</h1>
+<ul>
+{% for topic in topics %}
+
+    <li><a href="{% url 'courses:course_contents_student' topic.0 %}">{{ topic.1 }} : {{topic.2}}</a></li>
+
+{% endfor %}
+</ul>
+{% if enroll_record == None %}
+<form class="form-enroll_course" action="{% url 'courses:enroll_course' %}" method="POST" >
+    {% csrf_token %}
+    <input type="hidden" id="course_id" value="{{course.0}}" name="course_id" class="form-control" placeholder="Course ID">
+    <button class="btn btn-lg btn-outline-primary btn-block mb-5" type="submit">Add The Course !</button> 
+</form>
+{% endif %}
+{% endblock %} 
