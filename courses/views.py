@@ -200,6 +200,25 @@ def del_ques(request,exam_id,ques_id):
     connection.commit()
     connection.close()
     return redirect('/courses/add_ques/'+str(exam_id)+'/')
+
+def edit_ques(request,exam_id,ques_id):
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor()
+
+    statement = """UPDATE QAS
+                   SET QUESTION_DESCRIPTION = :d,OPTION1 = :o1,OPTION2 = :o2,OPTION3 = :o3,OPTION4 = :o4 
+                   WHERE ID = :i"""
+    c.execute(statement,{'d':request.POST['questitle'],'o1':request.POST['option1'],'o2':request.POST['option2'],'o3':request.POST['option3'],'o4':request.POST['option4'],'i':ques_id})
+    
+    statement = """UPDATE QA_ANS
+                   SET RIGHT_OPTION = :r 
+                   WHERE ID = :i"""
+    c.execute(statement,{'i':ques_id,'r':request.POST.get('Radios')})
+    connection.commit()
+    c.close()
+    connection.close()
+    return redirect('/courses/add_ques/'+str(exam_id)+'/')
     
 
 def add_content(request,course_id,topic_id):
@@ -333,4 +352,6 @@ def course_contents_student(request,topic_id):
     c.close()
     connection.close() 
     return render(request,'courses/course_contents_student.html',{'userid':userid,'contents': contents,'courseNtopic':courseNtopic,'enroll_record':enroll_record})
+
+
 

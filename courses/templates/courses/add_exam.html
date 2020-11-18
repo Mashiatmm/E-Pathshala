@@ -69,83 +69,100 @@
 </form>
 <ul>
   <br>
+
+  
 <h3>Questions</h3>
 {% for ques in ques_list %}
-    <div class="row  pt-3" >
-        <div class="col-md-12" >
-          <h6><span class="oi oi-paperclip"></span> {{ques.0}}</h6>
-        </div>
+<div class="modal fade" id="modalSubscriptionForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header text-center">
+              
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+          </div>
+          <div class="modal-body mx-3">
+              <h5 class="modal-title w-100 font-weight-bold"  style="text-align:center">Delete this question permanently?</h5>
+              <form class="form-settings" action="{% url 'courses:del_ques' examinfo.2 ques.6 %}" method="POST">
+              {% csrf_token %}
+              
+              
+              <div class="modal-footer d-flex justify-content-center">
+                  <button class="btn btn-info btn-sm" type="submit">Confirm</button> 
+                  
+              </div>
+            </form>
+
+          </div>
+          
+      </div>
+  
+  </div>
+</div>  
+<form class="form-settings" action="{% url 'courses:edit_ques' examinfo.2 ques.6  %}" method="POST" >
+
+  {% csrf_token %}
+  <div class="card-body tab-content" style="background-color: #F8F9F9 ;">
+
+    <div class="row pb-1" >
+      <div class="col-md-9">
+        <input type="text" id="questitle" name="questitle" class="form-control" value = '{{ques.0}}'>
+      </div>
+
+      <div class="float-right" >
+        <span class="align-right"><a href="" class="btn btn-lg btn-outline-primary btn-default mb-5" data-toggle="modal" data-target="#modalSubscriptionForm">Delete</a></span>
+      </div>
     </div>
-    <div class="row  pt-3" >
-      <div class="col-md-3" >
-        <input type="radio" name="optradio"> {{ques.1}}
-      </div>
-
-      <div class="col-md-3" >
-        <input type="radio" name="optradio"> {{ques.2}}
-      </div>
-
-      <div class="col-md-3" >
-        <input type="radio" name="optradio"> {{ques.3}}
-      </div>
-
-      <div class="col-md-3" >
-        <input type="radio" name="optradio"> {{ques.4}}
-      </div>
-    </div>
-    <div class="row  pt-3" >
-      <div class="col-md-12" >
-        Ans : 
+   
+    
+    <div class="row pb-3" >
+      <div class="col-md-3">
         {% if ques.5 == 'option1' %}
-        {{ques.1}}
-        {% elif ques.5 == 'option2' %}
-        {{ques.2}}
-        {% elif ques.5 == 'option3' %}
-        {{ques.3}}
+        <input class="form-check-input" type="radio" name="Radios" id="Radios1" value="option1" checked>
         {% else %}
-        {{ques.4}}
+          <input class="form-check-input" type="radio" name="Radios" id="Radios1" value="option1">
         {% endif %}
+        <input type="text" id="option1" name="option1" class="form-control" value = '{{ques.1}}'>
       </div>
-    </div>
+
+      <div class="col-md-3">
+        {% if ques.5 == 'option2' %}
+          <input class="form-check-input" type="radio" name="Radios" id="Radios2" value="option2" checked>
+        {% else %}
+          <input class="form-check-input" type="radio" name="Radios" id="Radios2" value="option2">
+        {% endif %}
+        <input type="text" id="option2" name="option2" class="form-control" value = '{{ques.2}}'>
+      </div>
+
+      <div class="col-md-3">
+        {% if ques.5 == 'option3' %}
+        <input class="form-check-input" type="radio" name="Radios" id="Radios3" value="option3" checked>
+        {% else %}
+        <input class="form-check-input" type="radio" name="Radios" id="Radios3" value="option3">
+        {% endif %}
+        <input type="text" id="option3" name="option3" class="form-control" value = '{{ques.3}}'>
+      </div>
+
+      <div class="col-md-3">
+        {% if ques.5 == 'option4' %}
+        <input class="form-check-input" type="radio" name="Radios" id="Radios4" value="option4" checked>
+        {% else %}
+        <input class="form-check-input" type="radio" name="Radios" id="Radios4" value="option4">
+        {% endif %}
+        <input type="text" id="option4" name="option4" class="form-control" value = '{{ques.4}}'>
+      </div>
+    </div>    
+    
     <div class="row  pt-3" >
-      <div class="col-md-3" >
-        <a href="" class="btn btn-lg btn-outline-primary btn-block mb-5"><span class="oi oi-pencil"></span> Edit</a>
-      </div>
-
-      <div class="modal fade" id="modalSubscriptionForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header text-center">
-                    
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                </div>
-                <div class="modal-body mx-3">
-                    <h5 class="modal-title w-100 font-weight-bold"  style="text-align:center">Delete this question permanently?</h5>
-                    <form class="form-settings" action="{% url 'courses:del_ques' examinfo.2 ques.6 %}" method="POST">
-                    {% csrf_token %}
-                    
-                    
-                    <div class="modal-footer d-flex justify-content-center">
-                        <button class="btn btn-info btn-sm" type="submit">Confirm</button> 
-                        
-                    </div>
-                  </form>
-
-                </div>
-                
-            </div>
-        
-        </div>
-    </div>
-       
-      <div class="col-md-3" >
-        <a href="" class="btn btn-lg btn-outline-primary btn-block mb-5" data-toggle="modal" data-target="#modalSubscriptionForm">Delete</a>
+      <div class="col-md-6" >
+        <button class="btn btn-lg btn-outline-primary btn-default mb-5" type="submit"><span class="oi oi-pencil"></span> Edit</button> 
       </div>
     </div>
+
+  </div>
  
-       
+</form>            
 {% endfor %}
 </ul>
 
