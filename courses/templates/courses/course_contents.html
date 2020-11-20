@@ -45,15 +45,15 @@
    
 </form>       
 
-<h3>Topics</h3><br>
+<h3 style="color:#cf3046">Topics</h3><br>
 <ul>
     
 {% for topic in topics %}
     <div class="row  pt-3" >
         
-        <div class="col-md-6" >
+        <div class="col-md-6"  onclick="window.location='{% url 'courses:topic_details' topic.0 %}';" style="cursor:pointer;">
             <div class="row  pt-2" >
-                <h4>{{topic.1}}</h4>
+                <h4 style="color:#069">{{topic.1}}</h4>
             </div>
             
             <div class="row  pt-2" >
