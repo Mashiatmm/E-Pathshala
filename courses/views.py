@@ -388,9 +388,50 @@ def course_contents_student(request,topic_id):
     statement= "SELECT ID,TITLE,DESCRIPTION,CONTENT_TYPE,DURATION FROM CONTENTS WHERE TOPIC_ID = :topic_id order by sl_no"
     c.execute(statement,{'topic_id':topic_id})
     contents= c.fetchall() 
+    print(contents)
     c.close()
     connection.close() 
-    return render(request,'courses/course_contents_student.html',{'userid':userid,'contents': contents,'courseNtopic':courseNtopic,'enroll_record':enroll_record})
+    return render(request,'courses/course_contents_student.html',{'userid':userid,'contents':contents,'courseNtopic':courseNtopic,'enroll_record':enroll_record})
+
+def show_video(request,content_id):
+    if request.session.has_key('userid'):
+        userid = request.session['userid']
+    else:
+        return render(request,'accounts/login.html',{'error': 'Not Logged In'})
+
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor() 
+
+    statement="SELECT C.TOPIC_ID,C.TITLE,V.LINK FROM VIDEOS V,CONTENTS C WHERE V.ID = C.ID AND V.ID= :content_id"
+    c.execute(statement,{'content_id':content_id})
+    video = c.fetchone()
+    c.close()
+    connection.close() 
+    return render(request,'contents/show_video.html',{'userid':userid,'video': video,'content_id':content_id})
+
+
+def give_exam(request,content_id):
+    if request.session.has_key('userid'):
+        userid = request.session['userid']
+    else:
+        return render(request,'accounts/login.html',{'error': 'Not Logged In'})
+
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor() 
+
+    statement="SELECT C.TOPIC_ID,C.TITLE,E.TOTAL_MARKS FROM EXAMS E,CONTENTS C WHERE E.ID = C.ID AND E.ID= :content_id"
+    c.execute(statement,{'content_id':content_id})
+    exam = c.fetchone()
+
+    statement="SELECT ID,QUESTION_DESCRIPTION,OPTION1,OPTION2,OPTION3,OPTION4 FROM QAS WHERE EXAM_ID = :content_id"
+    c.execute(statement,{'content_id':content_id})
+    questions= c.fetchall()
+    print(questions)
+    c.close()
+    connection.close() 
+    return render(request,'contents/give_exam.html',{'userid':userid,'content_id':content_id,'exam': exam,'questions':questions})
 
 
 

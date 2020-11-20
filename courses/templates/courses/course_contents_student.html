@@ -21,9 +21,10 @@
 <ul>
     {% for content in contents %}
         {% if content.3 == "video" %}
-        <li><a href="http://youtube.com">{{ content.1 }} ({{ content.3 }}) : {{content.2}}</a></li>
+        <li><a href="{% url 'courses:show_video' content.0 %}">{{ content.1 }} ({{ content.3 }}) : {{content.2}}</a>
+        </li>
         {% else %}
-        <li><a href="">{{ content.1 }} ({{ content.3 }}) : {{content.2}}</a></li>
+        <li><a href="{% url 'courses:give_exam' content.0%}">{{ content.1 }} ({{ content.3 }}) : {{content.2}}</a></li>
         {% endif %}
     {% endfor %}
     </ul>
