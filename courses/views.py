@@ -75,7 +75,7 @@ def course_contents(request,course_id):
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
     c = connection.cursor()
-
+    print(request.method)
     if request.method == 'POST':
         
         try:   
@@ -91,11 +91,10 @@ def course_contents(request,course_id):
     statement = "select name,class from Courses where id = :id "
     c.execute(statement,{'id':course_id})
     courseinfo, = c.fetchall()
-   
-    statement = """SELECT T.ID,T.TOPIC_TITLE,COUNT(C.ID)
+    #WRITE FUNCTION TO RETURN CONTENT NUMBERS
+    statement = """SELECT T.ID,T.TOPIC_TITLE,T.TOPIC_DESCRIPTION
                     FROM TOPICS T, CONTENTS C
-                    WHERE T.COURSE_ID = :course_id AND C.TOPIC_ID(+) = T.ID
-                    GROUP BY(T.ID,T.TOPIC_TITLE)"""
+                    WHERE T.COURSE_ID = :course_id AND C.TOPIC_ID(+) = T.ID"""
     c.execute(statement,{'course_id':course_id})
     topics = c.fetchall()
     print(topics)
@@ -107,6 +106,134 @@ def course_contents(request,course_id):
     else:
         return render(request,'courses/course_contents.html',{'course_id':course_id,'courseinfo':courseinfo,'topics':topics,'userid':userid,'error':error,'role':'teacher'})
 
+
+def del_topic(request,course_id,topic_id):
+    '''
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor()
+
+    statement = "DELETE FROM TOPICS WHERE ID = :i"
+    c.execute(statement,{'i':topic_id})
+    c.close()
+    connection.commit()
+    connection.close()
+    
+    print(request.method)
+    '''
+    return redirect('/courses/course_contents/teacher/'+str(course_id)+'/')
+
+def topic_details(request,topic_id):
+    if request.session.has_key('userid') == False:
+            return render(request,'accounts/login.html',{'error': 'Not Logged In'})
+    userid = request.session['userid']
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor()
+
+    statement = """SELECT C.SL_NO,C.TITLE,C.DESCRIPTION,C.CONTENT_TYPE,E.TOTAL_MARKS,V.LINK,C.DURATION,C.ID
+                    FROM CONTENTS C, EXAMS E, VIDEOS V
+                    WHERE C.TOPIC_ID = :t AND C.ID = E.ID(+) AND C.ID = V.ID(+)
+                    ORDER BY C.SL_NO"""
+    c.execute(statement,{'t':topic_id})
+    contents = c.fetchall()
+
+    statement = """SELECT T.ID,T.TOPIC_TITLE,T.TOPIC_DESCRIPTION,C.NAME,C.CLASS,C.ID 
+                FROM TOPICS T,COURSES C
+                WHERE T.COURSE_ID = C.ID AND T.ID = :t"""
+    c.execute(statement,{'t':topic_id})
+    topic_details = c.fetchone()
+
+    if request.session.has_key('error'):
+        error = request.session['error']
+        print(error)
+        del request.session['error']
+        return render(request,'courses/topic.html',{'contents':contents,'topic_details':topic_details,'userid':userid,'role':'teacher','error':error})
+    return render(request,'courses/topic.html',{'contents':contents,'topic_details':topic_details,'userid':userid,'role':'teacher'})
+
+
+def update_topic(request,topic_id):
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor()
+
+    statement = """UPDATE TOPICS
+                   SET TOPIC_TITLE = :T,TOPIC_DESCRIPTION = :D
+                   WHERE ID = :i"""
+    c.execute(statement,{'T':request.POST['title'],'D':request.POST['Description'],'i':topic_id})
+    
+    connection.commit()
+    c.close()
+    connection.close()
+    return redirect('/courses/topic_details/'+str(topic_id)+'/')
+
+
+def modify_content(request,topic_id,content_type,content_id):
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor()
+    statement = """UPDATE CONTENTS
+                    SET TITLE = :t, DESCRIPTION = :d
+                    WHERE ID = :i""" 
+    c.execute(statement,{'i':content_id,'t':request.POST['title'],'d':request.POST['description']})
+    connection.commit()
+    if content_type == 'exam':
+        c.close()
+        connection.close()
+        return redirect('/courses/add_ques/'+str(content_id)+'/')
+    else:
+        statement = """UPDATE VIDEOS
+                    SET LINK = :l 
+                    WHERE ID = :i""" 
+        c.execute(statement,{'i':content_id,'l':request.POST['videourl']})
+        connection.commit()
+        c.close()
+        connection.close()
+        return redirect('/courses/topic_details/'+str(topic_id)+'/')
+
+def del_content(request,topic_id,content_id):
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor()
+
+    statement = "DELETE FROM CONTENTS WHERE ID = :i"
+    c.execute(statement,{'i':content_id})
+    c.close()
+    connection.commit()
+    connection.close()
+    return redirect('/courses/topic_details/'+str(topic_id)+'/')
+
+
+def add_content(request,course_id,topic_id):#add video
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor()
+
+    if request.method == 'POST':
+        
+        try:
+            statement = """INSERT INTO CONTENTS(TOPIC_ID,ID,SL_NO,TITLE,DESCRIPTION,CONTENT_TYPE)
+                         VALUES(:0,0,0,:1,:2,'video')"""
+            c.execute(statement,(topic_id,request.POST['videotitle'],request.POST['Description']))
+            statement = "SELECT seq_content.currval FROM dual"
+            c.execute(statement)
+            content_id, = c.fetchone()
+            print(content_id)
+            statement = "INSERT INTO VIDEOS VALUES(:0,:1)"
+            c.execute(statement,(content_id,request.POST['videourl']))
+        except Exception as e:
+            error = "Same video/ title exists "
+            print(e)
+            request.session['error'] = error
+            return redirect('/courses/topic_details/'+str(topic_id)+'/')
+
+
+
+    c.close()
+    connection.commit()
+    connection.close()
+    
+    return redirect('/courses/topic_details/'+str(topic_id)+'/')
 
 def add_exams(request,course_id,topic_id):
     
@@ -221,75 +348,6 @@ def edit_ques(request,exam_id,ques_id):
     return redirect('/courses/add_ques/'+str(exam_id)+'/')
     
 
-def add_content(request,course_id,topic_id):
-    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
-    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
-    c = connection.cursor()
-
-    if request.method == 'POST':
-        
-        try:
-            statement = """INSERT INTO CONTENTS(TOPIC_ID,ID,SL_NO,TITLE,DESCRIPTION,CONTENT_TYPE)
-                         VALUES(:0,0,0,:1,:2,'video')"""
-            c.execute(statement,(topic_id,request.POST['videotitle'],request.POST['Description']))
-            statement = "SELECT seq_content.currval FROM dual"
-            c.execute(statement)
-            content_id, = c.fetchone()
-            print(content_id)
-            statement = "INSERT INTO VIDEOS VALUES(:0,:1)"
-            c.execute(statement,(content_id,request.POST['videourl']))
-        except Exception as e:
-            error = "Same video/ title exists "
-            print(e)
-            #PROBLEM HERE
-            #show message
-            #return render(request,)
-
-
-
-    c.close()
-    connection.commit()
-    connection.close()
-    
-    return redirect('/courses/topic_details/'+str(topic_id)+'/')
-    
-def topic_details(request,topic_id):
-    if request.session.has_key('userid') == False:
-            return render(request,'accounts/login.html',{'error': 'Not Logged In'})
-    userid = request.session['userid']
-    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
-    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
-    c = connection.cursor()
-
-    statement = """SELECT C.SL_NO,C.TITLE,C.DESCRIPTION,C.CONTENT_TYPE,E.TOTAL_MARKS,V.LINK,C.DURATION
-                    FROM CONTENTS C, EXAMS E, VIDEOS V
-                    WHERE C.TOPIC_ID = :t AND C.ID = E.ID(+) AND C.ID = V.ID(+)
-                    ORDER BY C.SL_NO"""
-    c.execute(statement,{'t':topic_id})
-    contents = c.fetchall()
-
-    statement = """SELECT T.ID,T.TOPIC_TITLE,T.TOPIC_DESCRIPTION,C.NAME,C.CLASS,C.ID 
-                FROM TOPICS T,COURSES C
-                WHERE T.COURSE_ID = C.ID AND T.ID = :t"""
-    c.execute(statement,{'t':topic_id})
-    topic_details = c.fetchone()
-    return render(request,'courses/topic.html',{'contents':contents,'topic_details':topic_details,'userid':userid,'role':'teacher'})
-
-
-def update_topic(request,topic_id):
-    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
-    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
-    c = connection.cursor()
-
-    statement = """UPDATE TOPICS
-                   SET TOPIC_TITLE = :T,TOPIC_DESCRIPTION = :D
-                   WHERE ID = :i"""
-    c.execute(statement,{'T':request.POST['title'],'D':request.POST['Description'],'i':topic_id})
-    
-    connection.commit()
-    c.close()
-    connection.close()
-    return redirect('/courses/topic_details/'+str(topic_id)+'/')
 
 def enroll_course(request):
     if request.session.has_key('userid'):
