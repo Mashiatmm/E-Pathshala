@@ -19,6 +19,6 @@ urlpatterns = [
         path('course_contents/student/<int:topic_id>',views.course_contents_student,name='course_contents_student'),
         path('course_topics/student/<int:course_id>',views.course_topics_student,name='course_topics_student'),
         path('course_contents/video/<int:content_id>',views.show_video,name='show_video'),
-        path('course_contents/exam',views.give_exam,name='give_exam'),
+        path('course_contents/exam/<int:content_id>',views.give_exam,name='give_exam'),
 
 ]
