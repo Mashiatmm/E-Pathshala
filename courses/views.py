@@ -477,17 +477,54 @@ def give_exam(request,content_id):
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
     c = connection.cursor() 
 
+    if request.method == 'POST':
+        statement="SELECT Q.ID,A.RIGHT_OPTION FROM QAS Q,QA_ANS A WHERE Q.EXAM_ID = :content_id AND A.ID=Q.ID ORDER BY Q.ID"
+        c.execute(statement,{'content_id':content_id})
+        questions= c.fetchall()
+        marks=0
+
+        for question in questions:
+            if request.POST.get('q'+str(question[0])) == question[1]:
+                marks=marks+1
+        statement="INSERT INTO GIVE_EXAM VALUES(:0,:1,:2)"
+        c.execute(statement,(content_id,userid,marks))
+        connection.commit()
+
+
+
+        statement="SELECT T.ID FROM CONTENTS C,TOPICS T WHERE C.TOPIC_ID = T.ID AND C.ID = :content_id"
+        c.execute(statement,{'content_id':content_id})
+        topic_id,= c.fetchone()
+            
+        c.close()
+        connection.close() 
+        return redirect('/courses/course_contents/student/'+str(topic_id))
+        
+
     statement="SELECT C.TOPIC_ID,C.TITLE,E.TOTAL_MARKS FROM EXAMS E,CONTENTS C WHERE E.ID = C.ID AND E.ID= :content_id"
     c.execute(statement,{'content_id':content_id})
     exam = c.fetchone()
 
-    statement="SELECT ID,QUESTION_DESCRIPTION,OPTION1,OPTION2,OPTION3,OPTION4 FROM QAS WHERE EXAM_ID = :content_id"
+    statement="SELECT ID,QUESTION_DESCRIPTION,OPTION1,OPTION2,OPTION3,OPTION4 FROM QAS WHERE EXAM_ID = :content_id ORDER BY ID"
     c.execute(statement,{'content_id':content_id})
     questions= c.fetchall()
-    print(questions)
+    
+    statement="SELECT EXAM_ID FROM GIVE_EXAM WHERE EXAM_ID = :content_id AND ST_ID = :userid"
+    c.execute(statement,{'content_id':content_id,'userid':userid})
+    entry = c.fetchone()
+
+    
+ 
+
+    if entry == None:
+        c.close()
+        connection.close() 
+        return render(request,'contents/give_exam.html',{'userid':userid,'content_id':content_id,'exam': exam,'questions':questions})
+
     c.close()
-    connection.close() 
-    return render(request,'contents/give_exam.html',{'userid':userid,'content_id':content_id,'exam': exam,'questions':questions})
+    connection.close()
+    return render(request,'contents/give_exam.html',{'userid':userid,'content_id':content_id,'exam': exam,'questions':questions,'error':'You gave the exam already'})
+    
 
 
 
