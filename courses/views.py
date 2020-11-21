@@ -461,7 +461,7 @@ def show_video(request,content_id):
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
     c = connection.cursor() 
 
-    statement="SELECT C.TOPIC_ID,C.TITLE,V.LINK FROM VIDEOS V,CONTENTS C WHERE V.ID = C.ID AND V.ID= :content_id"
+    statement="SELECT CRS.NAME,T.TOPIC_TITLE,C.TITLE,C.DESCRIPTION,V.LINK FROM VIDEOS V,CONTENTS C,TOPICS T, COURSES CRS WHERE V.ID = C.ID AND C.TOPIC_ID=T.ID AND T.COURSE_ID = CRS.ID AND V.ID= :content_id"
     c.execute(statement,{'content_id':content_id})
     video = c.fetchone()
     c.close()
