@@ -486,7 +486,7 @@ def give_exam(request,content_id):
         for question in questions:
             if request.POST.get('q'+str(question[0])) == question[1]:
                 marks=marks+1
-        statement="INSERT INTO GIVE_EXAM VALUES(:0,:1,:2)"
+        statement="INSERT INTO COMPLETED_CONTENT VALUES(:0,:1,:2)"
         c.execute(statement,(content_id,userid,marks))
         connection.commit()
 
@@ -500,6 +500,9 @@ def give_exam(request,content_id):
         connection.close() 
         return redirect('/courses/course_contents/student/'+str(topic_id))
         
+    statement="SELECT CONTENT_ID FROM COMPLETED_CONTENT WHERE CONTENT_ID = :content_id AND ST_ID = :userid"
+    c.execute(statement,{'content_id':content_id,'userid':userid})
+    entry = c.fetchone()
 
     statement="SELECT C.TOPIC_ID,C.TITLE,E.TOTAL_MARKS FROM EXAMS E,CONTENTS C WHERE E.ID = C.ID AND E.ID= :content_id"
     c.execute(statement,{'content_id':content_id})
@@ -509,9 +512,6 @@ def give_exam(request,content_id):
     c.execute(statement,{'content_id':content_id})
     questions= c.fetchall()
     
-    statement="SELECT EXAM_ID FROM GIVE_EXAM WHERE EXAM_ID = :content_id AND ST_ID = :userid"
-    c.execute(statement,{'content_id':content_id,'userid':userid})
-    entry = c.fetchone()
 
     
  
@@ -523,7 +523,7 @@ def give_exam(request,content_id):
 
     c.close()
     connection.close()
-    return render(request,'contents/give_exam.html',{'userid':userid,'content_id':content_id,'exam': exam,'questions':questions,'error':'You gave the exam already'})
+    return render(request,'contents/give_exam.html',{'userid':userid,'content_id':content_id,'exam': exam,'questions':questions,'error':'You have already given the exam ! '})
     
 
 
