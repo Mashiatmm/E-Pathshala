@@ -191,7 +191,7 @@ def profile(request):
                         WHERE T.ID=U.ID AND U.ID=:user_id"""
             c.execute(statement,{'user_id': userid})
             user,=c.fetchall()
-            statement="select id,name,class from courses where id in (select course_id from take_course where teacher_id =: t_id) "
+            statement="select id,name,class,creation_time,course_description from courses where id in (select course_id from take_course where teacher_id =: t_id) "
             c.execute(statement,{'t_id':userid})
             courses=c.fetchall()
             return render(request,'accounts/profile.html',{'userid':userid,'role':role,'name':user[0],'courses':courses})

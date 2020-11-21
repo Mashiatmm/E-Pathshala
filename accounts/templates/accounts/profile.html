@@ -14,18 +14,42 @@
     
 </div>
 
-{{role}}
+<h2 class="text-center">{{name}}</h2>
+<h4 class="text-center">{{role}}</h4>
 
-<br>
-{{name}}
-<br>
 {% if role == 'teacher' %}
     <h1>Courses</h1>
-    <a href="{% url 'courses:add_course'%}">Add Course</a>
+    <a href="{% url 'courses:add_course'%}" class = "btn btn-lg btn-outline-primary btn-lg">Add Course</a>
     <ul>
     {% for course in courses %}
+    <div class="row  pt-3  mydiv " >
+        
+        <div class="col-md-12"  onclick="window.location='{% url 'courses:course_contents' course.0 %}';" style="cursor:pointer;">
+            <div class="row  pt-2" >
+                <div class="col-4">
+                    <h4 style="color:#069">{{course.1}}</h4>
+                </div>
+            </div>
+            
+            <div class="row  pt-1" >
+                <div class="col-4">
+                    <h6>Class {{ course.2 }}</h6>
+                </div>
+                <div class="col-4 text-right">
+                    <h6><span class="oi oi-clock"></span> {{ course.3 }}</h6>
+                </div>
+              
+            </div>
+            
+              <div class="row  pt-3" >
+                {{courses.4}}
+              </div>
+            
+        </div>
 
-        <li><a href="{% url 'courses:course_contents' course.0 %}">{{ course.1 }} Class {{course.2}}</a></li>
+           
+    </div>
+
 
     {% endfor %}
     </ul>
