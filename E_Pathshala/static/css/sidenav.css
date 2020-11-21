@@ -54,3 +54,7 @@
       float: none;
     }
   }
+
+  p.uppercase {
+    text-transform: uppercase;
+  }

@@ -93,8 +93,8 @@ def course_contents(request,course_id):
     courseinfo, = c.fetchall()
     #WRITE FUNCTION TO RETURN CONTENT NUMBERS
     statement = """SELECT T.ID,T.TOPIC_TITLE,T.TOPIC_DESCRIPTION
-                    FROM TOPICS T, CONTENTS C
-                    WHERE T.COURSE_ID = :course_id AND C.TOPIC_ID(+) = T.ID"""
+                    FROM TOPICS T
+                    WHERE T.COURSE_ID = :course_id"""
     c.execute(statement,{'course_id':course_id})
     topics = c.fetchall()
     print(topics)
@@ -108,7 +108,7 @@ def course_contents(request,course_id):
 
 
 def del_topic(request,course_id,topic_id):
-    '''
+    print(topic_id)
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
     c = connection.cursor()
@@ -118,9 +118,8 @@ def del_topic(request,course_id,topic_id):
     c.close()
     connection.commit()
     connection.close()
+    print("delete")
     
-    print(request.method)
-    '''
     return redirect('/courses/course_contents/teacher/'+str(course_id)+'/')
 
 def topic_details(request,topic_id):
@@ -446,7 +445,6 @@ def course_contents_student(request,topic_id):
     statement= "SELECT ID,TITLE,DESCRIPTION,CONTENT_TYPE,DURATION FROM CONTENTS WHERE TOPIC_ID = :topic_id order by sl_no"
     c.execute(statement,{'topic_id':topic_id})
     contents= c.fetchall() 
-    print(contents)
     c.close()
     connection.close() 
     return render(request,'courses/course_contents_student.html',{'userid':userid,'contents':contents,'courseNtopic':courseNtopic,'enroll_record':enroll_record})
@@ -456,7 +454,6 @@ def show_video(request,content_id):
         userid = request.session['userid']
     else:
         return render(request,'accounts/login.html',{'error': 'Not Logged In'})
-
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
     c = connection.cursor() 
@@ -466,6 +463,7 @@ def show_video(request,content_id):
     video = c.fetchone()
     c.close()
     connection.close() 
+    
     return render(request,'contents/show_video.html',{'userid':userid,'video': video,'content_id':content_id})
 
 

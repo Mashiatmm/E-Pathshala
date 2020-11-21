@@ -73,7 +73,7 @@
   
 <h3>Questions</h3>
 {% for ques in ques_list %}
-<div class="modal fade" id="modalSubscriptionForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="test{{ques.6}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
       <div class="modal-content">
           <div class="modal-header text-center">
@@ -111,7 +111,7 @@
       </div>
 
       <div class="float-right" >
-        <span class="align-right"><a href="" class="btn btn-lg btn-outline-primary btn-default mb-5" data-toggle="modal" data-target="#modalSubscriptionForm">Delete</a></span>
+        <span class="align-right"><a href="#test{{ques.6}}" class="btn btn-lg btn-outline-primary btn-default mb-5" data-toggle="modal">Delete</a></span>
       </div>
     </div>
    
