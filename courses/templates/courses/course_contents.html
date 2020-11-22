@@ -1,9 +1,56 @@
 {% extends 'base.html' %}
 {% block title %}Course Contents{% endblock %}
 {% block body %}
+<div class="modal fade" id="modalCourseForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header text-center">
+              
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+          </div>
+          <div class="modal-body mx-3">
+              <form class="form-settings" action="{% url 'courses:edit_course' course_id %}" method="POST">
+                  {% csrf_token %}
+                  
+                  <div class="md-form mb-4">
+                      <label data-error="wrong" data-success="right" for="title">Course Title</label>
+                      <input type="text" id='title' name = 'title' class="form-control validate" value = '{{courseinfo.0}}' required>
+                      
+                  </div>
 
+                  <div class="md-form mb-4">
+                    <label data-error="wrong" data-success="right" for="class">Class</label>
+                    <input type="number" id='class' name = 'class' class="form-control validate" value = '{{courseinfo.1}}' required>
+                    
+                  </div>
+
+                  <div class="md-form mb-4">
+                      <label data-error="wrong" data-success="right" for="Description">Course Description</label>
+                      <input type="text" id='Description' name = 'Description' class="form-control validate" value = '{{courseinfo.2}}' required>
+                      
+                  </div>
+
+                  <div class="modal-footer d-flex justify-content-center">
+                      <button class="btn btn-lg btn-outline-primary btn-block mb-5" type="submit">Confirm Changes</button> 
+                      
+                  </div>
+                  </form>
+
+          </div>
+          
+      </div>
+  
+  </div>
+</div> 
 <h2 class="text-center">{{courseinfo.0}}</h2>
 <h4 class="text-center">Class {{courseinfo.1}}</h4>
+<div class="text-center">
+  <button class="button" data-toggle="modal" data-target="#modalCourseForm"><span class="oi oi-pencil"></span>Edit</button>
+</div>
+<br>
+<h6>{{courseinfo.2}}</h6>
 
 {% if error %}
 <div style="padding-top: 50px;"></div>

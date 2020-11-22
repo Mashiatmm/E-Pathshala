@@ -15,9 +15,6 @@ def add_course(request):
     c = connection.cursor()
 
     userid = request.session['userid']
-    statement = "SELECT name FROM USERS WHERE id = : user_id"
-    c.execute(statement,{'user_id':userid})
-    name, = c.fetchone()
 
 
     if request.method=='POST':
@@ -38,18 +35,15 @@ def add_course(request):
             
             statement = "INSERT INTO TAKE_COURSE VALUES(:0,:1)"
             c.execute(statement,(c_id,userid))
-
-            statement="select id,name,class from courses where id in (select course_id from take_course where teacher_id =: t_id) "
-            c.execute(statement,{'t_id':userid})
-            courses=c.fetchall()
        
             c.close()
             connection.commit()
             connection.close()
        
-            return render(request,'courses/all_courses.html',{'courses':courses,'userid':userid,'role':'teacher'})
+            return redirect('/accounts/profile',{'userid':userid})
         
-        except:
+        except Exception as e:
+            print(e)
             c.close()
             connection.close()
             return render(request,'courses/add_course.html',{'userid':userid,'role':'teacher','error': 'Course name already exists'})
@@ -61,6 +55,42 @@ def add_course(request):
         c.close()
         connection.close()
         return render(request,'courses/add_course.html',{'userid':userid,'role':'teacher'})
+
+
+def del_course(request,course_id):
+    userid = 0
+    if request.session.has_key('userid'):
+        userid = request.session['userid']
+
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor()
+    statement = """DELETE FROM QAS Q 
+                WHERE Q.EXAM_ID = ANY(SELECT C.ID FROM CONTENTS C 
+                WHERE C.TOPIC_ID = ANY(SELECT T.ID FROM TOPICS T WHERE T.COURSE_ID = :i))"""
+    c.execute(statement,{'i':course_id})
+    statement = "DELETE FROM COURSES WHERE ID = :i"
+    c.execute(statement,{'i':course_id})
+    c.close()
+    connection.commit()
+    connection.close()
+    
+    return redirect('/accounts/profile',{'userid':userid})
+
+def edit_course(request,course_id):
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor()
+
+    statement = """UPDATE COURSES
+                   SET NAME = :N,CLASS = :C,COURSE_DESCRIPTION = :D
+                   WHERE ID = :i"""
+    c.execute(statement,{'N':request.POST['title'],'C':request.POST['class'],'D':request.POST['Description'],'i':course_id})
+    
+    connection.commit()
+    c.close()
+    connection.close()
+    return redirect('/courses/course_contents/teacher/'+str(course_id)+'/')
 
 
 def course_contents(request,course_id):
@@ -88,7 +118,7 @@ def course_contents(request,course_id):
           
     
 
-    statement = "select name,class from Courses where id = :id "
+    statement = "select name,class,course_description from Courses where id = :id "
     c.execute(statement,{'id':course_id})
     courseinfo, = c.fetchall()
     #WRITE FUNCTION TO RETURN CONTENT NUMBERS
@@ -108,17 +138,16 @@ def course_contents(request,course_id):
 
 
 def del_topic(request,course_id,topic_id):
-    print(topic_id)
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
     c = connection.cursor()
-
+    statement = "DELETE FROM QAS Q WHERE Q.EXAM_ID = ANY(SELECT C.ID FROM CONTENTS C WHERE C.TOPIC_ID = :i)"
+    c.execute(statement,{'i':topic_id})
     statement = "DELETE FROM TOPICS WHERE ID = :i"
     c.execute(statement,{'i':topic_id})
     c.close()
     connection.commit()
     connection.close()
-    print("delete")
     
     return redirect('/courses/course_contents/teacher/'+str(course_id)+'/')
 
@@ -194,7 +223,8 @@ def del_content(request,topic_id,content_id):
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
     c = connection.cursor()
-
+    statement = "DELETE FROM QAS WHERE EXAM_ID = :i"
+    c.execute(statement,{'i':content_id})
     statement = "DELETE FROM CONTENTS WHERE ID = :i"
     c.execute(statement,{'i':content_id})
     c.close()

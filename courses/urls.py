@@ -5,6 +5,8 @@ app_name='courses'
 
 urlpatterns = [
         path('add_course/',views.add_course,name='add_course'),
+        path('edit_course/<int:course_id>/',views.edit_course,name='edit_course'),
+        path('del_course/<int:course_id>/',views.del_course,name='del_course'),
         path('course_contents/teacher/<int:course_id>/',views.course_contents,name='course_contents'),
         path('add_content/<int:course_id>/<int:topic_id>/',views.add_content,name='add_content'),
         path('modify_content/<int:topic_id>/<content_type>/<int:content_id>/',views.modify_content,name='modify_content'),
