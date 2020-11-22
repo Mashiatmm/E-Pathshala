@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}Add Exam{% endblock %}
 {% block body %}
-
+<a href ="{% url 'courses:topic_details' topic_id %}"><span class="oi oi-arrow-left"></span>Back</a>
 {% if examinfo %}
 
 <form class="form-settings" name = "addQues" action="{% url 'courses:add_ques' examinfo.2 %}" method="POST" >

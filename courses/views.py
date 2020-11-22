@@ -315,11 +315,12 @@ def add_ques(request,exam_id):
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
     c = connection.cursor()
-    statement = "SELECT TITLE,DESCRIPTION FROM CONTENTS WHERE ID = :i"
+    statement = "SELECT TITLE,DESCRIPTION,TOPIC_ID FROM CONTENTS WHERE ID = :i"
     c.execute(statement,{'i':exam_id})
     info, = c.fetchall()
     
     examinfo = [info[0],info[1],exam_id]
+    topic_id = info[2]
 
     if request.method == 'POST':
         right_option = request.POST.get('Radios')
@@ -343,7 +344,7 @@ def add_ques(request,exam_id):
     c.close()
     connection.close()
 
-    return render(request,'courses/add_exam.html',{'userid':userid,'examinfo':examinfo,'role':'teacher','ques_list':ques_list})
+    return render(request,'courses/add_exam.html',{'userid':userid,'topic_id':topic_id,'examinfo':examinfo,'role':'teacher','ques_list':ques_list})
 
 
 def del_ques(request,exam_id,ques_id):
