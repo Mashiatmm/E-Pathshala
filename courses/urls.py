@@ -26,4 +26,6 @@ urlpatterns = [
         path('course_contents/video/<int:content_id>',views.show_video,name='show_video'),
         path('course_contents/exam/<int:content_id>',views.give_exam,name='give_exam'),
 
+        path('next_content/student/<int:content_id>',views.next_content_student,name='next_content_student'),
+
 ]
