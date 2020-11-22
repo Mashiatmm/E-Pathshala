@@ -267,3 +267,26 @@ def settings(request):
         return render(request,'accounts/settings.html',{'userid':userid,'role':userinfo[0],'name':userinfo[1],'password':userinfo[2],'usermail':usermail})
 
 
+
+def students(request):
+    if request.session.has_key('userid') == False:
+            return render(request,'accounts/login.html',{'error': 'Not Logged In'})
+
+    
+
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor()
+
+    userid = request.session['userid']
+    statement = """SELECT S.NAME,S.EMAIL,C.NAME,C.CLASS,E.PERCENTAGE_COMPLETED,E.ENROLL_TIME,S.ID
+                   FROM USERS S,COURSES C,ENROLL E,TAKE_COURSE T
+                   WHERE T.TEACHER_ID = :t AND T.COURSE_ID = E.COURSE_ID AND
+                   E.COURSE_ID = C.ID AND E.ST_ID = S.ID"""
+
+    c.execute(statement,{'t':userid})
+    enrollinfo = c.fetchall()
+    c.close()
+    connection.close()
+
+    return render(request,'accounts/students.html',{'userid':userid,'role':'teacher','enrollinfo':enrollinfo})
