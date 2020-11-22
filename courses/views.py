@@ -488,7 +488,20 @@ def show_video(request,content_id):
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
     c = connection.cursor() 
 
-    statement="SELECT CRS.NAME,T.TOPIC_TITLE,C.TITLE,C.DESCRIPTION,V.LINK FROM VIDEOS V,CONTENTS C,TOPICS T, COURSES CRS WHERE V.ID = C.ID AND C.TOPIC_ID=T.ID AND T.COURSE_ID = CRS.ID AND V.ID= :content_id"
+    if request.method == 'POST':
+        statement="SELECT CONTENT_ID FROM COMPLETED_CONTENT WHERE CONTENT_ID =:content_id AND ST_ID = :userid"
+        c.execute(statement,{'content_id':content_id,'userid':userid})
+        exist=c.fetchone()
+        if exist == None:
+            statement="INSERT INTO COMPLETED_CONTENT VALUES(:0,:1,:2)"
+            c.execute(statement,(content_id,userid,0))
+            c.callproc('PERCENTAGE_COMPLETED_UPDATE',[userid,content_id])
+
+
+        
+        
+
+    statement="SELECT CRS.NAME,T.TOPIC_TITLE,C.TITLE,C.DESCRIPTION,V.LINK,C.ID FROM VIDEOS V,CONTENTS C,TOPICS T, COURSES CRS WHERE V.ID = C.ID AND C.TOPIC_ID=T.ID AND T.COURSE_ID = CRS.ID AND V.ID= :content_id"
     c.execute(statement,{'content_id':content_id})
     video = c.fetchone()
     c.close()
@@ -510,15 +523,17 @@ def give_exam(request,content_id):
     if request.method == 'POST':
         statement="SELECT Q.ID,A.RIGHT_OPTION FROM QAS Q,QA_ANS A WHERE Q.EXAM_ID = :content_id AND A.ID=Q.ID ORDER BY Q.ID"
         c.execute(statement,{'content_id':content_id})
-        questions= c.fetchall()
+        answers= c.fetchall()
         marks=0
 
-        for question in questions:
-            if request.POST.get('q'+str(question[0])) == question[1]:
+        for answer in answers:
+            if request.POST.get('q'+str(answer[0])) == answer[1]:
                 marks=marks+1
         statement="INSERT INTO COMPLETED_CONTENT VALUES(:0,:1,:2)"
         c.execute(statement,(content_id,userid,marks))
         connection.commit()
+        c.callproc('PERCENTAGE_COMPLETED_UPDATE',[userid,content_id])
+        
 
 
 
@@ -538,7 +553,7 @@ def give_exam(request,content_id):
     c.execute(statement,{'content_id':content_id})
     exam = c.fetchone()
 
-    statement="SELECT ID,QUESTION_DESCRIPTION,OPTION1,OPTION2,OPTION3,OPTION4 FROM QAS WHERE EXAM_ID = :content_id ORDER BY ID"
+    statement="SELECT Q.ID,Q.QUESTION_DESCRIPTION,Q.OPTION1,Q.OPTION2,Q.OPTION3,Q.OPTION4,A.RIGHT_OPTION FROM QAS Q,QA_ANS A WHERE Q.EXAM_ID = :content_id AND A.ID=Q.ID ORDER BY Q.ID"
     c.execute(statement,{'content_id':content_id})
     questions= c.fetchall()
     
