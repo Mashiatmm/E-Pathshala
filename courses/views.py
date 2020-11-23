@@ -583,15 +583,34 @@ def next_content_student(request,content_id):
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
     c = connection.cursor() 
 
-    statement="SELECT T.ID,CRS.ID,C.CONTENT_TYPE FROM CONTENTS C,TOPICS T,COURSES CRS WHERE C.ID = :content_id AND C.TOPIC_ID=T.ID AND T.COURSE_ID = CRS.ID"
+    statement="SELECT T.ID,CRS.ID,C.SL_NO,C.CONTENT_TYPE FROM CONTENTS C,TOPICS T,COURSES CRS WHERE C.ID = :content_id AND C.TOPIC_ID=T.ID AND T.COURSE_ID = CRS.ID"
     c.execute(statement,{'content_id':content_id})
     infos=c.fetchone()
-    print(infos)
-    
-    if infos[2] == 'video':
-        return redirect('/courses/course_contents/video/'+str(content_id))
+    current_topic=infos[0]
+    current_course=infos[1]
+    current_cont_sl=infos[2]
+
+
+    statement="SELECT MIN(C.SL_NO) FROM CONTENTS C WHERE  C.TOPIC_ID = :current_topic  AND C.SL_NO > :current_cont_sl "
+    c.execute(statement,{'current_topic':current_topic,'current_cont_sl':current_cont_sl})
+    next_cont_sl,=c.fetchone()
+    print(next_cont_sl)
+    if next_cont_sl != None:
+        statement="SELECT ID,CONTENT_TYPE FROM CONTENTS WHERE SL_NO = :next_cont_sl"
+        c.execute(statement,{'next_cont_sl':next_cont_sl})
+        infos=c.fetchone()
+        next_cont_id = infos[0]
+        print(infos)
     else:
-        return redirect('/courses/course_contents/exam/'+str(content_id))
+        next_cont_id=content_id
+        
+
+
+
+    if infos[1] == 'video':
+        return redirect('/courses/course_contents/video/'+str(next_cont_id))
+    else:
+        return redirect('/courses/course_contents/exam/'+str(next_cont_id))
 
 
     
