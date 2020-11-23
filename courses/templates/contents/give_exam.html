@@ -59,10 +59,21 @@
               <button class="btn btn-primary btn-lg"  type="submit">Submit Answer</button> 
             </div>
           </div>
+          <div class="row  pt-3" >
+      
+            <div class="col-md-6" >
+                <form class="form-give_exam" action="{% url 'courses:next_content_student' content_id %}" method="POST" >
+                    {% csrf_token %}
+                    <button class="btn btn-lg btn-outline-primary btn-block mb-5" type="submit">Go To Next</button> 
+                </form>
+            </div>
+          </div>
+        
     </div>
 {% if error %}
 </fieldset>
 {% endif %}
 </form>
+
 
 {% endblock %} 
