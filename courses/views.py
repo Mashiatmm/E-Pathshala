@@ -521,34 +521,35 @@ def give_exam(request,content_id):
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
     c = connection.cursor() 
-
+ 
+    given_answers=[]
     if request.method == 'POST':
         statement="SELECT Q.ID,A.RIGHT_OPTION FROM QAS Q,QA_ANS A WHERE Q.EXAM_ID = :content_id AND A.ID=Q.ID ORDER BY Q.ID"
         c.execute(statement,{'content_id':content_id})
         answers= c.fetchall()
         marks=0
 
+        
         for answer in answers:
+            given_answers.append(str(request.POST.get('q'+str(answer[0]))))
             if request.POST.get('q'+str(answer[0])) == answer[1]:
                 marks=marks+1
+
         statement="INSERT INTO COMPLETED_CONTENT VALUES(:0,:1,:2)"
         c.execute(statement,(content_id,userid,marks))
         connection.commit()
         c.callproc('PERCENTAGE_COMPLETED_UPDATE',[userid,content_id])
         
-
-
-
         statement="SELECT T.ID FROM CONTENTS C,TOPICS T WHERE C.TOPIC_ID = T.ID AND C.ID = :content_id"
         c.execute(statement,{'content_id':content_id})
         topic_id,= c.fetchone()
             
-        c.close()
+        '''c.close()
         connection.close() 
-        return redirect('/courses/next_content/student/'+str(content_id))
+        return redirect('/courses/next_content/student/'+str(content_id))'''
         #return redirect(reverse('course_contents_student', kwargs={'topic_id':topic_id}))
 
-    statement="SELECT CONTENT_ID FROM COMPLETED_CONTENT WHERE CONTENT_ID = :content_id AND ST_ID = :userid"
+    statement="SELECT OBTAINED_MARKS FROM COMPLETED_CONTENT WHERE CONTENT_ID = :content_id AND ST_ID = :userid"
     c.execute(statement,{'content_id':content_id,'userid':userid})
     entry = c.fetchone()
 
@@ -559,19 +560,18 @@ def give_exam(request,content_id):
     statement="SELECT Q.ID,Q.QUESTION_DESCRIPTION,Q.OPTION1,Q.OPTION2,Q.OPTION3,Q.OPTION4,A.RIGHT_OPTION FROM QAS Q,QA_ANS A WHERE Q.EXAM_ID = :content_id AND A.ID=Q.ID ORDER BY Q.ID"
     c.execute(statement,{'content_id':content_id})
     questions= c.fetchall()
-    
-
-    
- 
-
-    if entry == None:
-        c.close()
-        connection.close() 
-        return render(request,'contents/give_exam.html',{'userid':userid,'content_id':content_id,'exam': exam,'questions':questions})
-
     c.close()
-    connection.close()
-    return render(request,'contents/give_exam.html',{'userid':userid,'content_id':content_id,'exam': exam,'questions':questions,'error':'You have already given the exam ! '})
+    connection.close() 
+    if entry == None:
+        return render(request,'contents/give_exam.html',{'userid':userid,'content_id':content_id,'exam': exam,'questions':questions})
+    elif given_answers != []:
+        for i in range(len(questions)):
+            temp=list(questions[i])
+            temp.append(given_answers[i])
+            questions[i]=tuple(temp)
+        return render(request,'contents/give_exam.html',{'userid':userid,'content_id':content_id,'exam': exam,'questions':questions,'given_answers':given_answers,'obtained_marks':entry})
+
+    return render(request,'contents/give_exam.html',{'userid':userid,'content_id':content_id,'exam': exam,'questions':questions,'error':'You have already given the exam ! ','obtained_marks':entry})
     
 def next_content_student(request,content_id):
     if request.session.has_key('userid'):
@@ -602,7 +602,7 @@ def next_content_student(request,content_id):
         infos=c.fetchone()
         next_cont_id = infos[0]
         next_cont_type=infos[1]
-        print(infos)
+        #print(infos)
     else:
         statement="""SELECT MIN(T.SL_NO)
                     FROM CONTENTS C, TOPICS T 
@@ -610,7 +610,7 @@ def next_content_student(request,content_id):
         c.execute(statement,{'current_course':current_course,'current_topic_sl':current_topic_sl})
         next_topic_sl,= c.fetchone()
         if next_topic_sl == None:
-            print("No next topic exist")
+            #print("No next topic exist")
             return redirect('/courses/all_courses/student/'+str(current_course))
         else:
             statement = """SELECT ID,CONTENT_TYPE
@@ -622,7 +622,7 @@ def next_content_student(request,content_id):
             infos=c.fetchone()
             next_cont_id = infos[0]
             next_cont_type=infos[1]
-            print(infos)
+            #print(infos)
 
 
 
