@@ -7,9 +7,11 @@
 
 <div class="container">
 <h3>Topics of {{course.1}}</h3>
-{% if topics %}
+
 
 <ul>
+
+{% if topics %}
 {% for topic in topics %}
 
 
@@ -47,6 +49,9 @@
 
 
 {% endfor %}
+{% else %}
+<h6>No Topic In This Course Yet</h6>
+{% endif %}
 </ul>
 
 {% if not enroll_record %}
@@ -83,6 +88,6 @@
 </div>
 <br><br>
 {% endif %}
-{% endif %}
+
 </div>
 {% endblock %} 
