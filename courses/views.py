@@ -106,7 +106,6 @@ def course_contents(request,course_id):
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
     c = connection.cursor()
-    print(request.method)
     if request.method == 'POST':
         
         try:   
@@ -116,19 +115,17 @@ def course_contents(request,course_id):
         
         except Exception as e:
             error = "Topic name exists or empty"
-          
-    
 
     statement = "select name,class,course_description from Courses where id = :id "
     c.execute(statement,{'id':course_id})
     courseinfo, = c.fetchall()
     #WRITE FUNCTION TO RETURN CONTENT NUMBERS
-    statement = """SELECT T.ID,T.TOPIC_TITLE,T.TOPIC_DESCRIPTION
+    statement = """SELECT T.ID,T.TOPIC_TITLE,T.TOPIC_DESCRIPTION,T.SL_NO
                     FROM TOPICS T
-                    WHERE T.COURSE_ID = :course_id"""
+                    WHERE T.COURSE_ID = :course_id
+                    ORDER BY T.SL_NO"""
     c.execute(statement,{'course_id':course_id})
     topics = c.fetchall()
-    print(topics)
     c.close()
     connection.commit()
     connection.close()
@@ -137,6 +134,19 @@ def course_contents(request,course_id):
     else:
         return render(request,'courses/course_contents.html',{'course_id':course_id,'courseinfo':courseinfo,'topics':topics,'userid':userid,'error':error,'role':'teacher'})
 
+def topic_serial(request,type,sl_no,topic_id,course_id):
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor()
+
+    if type == 'D':
+        c.callproc('TOPIC_DECREASE_SERIAL',[sl_no,topic_id,course_id])
+    elif type == 'I':
+        c.callproc('TOPIC_INCREASE_SERIAL',[sl_no,topic_id,course_id])
+
+    c.close()
+    connection.close()
+    return redirect('/courses/course_contents/teacher/'+str(course_id)+'/')
 
 def del_topic(request,course_id,topic_id):
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
@@ -233,7 +243,6 @@ def del_content(request,topic_id,content_id):
     connection.close()
     return redirect('/courses/topic_details/'+str(topic_id)+'/')
 
-
 def add_content(request,course_id,topic_id):#add video
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
@@ -263,6 +272,21 @@ def add_content(request,course_id,topic_id):#add video
     connection.commit()
     connection.close()
     
+    return redirect('/courses/topic_details/'+str(topic_id)+'/')
+
+
+def content_serial(request,type,sl_no,content_id,topic_id):
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor()
+
+    if type == 'D':
+        c.callproc('DECREASE_SERIAL',[sl_no,content_id,topic_id])
+    elif type == 'I':
+        c.callproc('INCREASE_SERIAL',[sl_no,content_id,topic_id])
+
+    c.close()
+    connection.close()
     return redirect('/courses/topic_details/'+str(topic_id)+'/')
 
 def add_exams(request,course_id,topic_id):
@@ -443,7 +467,7 @@ def course_topics_student(request,course_id):
     enroll_record = c.fetchone()   
     
 
-    statement= "SELECT ID,TOPIC_TITLE,TOPIC_DESCRIPTION FROM TOPICS WHERE COURSE_ID = :course_id"
+    statement= "SELECT ID,TOPIC_TITLE,TOPIC_DESCRIPTION FROM TOPICS WHERE COURSE_ID = :course_id ORDER BY SL_NO"
     c.execute(statement,{'course_id':course_id})
     topics= c.fetchall()
     c.close()
@@ -521,34 +545,35 @@ def give_exam(request,content_id):
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
     c = connection.cursor() 
-
+ 
+    given_answers=[]
     if request.method == 'POST':
         statement="SELECT Q.ID,A.RIGHT_OPTION FROM QAS Q,QA_ANS A WHERE Q.EXAM_ID = :content_id AND A.ID=Q.ID ORDER BY Q.ID"
         c.execute(statement,{'content_id':content_id})
         answers= c.fetchall()
         marks=0
 
+        
         for answer in answers:
+            given_answers.append(str(request.POST.get('q'+str(answer[0]))))
             if request.POST.get('q'+str(answer[0])) == answer[1]:
                 marks=marks+1
+
         statement="INSERT INTO COMPLETED_CONTENT VALUES(:0,:1,:2)"
         c.execute(statement,(content_id,userid,marks))
         connection.commit()
         c.callproc('PERCENTAGE_COMPLETED_UPDATE',[userid,content_id])
         
-
-
-
         statement="SELECT T.ID FROM CONTENTS C,TOPICS T WHERE C.TOPIC_ID = T.ID AND C.ID = :content_id"
         c.execute(statement,{'content_id':content_id})
         topic_id,= c.fetchone()
             
-        c.close()
+        '''c.close()
         connection.close() 
-        return redirect('/courses/next_content/student/'+str(content_id))
+        return redirect('/courses/next_content/student/'+str(content_id))'''
         #return redirect(reverse('course_contents_student', kwargs={'topic_id':topic_id}))
 
-    statement="SELECT CONTENT_ID FROM COMPLETED_CONTENT WHERE CONTENT_ID = :content_id AND ST_ID = :userid"
+    statement="SELECT OBTAINED_MARKS FROM COMPLETED_CONTENT WHERE CONTENT_ID = :content_id AND ST_ID = :userid"
     c.execute(statement,{'content_id':content_id,'userid':userid})
     entry = c.fetchone()
 
@@ -559,19 +584,18 @@ def give_exam(request,content_id):
     statement="SELECT Q.ID,Q.QUESTION_DESCRIPTION,Q.OPTION1,Q.OPTION2,Q.OPTION3,Q.OPTION4,A.RIGHT_OPTION FROM QAS Q,QA_ANS A WHERE Q.EXAM_ID = :content_id AND A.ID=Q.ID ORDER BY Q.ID"
     c.execute(statement,{'content_id':content_id})
     questions= c.fetchall()
-    
-
-    
- 
-
-    if entry == None:
-        c.close()
-        connection.close() 
-        return render(request,'contents/give_exam.html',{'userid':userid,'content_id':content_id,'exam': exam,'questions':questions})
-
     c.close()
-    connection.close()
-    return render(request,'contents/give_exam.html',{'userid':userid,'content_id':content_id,'exam': exam,'questions':questions,'error':'You have already given the exam ! '})
+    connection.close() 
+    if entry == None:
+        return render(request,'contents/give_exam.html',{'userid':userid,'content_id':content_id,'exam': exam,'questions':questions})
+    elif given_answers != []:
+        for i in range(len(questions)):
+            temp=list(questions[i])
+            temp.append(given_answers[i])
+            questions[i]=tuple(temp)
+        return render(request,'contents/give_exam.html',{'userid':userid,'content_id':content_id,'exam': exam,'questions':questions,'given_answers':given_answers,'obtained_marks':entry})
+
+    return render(request,'contents/give_exam.html',{'userid':userid,'content_id':content_id,'exam': exam,'questions':questions,'error':'You have already given the exam ! ','obtained_marks':entry})
     
 def next_content_student(request,content_id):
     if request.session.has_key('userid'):
@@ -583,15 +607,53 @@ def next_content_student(request,content_id):
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
     c = connection.cursor() 
 
-    statement="SELECT T.ID,CRS.ID,C.CONTENT_TYPE FROM CONTENTS C,TOPICS T,COURSES CRS WHERE C.ID = :content_id AND C.TOPIC_ID=T.ID AND T.COURSE_ID = CRS.ID"
+    statement="SELECT T.ID,T.SL_NO,CRS.ID,C.SL_NO,C.CONTENT_TYPE FROM CONTENTS C,TOPICS T,COURSES CRS WHERE C.ID = :content_id AND C.TOPIC_ID=T.ID AND T.COURSE_ID = CRS.ID"
     c.execute(statement,{'content_id':content_id})
     infos=c.fetchone()
-    print(infos)
-    
-    if infos[2] == 'video':
-        return redirect('/courses/course_contents/video/'+str(content_id))
+    current_topic=infos[0]
+    current_topic_sl=infos[1]
+    current_course=infos[2]
+    current_cont_sl=infos[3]
+
+
+    statement="SELECT MIN(C.SL_NO) FROM CONTENTS C WHERE  C.TOPIC_ID = :current_topic  AND C.SL_NO > :current_cont_sl "
+    c.execute(statement,{'current_topic':current_topic,'current_cont_sl':current_cont_sl})
+    next_cont_sl,=c.fetchone()
+    print(next_cont_sl)
+    if next_cont_sl != None:
+        statement="SELECT ID,CONTENT_TYPE FROM CONTENTS WHERE SL_NO = :next_cont_sl"
+        c.execute(statement,{'next_cont_sl':next_cont_sl})
+        infos=c.fetchone()
+        next_cont_id = infos[0]
+        next_cont_type=infos[1]
+        #print(infos)
     else:
-        return redirect('/courses/course_contents/exam/'+str(content_id))
+        statement="""SELECT MIN(T.SL_NO)
+                    FROM CONTENTS C, TOPICS T 
+                    WHERE T.ID = C.TOPIC_ID AND T.COURSE_ID = :current_course AND T.SL_NO> :current_topic_sl"""
+        c.execute(statement,{'current_course':current_course,'current_topic_sl':current_topic_sl})
+        next_topic_sl,= c.fetchone()
+        if next_topic_sl == None:
+            #print("No next topic exist")
+            return redirect('/courses/all_courses/student/'+str(current_course))
+        else:
+            statement = """SELECT ID,CONTENT_TYPE
+                            FROM CONTENTS 
+                            WHERE SL_NO = (SELECT MIN(C.SL_NO) 
+                            FROM TOPICS T, CONTENTS C 
+                            WHERE T.ID = C.TOPIC_ID AND T.SL_NO= :next_topic_sl)"""
+            c.execute(statement,{'next_topic_sl':next_topic_sl})
+            infos=c.fetchone()
+            next_cont_id = infos[0]
+            next_cont_type=infos[1]
+            #print(infos)
+
+
+
+    if next_cont_type == 'video':
+        return redirect('/courses/course_contents/video/'+str(next_cont_id))
+    else:
+        return redirect('/courses/course_contents/exam/'+str(next_cont_id))
 
 
     

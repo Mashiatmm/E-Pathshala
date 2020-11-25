@@ -2,6 +2,7 @@
 {% block title %}{% endblock %}
 {% load static %}
 
+
 {% block body %}
 
 {% if error %}
@@ -9,41 +10,76 @@
 <div class="alert alert-danger" style="padding-left: 400px;padding-top: 50;">{{error}}</div>
 {% endif %}
 
-<h1>{{exam.1}}</h1>
+
 
 
 <form class="form-settings" name = "give_exam" action="{% url 'courses:give_exam' content_id %}" method="POST" >
 {% csrf_token %}
-{% if error %}
-    <fieldset disabled="disabled">
-{% endif %}
+
     <div class="container " style="background-color: #F8F9F9 ;">
+        <br><h4>{{exam.1}}&nbsp;{% if error or given_answers %}->Obtained Marks:&nbsp;{{obtained_marks.0}}{% endif %}</h4><br>
+        {% if error or given_answers %}
+        <fieldset disabled="disabled">
 
         <ol>
         {% for question in questions %}
         <li>
-        <h4>{{question.1}}</h4>
+        <b>{{question.1}}</b>
+        {% if not error and question.6 == question.7 %}
+            <span class="label success "><span class="oi oi-circle-check "></span></span>
+
+        {% elif not error %}
+            <span class="label danger "><span class="  oi oi-circle-x"></span></span>
+        {% endif %}
 
         <div class="row pb-3" >
             <div class="col-md-3">
             <input class="form-check-input" type="radio" name="q{{question.0}}" id="option1" value="option1"  >
-            <label for="option1">{{question.2}}</label> 
+            {% if question.6 == 'option1'%}
+            <label class="success" for="option1">{{question.2}}</label> 
+            {% elif not error and question.7 == 'option1'%}
+            <label class="danger" for="option1">{{question.2}}</label>
+            {% else %}
+            <label  for="option1">{{question.2}}</label>
+            {% endif %}
             </div>
 
             <div class="col-md-3">
                 <input class="form-check-input" type="radio" name="q{{question.0}}" id="option2" value="option2" >
-                <label for="option2">{{question.3}}</label> 
+                {% if question.6 == 'option2'%}
+                <label class="success" for="option2">{{question.3}}</label> 
+                {% elif not error and question.7 == 'option2'%}
+                <label class="danger" for="option2">{{question.3}}</label>
+                {% else %}
+                <label  for="option2">{{question.3}}</label>
+                {% endif %}
             </div>
 
             <div class="col-md-3">
                 <input class="form-check-input" type="radio" name="q{{question.0}}" id="option3" value="option3" >
-                <label for="option3">{{question.4}}</label> 
+                {% if question.6 == 'option3'%}
+                <label class="success" for="option3">{{question.4}}</label> 
+                {% elif not error and question.7 == 'option3'%}
+                <label class="danger" for="option3">{{question.4}}</label>
+                {% else %}
+                <label  for="option3">{{question.4}}</label>
+
+                {% endif %}
             </div>
 
             <div class="col-md-3">
                 <input class="form-check-input" type="radio" name="q{{question.0}}" id="option4" value="option4" >
-                <label for="option4">{{question.5}}</label> 
+                {% if question.6 == 'option4'%}
+                <label class="success" for="option4">{{question.5}}</label> 
+                {% elif not error and question.7 == 'option4'%}
+                <label class="danger" for="option4">{{question.5}}</label>
+                {% else %}
+                <label  for="option4">{{question.5}}</label>
+
+                {% endif %}
             </div>
+
+
         </div>
 
 
@@ -53,16 +89,69 @@
         {% endfor %}
         </ol>
 
+        {% else %}
+
+        <ol>
+            {% for question in questions %}
+            <li>
+            <h4>{{question.1}}</h4>
+    
+            <div class="row pb-3" >
+                <div class="col-md-3">
+                <input class="form-check-input" type="radio" name="q{{question.0}}" id="option1" value="option1"  >
+                <label for="option1">{{question.2}}</label> 
+                </div>
+    
+                <div class="col-md-3">
+                    <input class="form-check-input" type="radio" name="q{{question.0}}" id="option2" value="option2" >
+                    <label for="option2">{{question.3}}</label> 
+                </div>
+    
+                <div class="col-md-3">
+                    <input class="form-check-input" type="radio" name="q{{question.0}}" id="option3" value="option3" >
+                    <label for="option3">{{question.4}}</label> 
+                </div>
+    
+                <div class="col-md-3">
+                    <input class="form-check-input" type="radio" name="q{{question.0}}" id="option4" value="option4" >
+                    <label for="option4">{{question.5}}</label> 
+                </div>
+            </div>
+    
+    
+            </li>
+    
+    
+            {% endfor %}
+            </ol>
+
+        {% endif %}
+
         <div class="row  pt-3" >
       
             <div class="col-md-6" >
               <button class="btn btn-primary btn-lg"  type="submit">Submit Answer</button> 
             </div>
           </div>
+          {% if error %}
+        </fieldset>
+        {% endif %}
+
+        
     </div>
-{% if error %}
-</fieldset>
-{% endif %}
+
 </form>
+
+
+<div class="row  pt-3" >
+      
+    <div class="col-md-6" >
+        <form class="form-give_exam" action="{% url 'courses:next_content_student' content_id %}" method="POST" >
+            {% csrf_token %}
+            <button class="btn btn-lg btn-outline-primary btn-block mb-5" type="submit">Go To Next</button> 
+        </form>
+    </div>
+  </div>
+
 
 {% endblock %} 

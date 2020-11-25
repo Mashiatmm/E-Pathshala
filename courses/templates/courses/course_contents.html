@@ -129,7 +129,7 @@
 
 
 
-    <div class="row  pt-3  mydiv " >
+    <div class="row  pt-3 mydiv" >
         
         <div class="col-md-9"  onclick="window.location='{% url 'courses:topic_details' topic.0 %}';" style="cursor:pointer;">
             <div class="row  pt-2" >
@@ -143,7 +143,18 @@
         </div>
 
         <div class="col-md-3" >
-            <a href="#test{{topic.0}}" class= "button" data-toggle="modal">Delete</a>
+          <div class="row  pt-1" >
+            <div class = "col-md-1">
+              <div class = "float-right"><a href = "{% url 'courses:topic_serial' 'I' topic.3 topic.0 course_id %}"><span class="oi oi-caret-bottom"></span></a></div>
+            </div>    
+            <div class = "col-md-1">
+              <div class = "float-left"><a href = "{% url 'courses:topic_serial' 'D' topic.3 topic.0 course_id %}"><span class="oi oi-caret-top"></span></a></div>
+            </div>  
+            <div class="col-md-1" >
+              <a href="#test{{topic.0}}" class= "button" data-toggle="modal">Delete</a>
+            </div>
+          </div>
+          
         </div>
            
         
