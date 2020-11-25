@@ -8,17 +8,11 @@
 <h3>{{video.2}}</h3>
 <p>{{video.3}}</p>
 {% video video.4 'medium'%}
-
-<div >
-    <div class="col-md-6" >
-        <form class="form-show_video" action="{% url 'courses:next_content_student' video.5 %}" method="POST" >
-            {% csrf_token %}
-            
-            <button class="btn btn-lg btn-outline-primary btn-block mb-5" type="submit">DONE</button> 
-        </form>
-    </div>
-  </div>
-
+<form class="form-enroll_course" action="{% url 'courses:next_content_student' video.5 %}" method="POST" >
+    {% csrf_token %}
+    <input type="hidden" id="course_id" value="{{courseNtopic.0}}" name="course_id" class="form-control" placeholder="Course ID">
+    <button class="btn btn-lg btn-outline-primary btn-block mb-5" type="submit">DONE</button> 
+</form>
 </center>
 
 

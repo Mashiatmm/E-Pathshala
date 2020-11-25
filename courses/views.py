@@ -106,7 +106,6 @@ def course_contents(request,course_id):
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
     c = connection.cursor()
-    print(request.method)
     if request.method == 'POST':
         
         try:   
@@ -116,19 +115,17 @@ def course_contents(request,course_id):
         
         except Exception as e:
             error = "Topic name exists or empty"
-          
-    
 
     statement = "select name,class,course_description from Courses where id = :id "
     c.execute(statement,{'id':course_id})
     courseinfo, = c.fetchall()
     #WRITE FUNCTION TO RETURN CONTENT NUMBERS
-    statement = """SELECT T.ID,T.TOPIC_TITLE,T.TOPIC_DESCRIPTION
+    statement = """SELECT T.ID,T.TOPIC_TITLE,T.TOPIC_DESCRIPTION,T.SL_NO
                     FROM TOPICS T
-                    WHERE T.COURSE_ID = :course_id"""
+                    WHERE T.COURSE_ID = :course_id
+                    ORDER BY T.SL_NO"""
     c.execute(statement,{'course_id':course_id})
     topics = c.fetchall()
-    print(topics)
     c.close()
     connection.commit()
     connection.close()
@@ -137,6 +134,19 @@ def course_contents(request,course_id):
     else:
         return render(request,'courses/course_contents.html',{'course_id':course_id,'courseinfo':courseinfo,'topics':topics,'userid':userid,'error':error,'role':'teacher'})
 
+def topic_serial(request,type,sl_no,topic_id,course_id):
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor()
+
+    if type == 'D':
+        c.callproc('TOPIC_DECREASE_SERIAL',[sl_no,topic_id,course_id])
+    elif type == 'I':
+        c.callproc('TOPIC_INCREASE_SERIAL',[sl_no,topic_id,course_id])
+
+    c.close()
+    connection.close()
+    return redirect('/courses/course_contents/teacher/'+str(course_id)+'/')
 
 def del_topic(request,course_id,topic_id):
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
@@ -233,7 +243,6 @@ def del_content(request,topic_id,content_id):
     connection.close()
     return redirect('/courses/topic_details/'+str(topic_id)+'/')
 
-
 def add_content(request,course_id,topic_id):#add video
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
@@ -263,6 +272,21 @@ def add_content(request,course_id,topic_id):#add video
     connection.commit()
     connection.close()
     
+    return redirect('/courses/topic_details/'+str(topic_id)+'/')
+
+
+def content_serial(request,type,sl_no,content_id,topic_id):
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor()
+
+    if type == 'D':
+        c.callproc('DECREASE_SERIAL',[sl_no,content_id,topic_id])
+    elif type == 'I':
+        c.callproc('INCREASE_SERIAL',[sl_no,content_id,topic_id])
+
+    c.close()
+    connection.close()
     return redirect('/courses/topic_details/'+str(topic_id)+'/')
 
 def add_exams(request,course_id,topic_id):
