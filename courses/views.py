@@ -390,10 +390,16 @@ def enroll_course(request):
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
     c = connection.cursor()
     if request.method == 'POST':
-        statement = "insert into enroll values(:0,:1,0,sysdate)"
-        c.execute(statement,(userid,request.POST['course_id']))
+        statement = "select * from enroll where st_id = :userid and course_id = :course_id"
+        c.execute(statement,{'userid':userid,'course_id':request.POST['course_id']})
+        if not c.fetchone():
+            statement = "insert into enroll values(:0,:1,0,sysdate)"
+            c.execute(statement,(userid,request.POST['course_id']))
+            connection.commit()
 
-    connection.commit()
+        
+
+    
     statement = """ select id,name,class,course_description
                     from courses c 
                     where c.class = (select class from students where id = :st_id)
@@ -410,6 +416,7 @@ def enroll_course(request):
 def all_courses_student(request,id):
     if request.session.has_key('userid'):
         userid = request.session['userid']
+
     else:
         return render(request,'accounts/login.html',{'error': 'Not Logged In'})
 
@@ -427,6 +434,7 @@ def all_courses_student(request,id):
 def course_topics_student(request,course_id):
     if request.session.has_key('userid'):
         userid = request.session['userid']
+        role= request.session['role']
     else:
         return render(request,'accounts/login.html',{'error': 'Not Logged In'})
 
@@ -449,7 +457,7 @@ def course_topics_student(request,course_id):
     c.close()
     connection.close() 
 
-    return render(request,'courses/course_topics_student.html',{'userid':userid,'topics': topics,'course':course,'enroll_record':enroll_record})
+    return render(request,'courses/course_topics_student.html',{'userid':userid,'topics': topics,'course':course,'role':role,'enroll_record':enroll_record})
 
 
 

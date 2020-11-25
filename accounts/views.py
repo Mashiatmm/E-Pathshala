@@ -146,8 +146,10 @@ def login(request):
 
                 if request.session.has_key('userid'):
                     del request.session['userid']
+                    del request.session['role']
 
                 request.session['userid'] = info[2]
+                request.session['role'] = info[1]
                 
                 connection.close()
                 return redirect('/accounts/profile',{'userid':info[2]})
