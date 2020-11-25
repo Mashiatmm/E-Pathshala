@@ -394,7 +394,7 @@ def enroll_course(request):
         c.execute(statement,(userid,request.POST['course_id']))
 
     connection.commit()
-    statement = """ select id,name,total_marks 
+    statement = """ select id,name,class,course_description
                     from courses c 
                     where c.class = (select class from students where id = :st_id)
                             and c.id not in(select course_id from enroll where st_id = :st_id )"""

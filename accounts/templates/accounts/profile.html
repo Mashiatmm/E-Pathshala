@@ -20,6 +20,7 @@
 
 {% if role == 'teacher' %}
     <h1>Courses</h1>
+    
     <a href="{% url 'courses:add_course'%}" class = "btn btn-lg btn-outline-primary btn-lg">Add Course</a>
     <ul>
     {% for course in courses %}
@@ -73,9 +74,11 @@
               
             </div>
             
-              <div class="row  pt-3" >
-                {{courses.4}}
-              </div>
+        {% if course.4 != None%}
+            <div class="row  pt-3" >
+              {{course.4}}
+            </div>
+        {% endif %}
             
         </div>
 
@@ -91,9 +94,85 @@
     </ul>
     
 
-<!--id-->
+<!--student role-->
+
 {% else %}
-<a href="{% url 'courses:all_courses_student' userid %}">My Courses</a>
+
+<h1>Courses</h1>
+    <a href="{% url 'courses:enroll_course' %}" class = "btn btn-lg btn-outline-primary btn-lg">Add Course</a>
+    <ul>
+    {% for course in courses %}
+
+    <div class="modal fade" id="test{{course.0}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
+                <div class="modal-body mx-3">
+                    <h5 class="modal-title w-100 font-weight-bold"  style="text-align:center">Cancel enrolment for this course ?</h5>
+                    <form class="form-settings" action="" method="POST">
+                    {% csrf_token %}
+                    
+                    
+                    <div class="modal-footer d-flex justify-content-center">
+                        <button class="btn btn-info btn-sm" type="submit">Confirm</button> 
+                        
+                    </div>
+                  </form>
+      
+                </div>
+                
+            </div>
+        
+        </div>
+      </div> 
+
+
+    <div class="row  pt-3  mydiv " >
+        
+        <div class="col-md-12"  onclick="window.location='{% url 'courses:course_topics_student' course.0 %}';" style="cursor:pointer;">
+            <div class="row  pt-2" >
+                <div class="col-6">
+                    <h4 style="color:#069">{{course.1}}</h4>
+                </div>
+
+            </div>
+            
+            <div class="row  pt-1" >
+                <div class="col-4">
+                    <h6>Class {{ course.2 }}</h6>
+                </div>
+                <div class="col-4 text-right">
+                    {% if course.3 != None%}
+                    <div class="row  pt-3" >
+                      {{course.3}}
+                    </div>
+                {% endif %}
+                </div>
+              
+            </div>
+
+            
+        </div>
+<!--
+        <div class="col-md-3" >
+            <a href="#test{{course.0}}" class= "btn btn-lg btn-outline-primary btn-block" data-toggle="modal">Cancel Enrolment</a>
+        </div>
+
+-->
+           
+    </div>
+
+
+    {% endfor %}
+    </ul>
+    
+
+
 {% endif %}
 
 {% endblock %}

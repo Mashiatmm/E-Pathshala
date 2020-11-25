@@ -71,7 +71,7 @@
         <nav class="navbar fixed-top navbar-expand-lg navbar-light " style="background-color: lightblue;">
           <div class="container-fluid">
             
-            <a class="navbar-brand" href="{% url 'home' %}">
+            <a class="navbar-brand" href="{% url 'accounts:profile' %}">
               <img src="{% static 'e.png'%}" height="35" width="35" class="d-inline-block align-top">Pathshala
               
             </a>
@@ -126,7 +126,7 @@
     <a href="{% url 'courses:add_course'%}">Add Course</a>
     <a href="{% url 'accounts:students' %}">My Students</a>
   {% elif role == 'student' %}
-    <a href="">My Courses</a>
+  <a href="{% url 'courses:enroll_course'%}">Add Course</a>
   {% endif %}
   <a href="">Forum</a>
   <a href="{% url 'accounts:settings' %}">Settings</a>

@@ -185,23 +185,30 @@ def profile(request):
             statement="""Select U.NAME,S.CLASS 
                         FROM USERS U, STUDENTS S 
                         WHERE S.ID=U.ID AND U.ID=:user_id"""
+            c.execute(statement,{'user_id': userid})
+            user,=c.fetchall()
+
+            statement="select id,name,class,course_description from courses where id in (select course_id from enroll where st_id = :userid) "
+            c.execute(statement,{'userid':userid})
+            courses=c.fetchall()
+
+
+            
         else:
             statement="""Select U.NAME,T.Specialty 
                         FROM USERS U, TEACHERS T
                         WHERE T.ID=U.ID AND U.ID=:user_id"""
             c.execute(statement,{'user_id': userid})
             user,=c.fetchall()
-            statement="select id,name,class,creation_time,course_description from courses where id in (select course_id from take_course where teacher_id =: t_id) "
-            c.execute(statement,{'t_id':userid})
+            statement="select id,name,class,creation_time,course_description from courses where id in (select course_id from take_course where teacher_id =: userid) "
+            c.execute(statement,{'userid':userid})
             courses=c.fetchall()
-            return render(request,'accounts/profile.html',{'userid':userid,'role':role,'name':user[0],'courses':courses})
-
-        c.execute(statement,{'user_id': userid})
-        user,=c.fetchall()
 
         c.close()
-        #print(role,user[0],user[1],user[2],user[3])
-        return render(request,'accounts/profile.html',{'userid':userid,'role':role,'name':user[0]})
+        connection.close()    
+        return render(request,'accounts/profile.html',{'userid':userid,'role':role,'name':user[0],'courses':courses})    
+
+        
     
     else:
         return render(request,'accounts/login.html',{'error': 'Not Logged In'})
