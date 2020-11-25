@@ -488,6 +488,7 @@ def course_topics_student(request,course_id):
 def course_contents_student(request,topic_id):
     if request.session.has_key('userid'):
         userid = request.session['userid']
+        role=request.session['role']
     else:
         return render(request,'accounts/login.html',{'error': 'Not Logged In'})
 
@@ -511,11 +512,12 @@ def course_contents_student(request,topic_id):
     contents= c.fetchall() 
     c.close()
     connection.close() 
-    return render(request,'courses/course_contents_student.html',{'userid':userid,'contents':contents,'courseNtopic':courseNtopic,'enroll_record':enroll_record})
+    return render(request,'courses/course_contents_student.html',{'userid':userid,'contents':contents,'courseNtopic':courseNtopic,'enroll_record':enroll_record,'role':role})
 
 def show_video(request,content_id):
     if request.session.has_key('userid'):
         userid = request.session['userid']
+        role= request.session['role']
     else:
         return render(request,'accounts/login.html',{'error': 'Not Logged In'})
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
@@ -541,12 +543,13 @@ def show_video(request,content_id):
     c.close()
     connection.close() 
     
-    return render(request,'contents/show_video.html',{'userid':userid,'video': video,'content_id':content_id})
+    return render(request,'contents/show_video.html',{'userid':userid,'video': video,'content_id':content_id,'role':role})
 
 
 def give_exam(request,content_id):
     if request.session.has_key('userid'):
         userid = request.session['userid']
+        role= request.session['role']
     else:
         return render(request,'accounts/login.html',{'error': 'Not Logged In'})
 
@@ -595,19 +598,20 @@ def give_exam(request,content_id):
     c.close()
     connection.close() 
     if entry == None:
-        return render(request,'contents/give_exam.html',{'userid':userid,'content_id':content_id,'exam': exam,'questions':questions})
+        return render(request,'contents/give_exam.html',{'userid':userid,'content_id':content_id,'exam': exam,'questions':questions,'role':role})
     elif given_answers != []:
         for i in range(len(questions)):
             temp=list(questions[i])
             temp.append(given_answers[i])
             questions[i]=tuple(temp)
-        return render(request,'contents/give_exam.html',{'userid':userid,'content_id':content_id,'exam': exam,'questions':questions,'given_answers':given_answers,'obtained_marks':entry})
+        return render(request,'contents/give_exam.html',{'userid':userid,'content_id':content_id,'exam': exam,'questions':questions,'given_answers':given_answers,'obtained_marks':entry,'role':role})
 
-    return render(request,'contents/give_exam.html',{'userid':userid,'content_id':content_id,'exam': exam,'questions':questions,'error':'You have already given the exam ! ','obtained_marks':entry})
+    return render(request,'contents/give_exam.html',{'userid':userid,'content_id':content_id,'exam': exam,'questions':questions,'error':'You have already given the exam ! ','obtained_marks':entry,'role':role})
     
 def next_content_student(request,content_id):
     if request.session.has_key('userid'):
         userid = request.session['userid']
+        role= request.session['role']
     else:
         return render(request,'accounts/login.html',{'error': 'Not Logged In'})
 
