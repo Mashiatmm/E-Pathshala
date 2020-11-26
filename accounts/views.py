@@ -27,16 +27,16 @@ def home(request):
     connection.commit()
     connection.close()
     '''
+    '''dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    
+    c = connection.cursor()
+    statement = "SELECT ID,NAME,CLASS FROM COURSES " '''
+       
     
     if request.session.has_key('userid'):
         userid = request.session['userid']
-        dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
-        connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
-    
-        c = connection.cursor()
-        statement = 'select role from USERS where id = :i'
-        c.execute(statement,{'i':userid})
-        role, = c.fetchone()
+        role= request.session['role']
         return render(request,'accounts/home.html',{'userid':userid,'role':role})
 
     return render(request,'accounts/home.html')
@@ -80,7 +80,9 @@ def signup(request,role):
                 connection.close()
                 if request.session.has_key('userid'):
                     del request.session['userid']
+                    del request.session['role']
                 request.session['userid'] = val
+                request.session['role'] = role
                 return redirect('/accounts/profile',{'userid':val})
                 #return render(request,'accounts/profile.html',{'id':val,'role':role,'name':request.POST['username'],'email':request.POST['email'],'password':request.POST['password2']})
             except Exception as E: 
