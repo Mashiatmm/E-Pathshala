@@ -54,7 +54,7 @@
 {% endfor %}
 </ul>
 
-{% if enroll_record == None %}
+{% if role == 'student' and enroll_record == None %}
 
 <div class="modal fade" id="test{{course.0}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
