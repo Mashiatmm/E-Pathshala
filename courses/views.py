@@ -68,7 +68,11 @@ def contribute_course(request,course_id):
     c.execute(statement,{'e':contributor_mail})
     contributor_id = c.fetchall()
     if contributor_id != []:
-        if contributor_id[0][0] != request.session['userid']:
+        statement = "SELECT 1 FROM TAKE_COURSE WHERE COURSE_ID = :c AND TEACHER_ID = :t"
+        c.execute(statement,{'c':course_id,'t':contributor_id[0][0]})
+        exists = c.fetchall()
+        if exists == []:
+            
             statement = """INSERT INTO TAKE_COURSE VALUES(:0,:1)"""
             c.execute(statement,(course_id,contributor_id[0][0]))
     
@@ -137,11 +141,12 @@ def course_contents(request,course_id):
     if request.method == 'POST':
         
         try:   
-            statement="Insert into TOPICS(COURSE_ID,TOPIC_TITLE,TOPIC_DESCRIPTION) VALUES(:0,:1,:2)"
+            statement="Insert into TOPICS(COURSE_ID,TOPIC_TITLE,TOPIC_DESCRIPTION,SL_NO) VALUES(:0,:1,:2,1)"
             c.execute(statement,(course_id,request.POST['topic'],request.POST['topic_description']))
 
         
-        except Exception:
+        except Exception  as e:
+            print(e)
             error = "Topic name exists or empty" 
 
     statement = "select name,class,course_description from Courses where id = :id "
