@@ -58,10 +58,38 @@ def add_course(request):
         return render(request,'courses/add_course.html',{'userid':userid,'role':'teacher'})
 
 
+def contribute_course(request,course_id):
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor()
+
+    contributor_mail = request.POST['mail']
+    statement = "SELECT ID FROM USERS WHERE EMAIL = : e AND ROLE = 'teacher'"
+    c.execute(statement,{'e':contributor_mail})
+    contributor_id = c.fetchall()
+    if contributor_id != []:
+        if contributor_id[0][0] != request.session['userid']:
+            statement = """INSERT INTO TAKE_COURSE VALUES(:0,:1)"""
+            c.execute(statement,(course_id,contributor_id[0][0]))
+    
+            c.close()
+            connection.commit()
+            connection.close()
+            return redirect('/accounts/profile')
+
+    
+    error = "Invalid email ID"
+    print(error)
+    request.session['error'] = error
+    c.close()
+    connection.close()
+    return redirect('/accounts/profile')
+
+    
+    
+
+
 def del_course(request,course_id):
-    userid = 0
-    if request.session.has_key('userid'):
-        userid = request.session['userid']
 
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
@@ -76,7 +104,7 @@ def del_course(request,course_id):
     connection.commit()
     connection.close()
     
-    return redirect('/accounts/profile',{'userid':userid})
+    return redirect('/accounts/profile')
 
 def edit_course(request,course_id):
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
@@ -113,7 +141,7 @@ def course_contents(request,course_id):
             c.execute(statement,(course_id,request.POST['topic'],request.POST['topic_description']))
 
         
-        except Exception as e:
+        except Exception:
             error = "Topic name exists or empty" 
 
     statement = "select name,class,course_description from Courses where id = :id "
@@ -454,7 +482,7 @@ def all_courses(request):
     c.close()
     connection.close()
     
-    return render(request,'courses/all_courses.html',{'courses':courses,'userid':userid,'role':'student'})
+    return render(request,'courses/all_courses.html',{'courses':courses,'userid':userid,'role':role})
 
 def course_topics_student(request,course_id):
     if request.session.has_key('userid'):

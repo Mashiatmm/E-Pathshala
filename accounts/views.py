@@ -209,7 +209,12 @@ def profile(request):
             courses=c.fetchall()
 
         c.close()
-        connection.close()    
+        connection.close()  
+        if request.session.has_key('error'):
+            error = request.session['error']
+            print(error)
+            del request.session['error']
+            return render(request,'accounts/profile.html',{'userid':userid,'role':role,'name':user[0],'courses':courses,'error':error})
         return render(request,'accounts/profile.html',{'userid':userid,'role':role,'name':user[0],'courses':courses})    
 
         
