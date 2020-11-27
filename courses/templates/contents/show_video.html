@@ -4,16 +4,33 @@
 {% block body %}
 <a href ="{% url 'courses:course_contents_student' video.6 %}"><span class="oi oi-arrow-left"></span>Back</a>
 <br>
+{% if completed %}
+<div style="padding-top: 50px;">
+<div class="alert alert-success" style="padding-left: 400px;padding-top: 50;">You Completed Watching This Video</div>
+</div>
+{% endif %}
 <div class="container">
  
-<center>
-<h1>{{video.0}}</h1>
-<h2>{{video.1}}</h2>
-<h3>{{video.2}}</h3>
-<p>{{video.3}}</p>
-{% video video.4 'medium'%}
 
-<a href="{% url 'courses:next_content_student' video.5 %}" class= "btn btn-lg btn-outline-primary btn-block" >DONE</a>
+<h1><a href="{% url 'courses:course_topics_student' video.7 %}">{{video.0}}</a></h1>
+<h2><a href="{% url 'courses:course_contents_student' video.6 %}">{{video.1}}</a></h2>
+<hr>
+
+<div class="row pt-2">
+<div class="col md-6">{% video video.4 'medium'%}</div>
+
+</div>
+<hr>
+<div class="row pt-2">
+<div class="col md-6"><h3>{{video.2}}:</h3></div>
+</div>
+<div class="row">
+<div class="col md-6">
+    <h4>{{video.3}}</h4>
+</div>
+
+    
+</div>
 
 <!--
 <form class="form-show-video" action="{% url 'courses:next_content_student' video.5 %}" method="POST" >
@@ -22,9 +39,20 @@
     <button class="btn btn-md btn-outline-primary btn-block mb-5" type="submit">DONE</button> 
 </form>
 -->
-</center>
+
+<div class="row pt-3">
+    <div class="col " style="padding-left: 250px;padding-top: 50;" >
+        <a href="{% url 'courses:next_content_student' video.5 %}" class= "btn btn-lg btn-outline-primary " >DONE</a>
+        
+        
+    </div>
+</div>
+<br>
+<br>
+
 
 </div>
+
 
 
 {% endblock %} 

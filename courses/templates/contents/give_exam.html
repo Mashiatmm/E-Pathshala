@@ -8,18 +8,18 @@
 <br>
 {% if error %}
 <div style="padding-top: 50px;"></div>
-<div class="alert alert-danger" style="padding-left: 400px;padding-top: 50;">{{error}}</div>
+<div class="alert alert-success" style="padding-left: 400px;padding-top: 50;">{{error}}</div>
 {% endif %}
 
 
-
+<br><h4>{{exam.1}}&nbsp;</h4>
+        <div class="row"><div class="col-md-6"><H6 class="label success">{% if error or given_exam_now %}Obtained Marks:&nbsp;{{obtained_marks}}{% endif %}</H6></div></div>
 
 <form class="form-settings" name = "give_exam" action="{% url 'courses:give_exam' content_id %}" method="POST" >
 {% csrf_token %}
 
     <div class="container " style="background-color: #F8F9F9 ;">
-        <br><h4>{{exam.1}}&nbsp;</h4>
-        <H6 class="label success">{% if error or given_exam_now %}Obtained Marks:&nbsp;{{obtained_marks.0}}{% endif %}</H6>
+        
         {% if error or given_exam_now %}
         <fieldset disabled="disabled">
         {% endif %}
@@ -133,8 +133,8 @@
 
         <div class="row  pt-3" >
       
-            <div class="col-md-6" >
-              <button class="btn btn-primary btn-lg"  type="submit">Submit Answer</button> 
+            <div class="col-lg-7" style="padding-left: 400px;">
+              <button class="btn btn-primary btn-lg "  type="submit">Submit Answer</button> 
             </div>
           </div>
           {% if error or given_exam_now %}
@@ -147,13 +147,15 @@
 </form>
 
 
-<div class="row  pt-3" >
-      
-    <div class="col-md-6" >
-        <a href="{% url 'courses:next_content_student' content_id %}" class= "btn btn-lg btn-outline-primary btn-block" >Go To Next</a>
+    <div class="row pt-3">
+    <div class="col-lg-6" >
+        <a href="{% url 'courses:next_content_student' content_id %}" class= "btn btn-lg btn-outline-primary" style="float: right;">Go To Next</a>
         
     </div>
-  </div>
+</div>
+<br>
+<br>
+ 
 
 
 {% endblock %} 

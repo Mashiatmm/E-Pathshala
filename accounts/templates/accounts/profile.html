@@ -182,16 +182,18 @@
                 <div class="col-4">
                     <h6 style="color:#069">Class {{ course.2 }}</h6>
                 </div>
-                <div class="col-4 text-right">
-                    {% if course.3 != None%}
-                    <div class="row  pt-3" >
-                      {{course.3}}
-                    </div>
-                {% endif %}
-                </div>
+                
               
             </div>
-
+            <div class="row  pt-1" >
+                <div class="col-4 ">
+                {% if course.3 != None%}
+                    
+                        <h6 style="color:#069">{{course.3}}</h6>
+                    
+                {% endif %}
+                </div>
+            </div>
             
         </div>
 <!--

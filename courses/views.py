@@ -555,26 +555,18 @@ def show_video(request,content_id):
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
     c = connection.cursor() 
 
-    if request.method == 'POST':
-        statement="SELECT CONTENT_ID FROM COMPLETED_CONTENT WHERE CONTENT_ID =:content_id AND ST_ID = :userid"
-        c.execute(statement,{'content_id':content_id,'userid':userid})
-        exist=c.fetchone()
-        if exist == None:
-            statement="INSERT INTO COMPLETED_CONTENT VALUES(:0,:1,:2)"
-            c.execute(statement,(content_id,userid,0))
-            c.callproc('PERCENTAGE_COMPLETED_UPDATE',[userid,content_id])
 
+    statement="SELECT CONTENT_ID FROM COMPLETED_CONTENT WHERE CONTENT_ID =:content_id AND ST_ID = :userid"
+    c.execute(statement,{'content_id':content_id,'userid':userid})
+    completed=c.fetchone()
 
-        
-        
-
-    statement="SELECT CRS.NAME,T.TOPIC_TITLE,C.TITLE,C.DESCRIPTION,V.LINK,C.ID,T.ID FROM VIDEOS V,CONTENTS C,TOPICS T, COURSES CRS WHERE V.ID = C.ID AND C.TOPIC_ID=T.ID AND T.COURSE_ID = CRS.ID AND V.ID= :content_id"
+    statement="SELECT CRS.NAME,T.TOPIC_TITLE,C.TITLE,C.DESCRIPTION,V.LINK,C.ID,T.ID,CRS.ID FROM VIDEOS V,CONTENTS C,TOPICS T, COURSES CRS WHERE V.ID = C.ID AND C.TOPIC_ID=T.ID AND T.COURSE_ID = CRS.ID AND V.ID= :content_id"
     c.execute(statement,{'content_id':content_id})
     video = c.fetchone()
     c.close()
     connection.close() 
     
-    return render(request,'contents/show_video.html',{'userid':userid,'video': video,'content_id':content_id,'role':role})
+    return render(request,'contents/show_video.html',{'userid':userid,'video': video,'content_id':content_id,'role':role,'completed':completed})
 
 
 def give_exam(request,content_id):
@@ -651,8 +643,8 @@ def give_exam(request,content_id):
     if entry == None:
         return render(request,'contents/give_exam.html',{'userid':userid,'content_id':content_id,'exam': exam,'questions':questions,'role':role})
     
-
-    return render(request,'contents/give_exam.html',{'userid':userid,'content_id':content_id,'exam': exam,'questions':questions,'error':'You have already given the exam ! ','obtained_marks':entry,'role':role})
+    marks=entry[0]
+    return render(request,'contents/give_exam.html',{'userid':userid,'content_id':content_id,'exam': exam,'questions':questions,'error':'You have already given the exam ! ','obtained_marks':marks,'role':role})
     
 def next_content_student(request,content_id):
     if request.session.has_key('userid'):
