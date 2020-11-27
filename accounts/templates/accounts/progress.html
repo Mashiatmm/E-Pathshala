@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}Progress{% endblock %}
+
+  
+{% block body %}
+
+<div class="container " style="background-color: #F8F9F9 ;">
+
+    {% if error %}
+    <div style="padding-top: 50px;"></div>
+    <div class="alert alert-danger" style="padding-left: 400px;padding-top: 50;">{{error}}</div>
+    {% endif %}
+    
+</div>
+
+<h2 class="text-center">My Progress</h2>
+
+<div class="container">
+    <p>Type something in the input field to search the table for courses,enrollment date and others</p>  
+    <input class="form-control" id="myInput" type="text" placeholder="Search..">
+    <br>
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>Course</th>
+          <th>Class</th>
+          <th>Percentage Completed</th>
+          <th>Date of Enrollment</th>
+        </tr>
+      </thead>
+      <tbody id="myTable">
+          {%for enroll in enrollinfo %}
+        <tr>
+          <td>{{enroll.0}}</td>
+          <td>{{enroll.1}}</td>
+          <td>
+            <div class="progress" >
+                <div id = "test{{enroll.2}}" class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="{{enroll.2}}" aria-valuemin="0" aria-valuemax="100" style="width:{{enroll.2}}%; color:black;">
+                </div>
+                <div style="text-align:center;">{{enroll.2}}%</div>
+            </div>
+            
+          </td>
+          <td>{{enroll.3}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    
+    
+  </div>
+
+  <script>
+    $(document).ready(function(){
+      $("#myInput").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#myTable tr").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+    });
+    </script>
+
+{% endblock %}

@@ -126,7 +126,8 @@
     <a href="{% url 'courses:add_course'%}">Add Course</a>
     <a href="{% url 'accounts:students' %}">My Students</a>
   {% elif role == 'student' %}
-  <a href="{% url 'courses:enroll_course'%}">Add Course</a>
+    <a href="{% url 'courses:enroll_course'%}">Add Course</a>
+    <a href="{% url 'accounts:progress' %}">My Progress</a>
   {% endif %}
   <a href="">Forum</a>
   <a href="{% url 'accounts:settings' %}">Settings</a>

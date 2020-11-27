@@ -295,6 +295,8 @@ def students(request):
     c = connection.cursor()
 
     userid = request.session['userid']
+    role = request.session['role']
+    
     statement = """SELECT S.NAME,S.EMAIL,C.NAME,C.CLASS,E.PERCENTAGE_COMPLETED,E.ENROLL_TIME,S.ID
                    FROM USERS S,COURSES C,ENROLL E,TAKE_COURSE T
                    WHERE T.TEACHER_ID = :t AND T.COURSE_ID = E.COURSE_ID AND
@@ -305,4 +307,29 @@ def students(request):
     c.close()
     connection.close()
 
-    return render(request,'accounts/students.html',{'userid':userid,'role':'teacher','enrollinfo':enrollinfo})
+    return render(request,'accounts/students.html',{'userid':userid,'role':role,'enrollinfo':enrollinfo})
+
+
+def progress(request):
+    if request.session.has_key('userid') == False:
+            return render(request,'accounts/login.html',{'error': 'Not Logged In'})
+
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor()
+
+    userid = request.session['userid']
+    role = request.session['role']
+    
+    statement = """SELECT C.NAME,C.CLASS,E.PERCENTAGE_COMPLETED,E.ENROLL_TIME
+                    FROM STUDENTS S,COURSES C,ENROLL E
+                    WHERE S.ID = :t AND E.ST_ID = S.ID AND E.COURSE_ID = C.ID"""
+
+    c.execute(statement,{'t':userid})
+    enrollinfo = c.fetchall()
+    c.close()
+    connection.close()
+    print(enrollinfo)
+
+    return render(request,'accounts/progress.html',{'userid':userid,'role':role,'enrollinfo':enrollinfo})
+
