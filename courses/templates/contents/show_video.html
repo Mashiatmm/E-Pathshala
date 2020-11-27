@@ -9,8 +9,9 @@
 <div class="alert alert-success" style="padding-left: 400px;padding-top: 50;">You Completed Watching This Video</div>
 </div>
 {% endif %}
+
 <div class="container" style="align-content: center;">
- 
+    <center>
 
 <h1><a href="{% url 'courses:course_topics_student' video.7 %}">{{video.0}}</a></h1>
 <h2><a href="{% url 'courses:course_contents_student' video.6 %}">{{video.1}}</a></h2>
@@ -41,7 +42,7 @@
 -->
 
 <div class="row pt-3">
-    <div class="col " style="padding-left: 250px;padding-top: 50;" >
+    <div class="col " style="padding-left: padding-top: 50;" >
         <a href="{% url 'courses:next_content_student' video.5 %}" class= "btn btn-lg btn-outline-primary " >DONE</a>
         
         
@@ -51,6 +52,7 @@
 <br>
 
 
+</center>
 </div>
 
 
