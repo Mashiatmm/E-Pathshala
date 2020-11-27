@@ -23,12 +23,13 @@ urlpatterns = [
         path('edit_ques/<int:exam_id>/<int:ques_id>/',views.edit_ques,name='edit_ques'),
 
         path('enroll_course/',views.enroll_course,name='enroll_course'),
-        path('all_courses',views.all_courses,name='all_courses'),
+
         path('course_contents/student/<int:topic_id>',views.course_contents_student,name='course_contents_student'),
         path('course_topics/student/<int:course_id>',views.course_topics_student,name='course_topics_student'),
         path('course_contents/video/<int:content_id>',views.show_video,name='show_video'),
         path('course_contents/exam/<int:content_id>',views.give_exam,name='give_exam'),
 
         path('next_content/student/<int:content_id>',views.next_content_student,name='next_content_student'),
+        path('all_courses/class<int:course_class>',views.all_courses,name='all_courses'),
 
 ]

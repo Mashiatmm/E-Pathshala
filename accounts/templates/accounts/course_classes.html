@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}All Classes{% endblock %}
+{% block body %}
+
+
+
+
+
+<h1>Classes</h1>
+<ul>
+{% for course_class in classes %}
+
+<div class="row  pt-3  mydiv " >
+    
+    <div class="col-md-12"  onclick="window.location='{% url 'courses:all_courses' course_class %}';" style="cursor:pointer;">
+        <div class="row  pt-2" >
+            <div class="col-6">
+                <h4 style="color:#069">class {{course_class}}</h4>
+            </div>
+
+        </div>
+
+    </div>
+    </div>
+
+{% endfor %}
+</ul>
+
+
+{% endblock %} 

@@ -2,15 +2,35 @@
 {% block title %}All Courses{% endblock %}
 {% block body %}
 
+<a href ="{% url 'accounts:course_classes' %}"><span class="oi oi-arrow-left"></span>Back</a>
 
 
 
-
-<h1>courses</h1>
+<h1>courses of class {{course_class}}</h1>
 <ul>
 {% for course in courses %}
+<div class="row  pt-3  mydiv " >
+    
+    <div class="col-md-12"  onclick="window.location='{% url 'courses:course_topics_student' course.0 %}';" style="cursor:pointer;">
+        <div class="row  pt-2" >
+            <div class="col-6">
+                <h4 style="color:#069">{{course.1}}</h4>
+            </div>
 
-    <li><a href="{% url 'courses:course_topics_student' course.0 %}">{{ course.1 }} for class {{course.2}}</a></li>
+        </div>
+        {% if course.3 %}
+        <div class="row  pt-2" >
+            <div class="col-6">
+                <h6 style="color:#069">{{course.3}}</h6>
+            </div>
+
+        </div>
+        {% endif %}
+
+    </div>
+    </div>
+
+    
 
 {% endfor %}
 </ul>

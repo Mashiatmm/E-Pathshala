@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}Topics of {{course.1}}{% endblock %}
 {% block body %}
-<a href =""><span class="oi oi-arrow-left"></span>Back</a>
+
 <br>
 
 
@@ -28,12 +28,12 @@
 
         </div>
         
-        <div class="row  pt-1" >
-            <div class="col-4 text-right">
+        <div class="row  pt-2" >
+            <div class="col-6 ">
                 {% if topic.2 != None%}
-                <div class="row  pt-3" >
-                  {{topic.2}}
-                </div>
+            
+                  <h6 style="color:#069">{{topic.2}}</h6>
+             
             {% endif %}
             </div>
           

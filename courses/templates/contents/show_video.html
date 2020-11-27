@@ -2,20 +2,29 @@
 {% load embed_video_tags %}
 {% block title %}{% endblock %}
 {% block body %}
-<a href =""><span class="oi oi-arrow-left"></span>Back</a>
+<a href ="{% url 'courses:course_contents_student' video.6 %}"><span class="oi oi-arrow-left"></span>Back</a>
 <br>
+<div class="container">
+ 
 <center>
 <h1>{{video.0}}</h1>
 <h2>{{video.1}}</h2>
 <h3>{{video.2}}</h3>
 <p>{{video.3}}</p>
 {% video video.4 'medium'%}
-<form class="form-enroll_course" action="{% url 'courses:next_content_student' video.5 %}" method="POST" >
+
+<a href="{% url 'courses:next_content_student' video.5 %}" class= "btn btn-lg btn-outline-primary btn-block" >DONE</a>
+
+<!--
+<form class="form-show-video" action="{% url 'courses:next_content_student' video.5 %}" method="POST" >
     {% csrf_token %}
     <input type="hidden" id="course_id" value="{{courseNtopic.0}}" name="course_id" class="form-control" placeholder="Course ID">
-    <button class="btn btn-lg btn-outline-primary btn-block mb-5" type="submit">DONE</button> 
+    <button class="btn btn-md btn-outline-primary btn-block mb-5" type="submit">DONE</button> 
 </form>
+-->
 </center>
+
+</div>
 
 
 {% endblock %} 

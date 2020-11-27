@@ -4,7 +4,7 @@
 
 
 {% block body %}
-<a href =""><span class="oi oi-arrow-left"></span>Back</a>
+<a href ="{% url 'courses:course_contents_student' exam.0 %}"><span class="oi oi-arrow-left"></span>Back</a>
 <br>
 {% if error %}
 <div style="padding-top: 50px;"></div>
@@ -150,10 +150,8 @@
 <div class="row  pt-3" >
       
     <div class="col-md-6" >
-        <form class="form-give_exam" action="{% url 'courses:next_content_student' content_id %}" method="POST" >
-            {% csrf_token %}
-            <button class="btn btn-lg btn-outline-primary btn-block mb-5" type="submit">Go To Next</button> 
-        </form>
+        <a href="{% url 'courses:next_content_student' content_id %}" class= "btn btn-lg btn-outline-primary btn-block" >Go To Next</a>
+        
     </div>
   </div>
 

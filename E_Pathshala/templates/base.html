@@ -70,13 +70,15 @@
         
         <nav class="navbar fixed-top navbar-expand-lg navbar-light " style="background-color: lightblue;">
           <div class="container-fluid">
-            
+
             <a class="navbar-brand" href="{% url 'accounts:profile' %}">
+
+
               <img src="{% static 'e.png'%}" height="35" width="35" class="d-inline-block align-top">Pathshala
               
             </a>
 
-            <a class="nav-item nav-link {% block actcourses %}active{% endblock %}" href="{% url 'courses:all_courses'%}">Courses</a>
+           <a class="nav-item nav-link {% block actcourses %}active{% endblock %}" href="{% url 'accounts:course_classes' %}">Courses</a>
 
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
@@ -118,9 +120,10 @@
        </nav>
         
 </header>
-{%  if userid %}
+
 
 <div class="sidebar">
+  {%  if userid %}
   <a href="{% url 'accounts:profile' %}">Profile</a>
   {% if role == 'teacher' %}
     <a href="{% url 'courses:add_course'%}">Add Course</a>
@@ -131,9 +134,10 @@
   {% endif %}
   <a href="">Forum</a>
   <a href="{% url 'accounts:settings' %}">Settings</a>
+  {% endif %}
 </div>
 
-{% endif %}
+
 <main>
 
 

@@ -10,5 +10,6 @@ urlpatterns = [
     path('settings',views.settings,name = 'settings'),
     path('students',views.students,name = 'students'),
     path('progress',views.progress,name = 'progress'),
+    path('course_classes',views.course_classes,name = 'course_classes'),
     
 ]

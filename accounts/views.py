@@ -333,3 +333,14 @@ def progress(request):
 
     return render(request,'accounts/progress.html',{'userid':userid,'role':role,'enrollinfo':enrollinfo})
 
+def course_classes(request):
+    if request.session.has_key('userid'):
+        userid = request.session['userid']
+        role = request.session['role']
+    else:
+        userid = None
+        role = None
+    classes=[]
+    for i in range(0,12):
+        classes.append(i+1)
+    return render(request,'accounts/course_classes.html',{'userid':userid,'role':role,'classes':classes})

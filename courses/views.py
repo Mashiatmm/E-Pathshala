@@ -457,43 +457,45 @@ def enroll_course(request):
                     where c.class = (select class from students where id = :st_id)
                             and c.id not in(select course_id from enroll where st_id = :st_id )"""
     c.execute(statement,{'st_id':userid})
-    available_courses = c.fetchall()
-    print(available_courses)
+    available_courses_from_class = c.fetchall()
+
+    statement = """ select id,name,class,course_description
+                    from courses c 
+                    where c.class != (select class from students where id = :st_id)
+                            and c.id not in(select course_id from enroll where st_id = :st_id )
+                            order by c.class"""
+    c.execute(statement,{'st_id':userid})
+    available_courses_from_others = c.fetchall()
+
     c.close()
     connection.close()
     #,{'userid':userid,'available_courses':available_courses}
-    return render(request,'courses/enroll_course.html',{'userid':userid,'available_courses':available_courses,'role':'student'}) 
+    return render(request,'courses/enroll_course.html',{'userid':userid,'available_courses_from_class':available_courses_from_class,'available_courses_from_others':available_courses_from_others,'role':'student'}) 
 
 
-def all_courses(request):
-    if request.session.has_key('userid'):
-        userid = request.session['userid']
-        role = request.session['role']
-    else:
-        userid = None
-        role = None
 
-    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
-    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
-    c = connection.cursor()
-    statement="select id,name,class from courses "
-    c.execute(statement)
-    courses=c.fetchall()
-    c.close()
-    connection.close()
-    
-    return render(request,'courses/all_courses.html',{'courses':courses,'userid':userid,'role':role})
 
 def course_topics_student(request,course_id):
     if request.session.has_key('userid'):
         userid = request.session['userid']
         role= request.session['role']
     else:
-        return render(request,'accounts/login.html',{'error': 'Not Logged In'})
+        userid = None
+        role= None
+    
+
 
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
     c = connection.cursor()  
+    if role == 'teacher':
+        statement = "select * from take_course where course_id = :course_id and teacher_id = :userid"
+        c.execute(statement,{'course_id':course_id,'userid':userid})
+        takes = c.fetchone()
+        if takes != None:
+            return redirect('/courses/course_contents/teacher/'+str(course_id))
+
+        
 
     statement= "SELECT ID,NAME FROM COURSES WHERE ID = :course_id"
     c.execute(statement,{'course_id':course_id})
@@ -525,7 +527,7 @@ def course_contents_student(request,topic_id):
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
     c = connection.cursor() 
 
-    statement = "SELECT T.COURSE_ID,C.NAME,T.TOPIC_TITLE FROM TOPICS T,COURSES C WHERE T.COURSE_ID = C.ID AND T.ID = :topic_id"
+    statement = "SELECT T.COURSE_ID,C.NAME,T.TOPIC_TITLE,T.ID FROM TOPICS T,COURSES C WHERE T.COURSE_ID = C.ID AND T.ID = :topic_id"
     c.execute(statement,{'topic_id':topic_id})
     courseNtopic = c.fetchone()#stores info about the topic and course
 
@@ -566,7 +568,7 @@ def show_video(request,content_id):
         
         
 
-    statement="SELECT CRS.NAME,T.TOPIC_TITLE,C.TITLE,C.DESCRIPTION,V.LINK,C.ID FROM VIDEOS V,CONTENTS C,TOPICS T, COURSES CRS WHERE V.ID = C.ID AND C.TOPIC_ID=T.ID AND T.COURSE_ID = CRS.ID AND V.ID= :content_id"
+    statement="SELECT CRS.NAME,T.TOPIC_TITLE,C.TITLE,C.DESCRIPTION,V.LINK,C.ID,T.ID FROM VIDEOS V,CONTENTS C,TOPICS T, COURSES CRS WHERE V.ID = C.ID AND C.TOPIC_ID=T.ID AND T.COURSE_ID = CRS.ID AND V.ID= :content_id"
     c.execute(statement,{'content_id':content_id})
     video = c.fetchone()
     c.close()
@@ -663,6 +665,9 @@ def next_content_student(request,content_id):
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
     c = connection.cursor() 
 
+
+   
+
     statement="SELECT T.ID,T.SL_NO,CRS.ID,C.SL_NO,C.CONTENT_TYPE FROM CONTENTS C,TOPICS T,COURSES CRS WHERE C.ID = :content_id AND C.TOPIC_ID=T.ID AND T.COURSE_ID = CRS.ID"
     c.execute(statement,{'content_id':content_id})
     infos=c.fetchone()
@@ -670,6 +675,17 @@ def next_content_student(request,content_id):
     current_topic_sl=infos[1]
     current_course=infos[2]
     current_cont_sl=infos[3]
+    current_cont_type=infos[4]
+
+    if current_cont_type == 'video':
+        statement="SELECT CONTENT_ID FROM COMPLETED_CONTENT WHERE CONTENT_ID =:content_id AND ST_ID = :userid"
+        c.execute(statement,{'content_id':content_id,'userid':userid})
+        exist=c.fetchone()
+        if exist == None:
+            statement="INSERT INTO COMPLETED_CONTENT VALUES(:0,:1,:2)"
+            c.execute(statement,(content_id,userid,0))
+            c.callproc('PERCENTAGE_COMPLETED_UPDATE',[userid,content_id])
+
 
 
     statement="SELECT MIN(C.SL_NO) FROM CONTENTS C WHERE  C.TOPIC_ID = :current_topic  AND C.SL_NO > :current_cont_sl "
@@ -713,7 +729,24 @@ def next_content_student(request,content_id):
 
 
     
+def all_courses(request,course_class):
+    if request.session.has_key('userid'):
+        userid = request.session['userid']
+        role = request.session['role']
+    else:
+        userid = None
+        role = None
+
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor()
+    statement="select id,name,class,course_description from courses where class = :course_class"
+    c.execute(statement,{'course_class':course_class})
+    courses=c.fetchall()
+    c.close()
+    connection.close()
     
+    return render(request,'courses/all_courses.html',{'courses':courses,'userid':userid,'role':role,'course_class':course_class})
 
    
 
