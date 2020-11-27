@@ -17,10 +17,13 @@
 {% csrf_token %}
 
     <div class="container " style="background-color: #F8F9F9 ;">
-        <br><h4>{{exam.1}}&nbsp;{% if error or given_answers %}->Obtained Marks:&nbsp;{{obtained_marks.0}}{% endif %}</h4><br>
-        {% if error or given_answers %}
+        <br><h4>{{exam.1}}&nbsp;</h4>
+        <H6 class="label success">{% if error or given_exam_now %}Obtained Marks:&nbsp;{{obtained_marks.0}}{% endif %}</H6>
+        {% if error or given_exam_now %}
         <fieldset disabled="disabled">
-
+        {% endif %}
+        
+        {% if error or given_exam_now %}
         <ol>
         {% for question in questions %}
         <li>
@@ -133,7 +136,7 @@
               <button class="btn btn-primary btn-lg"  type="submit">Submit Answer</button> 
             </div>
           </div>
-          {% if error %}
+          {% if error or given_exam_now %}
         </fieldset>
         {% endif %}
 

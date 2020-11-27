@@ -114,7 +114,7 @@ def course_contents(request,course_id):
 
         
         except Exception as e:
-            error = "Topic name exists or empty"
+            error = "Topic name exists or empty" 
 
     statement = "select name,class,course_description from Courses where id = :id "
     c.execute(statement,{'id':course_id})
@@ -558,14 +558,21 @@ def give_exam(request,content_id):
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
     c = connection.cursor() 
  
-    given_answers=[]
-    if request.method == 'POST':
+    given_exam_now= False
+    statement="SELECT OBTAINED_MARKS FROM COMPLETED_CONTENT WHERE CONTENT_ID = :content_id AND ST_ID = :userid"
+    c.execute(statement,{'content_id':content_id,'userid':userid})
+    entry = c.fetchone()
+
+    if request.method == 'POST' and entry==None:
         statement="SELECT Q.ID,A.RIGHT_OPTION FROM QAS Q,QA_ANS A WHERE Q.EXAM_ID = :content_id AND A.ID=Q.ID ORDER BY Q.ID"
         c.execute(statement,{'content_id':content_id})
         answers= c.fetchall()
         marks=0
-
+        given_exam_now= True
+        given_answers=[]
         
+        
+
         for answer in answers:
             given_answers.append(str(request.POST.get('q'+str(answer[0]))))
             if request.POST.get('q'+str(answer[0])) == answer[1]:
@@ -579,15 +586,28 @@ def give_exam(request,content_id):
         statement="SELECT T.ID FROM CONTENTS C,TOPICS T WHERE C.TOPIC_ID = T.ID AND C.ID = :content_id"
         c.execute(statement,{'content_id':content_id})
         topic_id,= c.fetchone()
+
+        statement="SELECT C.TOPIC_ID,C.TITLE,E.TOTAL_MARKS FROM EXAMS E,CONTENTS C WHERE E.ID = C.ID AND E.ID= :content_id"
+        c.execute(statement,{'content_id':content_id})
+        exam = c.fetchone()
+
+        statement="SELECT Q.ID,Q.QUESTION_DESCRIPTION,Q.OPTION1,Q.OPTION2,Q.OPTION3,Q.OPTION4,A.RIGHT_OPTION FROM QAS Q,QA_ANS A WHERE Q.EXAM_ID = :content_id AND A.ID=Q.ID ORDER BY Q.ID"
+        c.execute(statement,{'content_id':content_id})
+        questions= c.fetchall()
+
+        for i in range(len(questions)):
+            temp=list(questions[i])
+            temp.append(given_answers[i])
+            questions[i]=tuple(temp)
+        return render(request,'contents/give_exam.html',{'userid':userid,'content_id':content_id,'exam': exam,'questions':questions,'given_exam_now':given_exam_now,'obtained_marks':marks,'role':role})
+
             
         '''c.close()
         connection.close() 
         return redirect('/courses/next_content/student/'+str(content_id))'''
         #return redirect(reverse('course_contents_student', kwargs={'topic_id':topic_id}))
 
-    statement="SELECT OBTAINED_MARKS FROM COMPLETED_CONTENT WHERE CONTENT_ID = :content_id AND ST_ID = :userid"
-    c.execute(statement,{'content_id':content_id,'userid':userid})
-    entry = c.fetchone()
+
 
     statement="SELECT C.TOPIC_ID,C.TITLE,E.TOTAL_MARKS FROM EXAMS E,CONTENTS C WHERE E.ID = C.ID AND E.ID= :content_id"
     c.execute(statement,{'content_id':content_id})
@@ -600,12 +620,7 @@ def give_exam(request,content_id):
     connection.close() 
     if entry == None:
         return render(request,'contents/give_exam.html',{'userid':userid,'content_id':content_id,'exam': exam,'questions':questions,'role':role})
-    elif given_answers != []:
-        for i in range(len(questions)):
-            temp=list(questions[i])
-            temp.append(given_answers[i])
-            questions[i]=tuple(temp)
-        return render(request,'contents/give_exam.html',{'userid':userid,'content_id':content_id,'exam': exam,'questions':questions,'given_answers':given_answers,'obtained_marks':entry,'role':role})
+    
 
     return render(request,'contents/give_exam.html',{'userid':userid,'content_id':content_id,'exam': exam,'questions':questions,'error':'You have already given the exam ! ','obtained_marks':entry,'role':role})
     
