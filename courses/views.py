@@ -704,7 +704,7 @@ def next_content_student(request,content_id):
         next_topic_sl,= c.fetchone()
         if next_topic_sl == None:
             #print("No next topic exist")
-            return redirect('/courses/all_courses/student/'+str(current_course))
+            return redirect('/accounts/profile')
         else:
             statement = """SELECT ID,CONTENT_TYPE
                             FROM CONTENTS 
