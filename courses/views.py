@@ -542,9 +542,9 @@ def course_contents_student(request,topic_id):
 
 
 
-
-    statement= "SELECT ID,TITLE,DESCRIPTION,CONTENT_TYPE,DURATION FROM CONTENTS WHERE TOPIC_ID = :topic_id order by sl_no"
-    c.execute(statement,{'topic_id':topic_id})
+    #ADD COUNT OF COMPLETED_CONTENT ENTRY
+    statement= "SELECT ID,TITLE,DESCRIPTION,CONTENT_TYPE,DURATION,IS_COMPLETED(:userid,ID) FROM CONTENTS WHERE TOPIC_ID = :topic_id order by sl_no"
+    c.execute(statement,{'topic_id':topic_id,'userid':userid})
     contents= c.fetchall() 
     c.close()
     connection.close() 

@@ -27,8 +27,9 @@
         {% if error or given_exam_now %}
         <ol>
         {% for question in questions %}
+        <div class="col-md-12" style="cursor:pointer;">
         <li>
-        <b>{{question.1}}</b>
+        <b>{{question.1}}</b><br><br>
         {% if not error and question.6 == question.7 %}
             <span class="label success "><span class="oi oi-circle-check "></span></span>
 
@@ -88,6 +89,9 @@
 
 
         </li>
+        <br>
+        <hr>
+    </div>
 
 
         {% endfor %}
@@ -97,8 +101,9 @@
 
         <ol>
             {% for question in questions %}
+            <div class="col-md-12" style="cursor:pointer;">
             <li>
-            <h4>{{question.1}}</h4>
+                <b>{{question.1}}</b><br><br>
     
             <div class="row pb-3" >
                 <div class="col-md-3">
@@ -124,6 +129,9 @@
     
     
             </li>
+            <br>
+            <hr>
+        </div>
     
     
             {% endfor %}
