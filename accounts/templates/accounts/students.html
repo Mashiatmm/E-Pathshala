@@ -14,6 +14,51 @@
     
 </div>
 
+<h2 class="text-center">My Courses</h2>
+
+<div class="container">
+    <p>Type something in the input field to search the table for name,courses,enrollment date and others</p>  
+    <input class="form-control" id="myCourses" type="text" placeholder="Search..">
+    <br>
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Class</th>
+          <th>Total Marks</th>
+          <th>Enrolled Students</th>
+          <th>Creation Date</th>
+        </tr>
+      </thead>
+      <tbody id="myTable1">
+          {%for course in courseinfo %}
+        <tr>
+          <td>{{course.0}}</td>
+          <td>{{course.1}}</td>
+          <td>{{course.2}}</td>
+          <td>{{course.3}}</td>
+          <td>{{course.4}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    
+    
+  </div>
+
+  <script>
+    $(document).ready(function(){
+      $("#myCourses").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#myTable1 tr").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+    });
+    </script>
+
+
+
 <h2 class="text-center">My Students</h2>
 
 <div class="container">

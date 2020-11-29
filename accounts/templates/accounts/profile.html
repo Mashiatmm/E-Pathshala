@@ -107,6 +107,14 @@
               
             </div>
 
+            <div class="row  pt-1" >
+                <div class="col-4">
+                    <h6 class ="text-uppercase">{{ course.5 }}</h6>
+                </div>
+                
+              
+            </div>
+
         {% if course.4 != None%}
             <div class="row  pt-3" >
               {{course.4}}
@@ -118,9 +126,11 @@
         <div class="col-md-3" >
             <a href="#contribute{{course.0}}" class= "btn btn-lg btn-outline-primary " data-toggle="modal">Add Contributor</a>
         </div>
+        {% if course.5 == 'owner' %}
         <div class="col-md-3" >
             <a href="#test{{course.0}}" class= "btn btn-lg btn-outline-primary " data-toggle="modal">Delete</a>
         </div>
+        {% endif %}
 
            
     </div>

@@ -204,7 +204,10 @@ def profile(request):
                         WHERE T.ID=U.ID AND U.ID=:user_id"""
             c.execute(statement,{'user_id': userid})
             user,=c.fetchall()
-            statement="select id,name,class,creation_time,course_description from courses where id in (select course_id from take_course where teacher_id =: userid) "
+            statement="""select c.id,c.name,c.class,c.creation_time,c.course_description,t.role
+                        from courses c ,take_course t
+                        where c.id in (select course_id from take_course where teacher_id =:userid)
+                        AND t.TEACHER_ID = :userid AND t.COURSE_ID = c.id"""
             c.execute(statement,{'userid':userid})
             courses=c.fetchall()
 
@@ -296,6 +299,14 @@ def students(request):
 
     userid = request.session['userid']
     role = request.session['role']
+
+    statement = """SELECT C.NAME,C.CLASS,C.TOTAL_MARKS,COUNT(E.ST_ID),C.CREATION_TIME
+                FROM COURSES C,ENROLL E,TAKE_COURSE T
+                WHERE T.TEACHER_ID = :t AND C.ID = T.COURSE_ID  AND E.COURSE_ID(+) = C.ID
+                GROUP BY (C.NAME,C.CLASS,C.TOTAL_MARKS,C.CREATION_TIME)"""
+
+    c.execute(statement,{'t':userid})
+    courseinfo = c.fetchall()
     
     statement = """SELECT S.NAME,S.EMAIL,C.NAME,C.CLASS,E.PERCENTAGE_COMPLETED,E.ENROLL_TIME,S.ID
                    FROM USERS S,COURSES C,ENROLL E,TAKE_COURSE T
@@ -307,7 +318,7 @@ def students(request):
     c.close()
     connection.close()
 
-    return render(request,'accounts/students.html',{'userid':userid,'role':role,'enrollinfo':enrollinfo})
+    return render(request,'accounts/students.html',{'userid':userid,'role':role,'enrollinfo':enrollinfo,'courseinfo':courseinfo})
 
 
 def progress(request):

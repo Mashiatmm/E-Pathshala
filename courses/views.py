@@ -34,7 +34,7 @@ def add_course(request):
             c.execute(statement)
             c_id, = c.fetchone()
             
-            statement = "INSERT INTO TAKE_COURSE VALUES(:0,:1)"
+            statement = "INSERT INTO TAKE_COURSE VALUES(:0,:1,'owner')"
             c.execute(statement,(c_id,userid))
        
             c.close()
@@ -73,7 +73,7 @@ def contribute_course(request,course_id):
         exists = c.fetchall()
         if exists == []:
             
-            statement = """INSERT INTO TAKE_COURSE VALUES(:0,:1)"""
+            statement = """INSERT INTO TAKE_COURSE VALUES(:0,:1,'contributor')"""
             c.execute(statement,(course_id,contributor_id[0][0]))
     
             c.close()
