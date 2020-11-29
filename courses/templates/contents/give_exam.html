@@ -29,13 +29,14 @@
         {% for question in questions %}
         <div class="col-md-12" style="cursor:pointer;">
         <li>
-        <b>{{question.1}}</b><br><br>
+        <b>{{question.1}}</b>
         {% if not error and question.6 == question.7 %}
             <span class="label success "><span class="oi oi-circle-check "></span></span>
 
         {% elif not error %}
             <span class="label danger "><span class="  oi oi-circle-x"></span></span>
         {% endif %}
+        <br><br>
 
         <div class="row pb-3" >
             <div class="col-md-3">
