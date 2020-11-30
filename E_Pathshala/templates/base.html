@@ -16,9 +16,11 @@
     <link rel="canonical" href="https://getbootstrap.com/docs/4.4/examples/album/">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'open-iconic\font\css\open-iconic-bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css\forum.css' %}">
     <link rel="stylesheet" href="{% static 'css\sidenav.css' %}">
     <link rel="stylesheet" href="{% static 'css\button.css' %}">
     <link rel="stylesheet" href="{% static 'css\hover.css' %}">
+    
     <!--<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"> -->
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -132,7 +134,7 @@
     <a href="{% url 'courses:enroll_course'%}">Add Course</a>
     <a href="{% url 'accounts:progress' %}">My Progress</a>
   {% endif %}
-  <a href="">Forum</a>
+  <a href="{% url 'forum:main' %}">Forum</a>
   <a href="{% url 'accounts:settings' %}">Settings</a>
   {% endif %}
 </div>
