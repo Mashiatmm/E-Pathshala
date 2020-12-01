@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base1.html' %}
 {% block title %}Sign Up{% endblock %}
 {% block body %}
 
@@ -7,7 +7,7 @@
 <form class="form-signin" action="{% url 'accounts:signup' role %}" method="POST" >
 
   {% csrf_token %}
-  <div class="container " style="background-color: #F8F9F9 ;">
+  <div class="container " >
 
     {% if error %}
     <div style="padding-top: 50px;"></div>
@@ -18,7 +18,7 @@
     <div class="row pb-3 pt-5" style="padding-left: 400px;">
 
       <div class="col-md-4">
-    <div class="text-center mb-4"><h1 class="h3 mb-3 font-weight-normal" >Sign up</h1></div>
+    <div class="text-center mb-4" style="padding-bottom:;"><h1 class="h3 mb-3 " ><b>Sign up</b></h1></div>
   
       </div>
     </div>

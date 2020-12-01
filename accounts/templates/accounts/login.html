@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base1.html' %}
 {% block title %}Log In{% endblock %}
 {% block body %}
 
@@ -7,7 +7,7 @@
 <form class="form-signin" action="{% url 'accounts:login'%}" method="POST" >
 
   {% csrf_token %}
-  <div class="container " style="background-color: #F8F9F9 ;">
+  <div class="container " >
 
     {% if error %}
     <div style="padding-top: 50px;"></div>
@@ -18,21 +18,21 @@
     <div class="row pb-3 pt-5" style="padding-left: 400px;">
 
       <div class="col-md-4">
-    <div class="text-center mb-4"><h1 class="h3 mb-3 font-weight-normal" >Log In</h1></div>
+    <div class="text-center mb-4"><h1 class="h3 mb-3 font-weight-normal" ><b>Log In</b></h1></div>
   
       </div>
     </div>
     
 
     
-    <div class="row pb-3" style="padding-left: 340px;">
+    <div class="row pb-3" style="padding-left: 340px;padding-top: 50px;padding-bottom: 20px;">
     <div class="col-md-6">
       <input type="text" id="email_or_name" name="email_or_name" class="form-control" placeholder="Email address" required autofocus>
     <label for="email_or_name" class="sr-only">Email address</label>
     </div>
     </div>
     
-    <div class="row pb-3" style="padding-left: 340px;">
+    <div class="row pb-3" style="padding-left: 340px;padding-bottom: 20px;">
   
       <div class="col-md-6">
   
