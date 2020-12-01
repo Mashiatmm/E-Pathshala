@@ -1,6 +1,7 @@
 {% extends 'base1.html' %}
 
 {% block title %}Profile{% endblock %}
+{% block profile_active %}active{% endblock %}
 
   
 {% block body %}
@@ -89,7 +90,7 @@
 
     <div class="row  pt-3  mydiv " >
         
-        <div class="col-md-12"  onclick="window.location='{% url 'courses:course_contents' course.0 %}';" style="cursor:pointer;">
+        <div class="col-md-12"  onclick="window.location='{% url 'courses:course_contents' course.0 %}';" style="cursor:pointer; padding-block-start: 20px;padding-block-end: 20px;padding-left: 50px;padding-right: 50px;">
             <div class="row  pt-2" >
                 <div class="col-6">
                     <h4 style="color:#069">{{course.1}}</h4>
@@ -123,11 +124,11 @@
    
         </div>
 
-        <div class="col-md-3" >
+        <div class="col-md-3" style="pointer-events:auto" >
             <a href="#contribute{{course.0}}" class= "btn btn-lg btn-outline-primary " data-toggle="modal">Add Contributor</a>
         </div>
         {% if course.5 == 'owner' %}
-        <div class="col-md-3" >
+        <div class="col-md-3"style="pointer-events: auto;" >
             <a href="#test{{course.0}}" class= "btn btn-lg btn-outline-primary " data-toggle="modal">Delete</a>
         </div>
         {% endif %}
