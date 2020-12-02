@@ -26,6 +26,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <link rel="stylesheet" href="{% static 'open-iconic\font\css\open-iconic-bootstrap.css' %}">
   <link rel="stylesheet" href="{% static 'css\style.css' %}">
   <link rel="stylesheet" href="{% static 'css\hover.css' %}"> 
+  <link rel="stylesheet" href="{% static 'css\sidenav.css' %}"> 
 
     <style>
       .bd-placeholder-img {
@@ -43,10 +44,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
         }
       }
 
-    
-    </style>
 
-<style> 
   #footer { 
       position:fixed;
       padding: 10px 10px 0px 10px; 
@@ -60,10 +58,12 @@ License URL: http://creativecommons.org/licenses/by/3.0/
       
   } 
 
+  #navbar {
+    position: fixed;
+    top: 0px;
+    width: 100%;
+}​
 
-</style> 
-
-<style>
   .label {
       padding: 8px;
       font-family: Arial;
@@ -75,22 +75,84 @@ License URL: http://creativecommons.org/licenses/by/3.0/
     .other {color: black;} /* Gray */ 
     .black_link {color: black;}
 
+    body, html {
+    height: 100%;
+    margin: 0;
+  }
+  
+  .bg {
+    /* The image used */
+    background-image: url({% static 'images\school1.jpeg' %});
+  
+    /* Full height */
+    height: 100%; 
+
+    
+  
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+
+
+
+
 
 
     
     </style>
-    <style>
-          .li{
-  color:#000;}
-    </style>
+    
+
 
 
 </head>
-<body>
-	<!-- Fixed navbar -->
-	<div class="navbar navbar-inverse " style="background-color: rgb(117, 175, 211); ">
-		<div class="container">
+
+  <body>
+<!-- <div id="main">
+            <button class="openbtn" onclick="openNav()">&#9776;</button>
+        
+          </div>
+          
+      <div id="mySidebar" class="sidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="#">About</a>
+        <a href="#">Services</a>
+        <a href="#">Clients</a>
+        <a href="#">Contact</a>
+      </div>-->
+<!--sidebar code-->
+<!--
+      <div id="main">
+        <button class="openbtn" onclick="openNav()">&#9776;</button>
+    
+      </div>
+      
+  <div id="mySidebar" class="sidebar">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <a href="#">About</a>
+    <a href="#">Services</a>
+    <a href="#">Clients</a>
+    <a href="#">Contact</a>
+  </div>
+
+-->
+    
+
+
+  <!-- Fixed navbar -->
+  <header>
+
+  <div class="navbar navbar-inverse navbar-static-top" style="background-color: rgb(117, 175, 211); ">
+    
+		<div class="container  container-fluid">
+      
+
+      
 			<div class="navbar-header">
+
+        
 				<!-- Button for smallest screens -->
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
         {% if userid %}
@@ -102,49 +164,70 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 			</div>
 			<div class="navbar-collapse collapse ">
 				<ul class="nav  navbar-nav pull-right mainNav " >
-					<li class="{% block home_active %}{% endblock %}"><a href="{% url 'home' %}">Home</a></li>
-				<!--	<li><a href="about.html">About</a></li> -->
-          <li class="{% block courses_active %}{% endblock %}"><a  href="{% url 'accounts:course_classes'%}">Courses</a></li>
+					
 
           {% if userid %}
-          <li class="{% block profile_active %}{% endblock %}"><a href="{% url 'accounts:profile'%}">My Profile</a></li>
-          <li><a href="{% url 'accounts:login'%}">Log Out</a></li>
+          <li class="{% block profile_active %}{% endblock %}"><a href="{% url 'accounts:profile' %}">Home</a></li>
+				<!--	<li><a href="about.html">About</a></li> -->
+          <li class="{% block courses_active %}{% endblock %}"><a  href="{% url 'accounts:course_classes'%}">Courses</a></li>
+          {% if role == 'student' %}
+          <li class="{% block enroll_course_active %}{% endblock %}"><a  href="{% url 'courses:enroll_course'%}">Add Course</a></li>
+          <li class="{% block my_progress_active %}{% endblock %}"><a  href="{% url 'accounts:progress' %}">My Progress</a></li>
+          {% elif role == 'teacher' %}
+          <li class="{% block add_course_active %}{% endblock %}"><a  href="{% url 'courses:add_course'%}">Add Course</a></li>
+          <li class="{% block my_students_active %}{% endblock %}"><a  href="{% url 'accounts:students' %}">My Students</a></li>
+          {% endif %}
+          <li class="dropdown {% block more_active %}{% endblock %}">
+						<a  class="dropdown-toggle " data-toggle="dropdown">{% block more_text %}More {% endblock %}<b class="caret"></b></a>
+						<ul class="dropdown-menu">
+					
+							<li><a href="{% url 'forum:main' %}">Forum</a></li>
+              <li><a href="{% url 'accounts:settings' %}">Edit Account</a></li>
+              <li><a href="{% url 'accounts:login'%}">Log Out</a></li>
+
+						</ul>
+          </li>
+      
+
 
           {% else %}
+          <li class="{% block home_active %}{% endblock %}"><a href="{% url 'home' %}">Home</a></li>
+				<!--	<li><a href="about.html">About</a></li> -->
+          <li class="{% block courses_active1 %}{% endblock %}"><a  href="{% url 'accounts:course_classes'%}">Courses</a></li>
           <li class="{% block login_active %}{% endblock %}"><a href="{% url 'accounts:login' %}">Log In</a></li>
 					<li class="dropdown {% block signup_active %}{% endblock %}">
 						<a  class="dropdown-toggle" data-toggle="dropdown">Sign Up <b class="caret"></b></a>
 						<ul class="dropdown-menu">
 					
 							<li><a href="{% url 'accounts:signup' 'student'  %}">As Student</a></li>
-							<li><a href="{% url 'accounts:signup' 'teacher'  %}">As Teacher</a></li>
+              <li><a href="{% url 'accounts:signup' 'teacher'  %}">As Teacher</a></li>
+
 						</ul>
           </li>
-<!--
-          <li >
-          <div class="dropdown">
-            <button class="dropbtn">Sign Up <b class="caret"></b>
-            </button>
-            <div class="dropdown-content">
-              <a href="{% url 'accounts:signup' 'student'  %}">As Student</a>
-              <a href="{% url 'accounts:signup' 'teacher'  %}">As Teacher</a>
-             
-            </div>
-          </div>
-          
-            </li>
--->
+
           
           {% endif %}
+
 				</ul>
 			</div>
 			<!--/.nav-collapse -->
 		</div>
-	</div>
+  </div>
+
+
+</header>
+
+
+{% if home %}
+<main class="bg">
+  {% else %}
+  <main >
+    {% endif %}
 
 
   <div class="container">
     <div class="container-fluid" style="padding-bottom: 40px;">
+
     {% block body %}
 
     {% endblock %}
@@ -152,6 +235,9 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 </script>
 </div>
     </div>
+ 
+
+
     	 
     <footer id="footer">
 
@@ -186,10 +272,10 @@ License URL: http://creativecommons.org/licenses/by/3.0/
     
     <script type='text/javascript' src="{% static 'js\jquery.mobile.customized.min.js'%}"></script>
     <script type='text/javascript' src="{% static 'js\jquery.easing.1.3.js'%}"></script> 
-    <script type='text/javascript' src=></script> 
+    <script type='text/javascript' src="{% static 'js\collapsible-sidebar.js'%}"></script> 
     <script src="{% static 'js\bootstrap.min.js'%}"></script> 
 	<script src="{% static 'js\custom.js'%}"></script>
  
-    
+</main>
 </body>
 </html>
