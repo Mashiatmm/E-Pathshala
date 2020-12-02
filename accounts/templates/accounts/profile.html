@@ -11,7 +11,7 @@
 
     {% if error %}
     <div style="padding-top: 50px;"></div>
-    <div class="alert alert-danger" style="padding-left: 400px;padding-top: 50;">{{error}}</div>
+    <div class="alert alert-danger" style="padding-left: 400px;padding-top: 50px;">{{error}}</div>
     {% endif %}
     
 </div>
@@ -71,30 +71,31 @@
       </div> 
 
 
-    <div class="row  pt-3  mydiv " >
+    <div class="row  pt-3  mydiv " style="padding-bottom: 10px;">
         
         <div class="col-md-12"  onclick="window.location='{% url 'courses:course_topics_student' course.0 %}';" style="cursor:pointer;">
             <div class="row  pt-2" >
-                <div class="col-6">
-                    <h4 style="color:#069">{{course.1}}</h4>
+                <div class="col-8">
+                    <h4 style="color:#069"><img src="{% static 'images/pen.png'%}" style="height: 50px;" >&nbsp;&nbsp;{{course.1}}</h4>
                 </div>
 
             </div>
             
-            <div class="row  pt-1" >
-                <div class="col-4">
-                    <h6 style="color:#069">Class {{ course.2 }}</h6>
+            <div class="row  pt-2" >
+                <div class="col-8">
+                    <h6 style="color:#069">for Class {{ course.2 }}</h6>
                 </div>
                 
               
             </div>
-            <div class="row  pt-1" >
-                <div class="col-4 ">
+            <div class="row  pt-2" >
+                <div class="col-8 ">
                 {% if course.3 != None%}
                     
-                        <h6 style="color:#069">{{course.3}}</h6>
+                        <b style="color:#069">about:</b>&nbsp;{{course.3}}
                     
                 {% endif %}
+           
                 </div>
             </div>
             
@@ -107,6 +108,7 @@
 -->
            
     </div>
+    
 
 
     {% endfor %}
