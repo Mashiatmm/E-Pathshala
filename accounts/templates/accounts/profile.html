@@ -37,9 +37,9 @@
 
 {% else %}
 
-<h1>Courses</h1>
-    <a href="{% url 'courses:enroll_course' %}" class = "btn btn-lg btn-outline-primary btn-lg">Add Course</a>
-    <ul>
+
+<h5>My Courses<a href="{% url 'courses:enroll_course'%}" style="float:right">Add a new Course</a></h5>
+    <ul class="list-group list-group-flush mydiv">
     {% for course in courses %}
 
     <div class="modal fade" id="test{{course.0}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
