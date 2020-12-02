@@ -82,6 +82,13 @@
   margin: 0;
   }
 
+  .active1{
+    background: blue;
+    color:blue;
+  }
+
+  
+
   .bg {
   /* The image used */
   background-image: url({% static 'images\school1.jpeg' %});
@@ -180,16 +187,16 @@
 {%  if userid %}
 <div class="bg-light border-right" id="sidebar-wrapper">
   <div class="list-group list-group-flush">
-      <a href="{% url 'accounts:profile' %}" class="list-group-item list-group-item-action bg-light">Profile</a>
+      <a href="{% url 'accounts:profile' %}" class="{% block profile_active1 %}{% endblock %} list-group-item list-group-item-action bg-light">Profile</a>
     {% if role == 'teacher' %}
-      <a href="{% url 'courses:add_course'%}" class="list-group-item list-group-item-action bg-light">Add Course</a>
-      <a href="{% url 'accounts:students' %}" class="list-group-item list-group-item-action bg-light">My Students</a>
+      <a href="{% url 'courses:add_course'%}" class="{% block add_course_active1 %}{% endblock %} list-group-item list-group-item-action bg-light">Add Course</a>
+      <a href="{% url 'accounts:students' %}" class="{% block my_students_active1 %}{% endblock %} list-group-item list-group-item-action bg-light">My Students</a>
     {% elif role == 'student' %}
-      <a href="{% url 'courses:enroll_course'%}" class="list-group-item list-group-item-action bg-light">Add Course</a>
-      <a href="{% url 'accounts:progress' %}" class="list-group-item list-group-item-action bg-light">My Progress</a>
+      <a href="{% url 'courses:enroll_course'%}" class="{% block enroll_course_active1 %}{% endblock %} list-group-item list-group-item-action bg-light">Add Course</a>
+      <a href="{% url 'accounts:progress' %}" class="{% block my_progress_active1 %}{% endblock %} list-group-item list-group-item-action bg-light">My Progress</a>
     {% endif %}
-    <a href="{% url 'forum:main' %}" class="list-group-item list-group-item-action bg-light">Forum</a>
-    <a href="{% url 'accounts:settings' %}" class="list-group-item list-group-item-action bg-light">Settings</a>
+    <a href="{% url 'forum:main' %}" class="{% block forum_active1 %}{% endblock %} list-group-item list-group-item-action bg-light">Forum</a>
+    <a href="{% url 'accounts:settings' %}" class="{% block settings_active1 %}{% endblock %} list-group-item list-group-item-action bg-light">Settings</a>
   </div>
 </div>
   

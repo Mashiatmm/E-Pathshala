@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
 {% block title %}Add Course{% endblock %}
 {% block add_course_active %}active{% endblock %}
+{% block add_course_active1 %}active1{% endblock %}
 {% block body %}
 
 
 
-<form class="form-add_course" action="{% url 'courses:add_course'%}" method="POST" >
+<form class="form" action="{% url 'courses:add_course'%}" method="POST" >
 
   {% csrf_token %}
   <div class="container " >
