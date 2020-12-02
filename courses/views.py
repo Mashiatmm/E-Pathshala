@@ -149,8 +149,10 @@ def course_contents(request,course_id):
             print(e)
             error = "Topic name exists or empty" 
 
-    statement = "select name,class,course_description from Courses where id = :id "
-    c.execute(statement,{'id':course_id})
+    statement = """select c.name,c.class,c.course_description,t.role 
+                    from Courses c,take_course t 
+                    where c.id = :id  AND t.TEACHER_ID = :userid AND t.COURSE_ID = c.id"""
+    c.execute(statement,{'userid':userid,'id':course_id})
     courseinfo, = c.fetchall()
     #WRITE FUNCTION TO RETURN CONTENT NUMBERS
     statement = """SELECT T.ID,T.TOPIC_TITLE,T.TOPIC_DESCRIPTION,T.SL_NO

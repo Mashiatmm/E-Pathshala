@@ -1,4 +1,4 @@
-.mydiv div:hover{
+.mydiv li:hover{
     background-color:#F3F3F3;
     -webkit-border-radius: 5px 5px 5px 5px;
     border-radius: 5px 5px 5px 5px;
