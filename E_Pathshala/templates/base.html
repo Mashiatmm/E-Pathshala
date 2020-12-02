@@ -100,7 +100,7 @@
   .color-white{
     color:white;
 }
- 
+
   </style>
   
 
@@ -113,27 +113,25 @@
       
     <header>
         
-      <nav class="navbar static-top navbar-expand-lg navbar-dark" style="background-color: rgb(25,25,112);">
-        <div class="container container-fluid">
+      <nav class="navbar static-top navbar-expand-lg  navbar-dark" style="background-color: rgba(8, 8, 102, 0.89);">
+        <div class="container  container-fluid" >
 
           <a class="navbar-brand" href="{% url 'home' %}">
 
 
-            <img src="{% static 'images/logo 3.png'%}" height="35" width="150" class="d-inline-block align-top">
+            <img src="{% static 'images/logo4.png'%}" height="20%" width="20%" class="d-inline-block align-top">
             
           </a>
 
-         <a class="nav-item nav-link {% block courses_active %}{% endblock %} color-white" href="{% url 'accounts:course_classes' %}">Courses</a>
+         
 
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
+  
           <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
 
             {%  if userid %}
 
             <div class="navbar-nav ml-auto">
-
+              <a class="nav-item nav-link {% block courses_active %}{% endblock %} color-white" href="{% url 'accounts:course_classes' %}">Courses</a>
               <a class="nav-item nav-link {% block profile_active %}{% endblock %} color-white" href="{% url 'accounts:profile' %}"> <span class="oi oi-people"></span></a>
               <a class="nav-item nav-link {% block logout_active %}{% endblock %} color-white" href="{% url 'accounts:login' %}">Logout</a>
 
@@ -141,7 +139,9 @@
 
 
             {%  else %}
-            <div class="navbar-nav ml-auto">
+            <div class="navbar-nav ml-auto" style="padding-top: 25px;padding-bottom: 25px;">
+              
+              <a class="nav-item nav-link {% block courses_active1 %}{% endblock %} color-white" href="{% url 'accounts:course_classes' %}">Courses</a>
               <div class="dropdown {% block signup_active %}{% endblock %} ">
                 <button class="btn dropdown-toggle color-white"  id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Sign Up 
@@ -152,15 +152,16 @@
                   
                 </div>
               </div>
+              <a class="nav-item nav-link {% block login_active %}{% endblock %}" href="{% url 'accounts:login' %}">LogIn</a> 
              
               
-              <a class="nav-item nav-link {% block login_active %}{% endblock %}" href="{% url 'accounts:login' %}">Log In</a>
+             
              
             </div>
 
             {%  endif  %}
 
-          </div>
+          
       </div>
      </nav>
       
