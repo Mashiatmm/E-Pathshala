@@ -355,3 +355,22 @@ def course_classes(request):
     for i in range(0,12):
         classes.append(i+1)
     return render(request,'accounts/course_classes.html',{'userid':userid,'role':role,'classes':classes})
+
+
+
+"""
+<div class="sidebar">
+  
+  <a href="{% url 'accounts:profile' %}">Profile</a>
+  {% if role == 'teacher' %}
+    <a href="{% url 'courses:add_course'%}">Add Course</a>
+    <a href="{% url 'accounts:students' %}">My Students</a>
+  {% elif role == 'student' %}
+    <a href="{% url 'courses:enroll_course'%}">Add Course</a>
+    <a href="{% url 'accounts:progress' %}">My Progress</a>
+  {% endif %}
+  <a href="{% url 'forum:main' %}">Forum</a>
+  <a href="{% url 'accounts:settings' %}">Settings</a>
+  
+</div>
+"""
