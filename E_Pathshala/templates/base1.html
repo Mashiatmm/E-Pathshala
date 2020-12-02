@@ -74,13 +74,21 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
     .other {color: black;} /* Gray */ 
     .black_link {color: black;}
+
+
+
+    
+    </style>
+    <style>
+          .li{
+  color:#000;}
     </style>
 
 
 </head>
 <body>
 	<!-- Fixed navbar -->
-	<div class="navbar navbar-inverse" style="background-color: rgb(117, 175, 211);">
+	<div class="navbar navbar-inverse " style="background-color: rgb(117, 175, 211); ">
 		<div class="container">
 			<div class="navbar-header">
 				<!-- Button for smallest screens -->
@@ -90,16 +98,16 @@ License URL: http://creativecommons.org/licenses/by/3.0/
           {% else %}
           <a class="navbar-brand" href="{% url 'home' %}">
         {% endif %}
-					<img src="{% static 'images\logo2.png' %}" ></a><br><br>
+					<img src="{% static 'images\logo 3.png' %}" ></a><br><br>
 			</div>
-			<div class="navbar-collapse collapse">
-				<ul class="nav navbar-nav pull-right mainNav">
+			<div class="navbar-collapse collapse ">
+				<ul class="nav  navbar-nav pull-right mainNav " >
 					<li class="{% block home_active %}{% endblock %}"><a href="{% url 'home' %}">Home</a></li>
 				<!--	<li><a href="about.html">About</a></li> -->
-          <li class="{% block courses_active %}{% endblock %}"><a href="{% url 'accounts:course_classes'%}">Courses</a></li>
+          <li class="{% block courses_active %}{% endblock %}"><a  href="{% url 'accounts:course_classes'%}">Courses</a></li>
 
           {% if userid %}
-          <li><a href="{% url 'accounts:profile'%}">My Profile</a></li>
+          <li class="{% block profile_active %}{% endblock %}"><a href="{% url 'accounts:profile'%}">My Profile</a></li>
           <li><a href="{% url 'accounts:login'%}">Log Out</a></li>
 
           {% else %}
@@ -136,11 +144,13 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
 
   <div class="container">
+    <div class="container-fluid" style="padding-bottom: 40px;">
     {% block body %}
 
     {% endblock %}
     <script src="{% static 'js\radioUnclick.js'%}">
 </script>
+</div>
     </div>
     	 
     <footer id="footer">
