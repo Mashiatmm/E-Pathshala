@@ -57,3 +57,49 @@ if prev_cont_sl!= None:
         return redirect('/courses/course_contents/video/'+str(prev_cont_id))
     else:
         return redirect('/courses/course_contents/exam/'+str(prev_cont_id))
+
+
+
+
+
+
+
+
+
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+
+            {%  if userid %}
+
+            <div class="navbar-nav ml-auto">
+              <a class="nav-item nav-link {% block courses_active %}{% endblock %} color-white" href="{% url 'accounts:course_classes' %}">Courses</a>
+              <a class="nav-item nav-link {% block profile_active %}{% endblock %} color-white" href="{% url 'accounts:profile' %}"> <span class="oi oi-people"></span></a>
+              <a class="nav-item nav-link {% block logout_active %}{% endblock %} color-white" href="{% url 'accounts:login' %}">Logout</a>
+
+            </div>
+
+
+            {%  else %}
+            <div class="navbar-nav ml-auto" style="padding-top: 25px;">
+              <a class="nav-item nav-link {% block courses_active1 %}{% endblock %} color-white" href="{% url 'accounts:course_classes' %}">Courses</a>
+              <div class="dropdown {% block signup_active %}{% endblock %} ">
+                <button class="btn dropdown-toggle color-white"  id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Sign Up 
+                </button>
+                <div class="dropdown-menu " aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" href="{% url 'accounts:signup' 'teacher'  %}">as Teacher</a>
+                  <a class="dropdown-item" href="{% url 'accounts:signup' 'student'  %}">as Student</a>
+                  
+                </div>
+              </div>
+             
+              
+              <a class="nav-item nav-link {% block login_active %}{% endblock %}" href="{% url 'accounts:login' %}">Log In</a>
+             
+            </div>
+
+            {%  endif  %}
+
+          </div>

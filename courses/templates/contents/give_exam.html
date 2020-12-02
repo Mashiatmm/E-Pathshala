@@ -18,7 +18,7 @@
 <form class="form-settings" name = "give_exam" action="{% url 'courses:give_exam' content_id %}" method="POST" >
 {% csrf_token %}
 
-    <div class="container " style="background-color: #F8F9F9 ;">
+    <div class="container " >
         
         {% if error or given_exam_now %}
         <fieldset disabled="disabled">

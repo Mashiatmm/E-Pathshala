@@ -7,7 +7,7 @@
 <form class="form-settings" name = "addQues" action="{% url 'courses:add_ques' examinfo.2 %}" method="POST" >
 
   {% csrf_token %}
-  <div class="container " style="background-color: #F8F9F9 ;">
+  <div class="container " >
 
     {% if error %}
     <div style="padding-top: 50px;"></div>
