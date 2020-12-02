@@ -33,13 +33,13 @@ def home(request):
     c = connection.cursor()
     statement = "SELECT ID,NAME,CLASS FROM COURSES " '''
        
-    
+    home=1
     if request.session.has_key('userid'):
         userid = request.session['userid']
         role= request.session['role']
-        return render(request,'accounts/home.html',{'userid':userid,'role':role})
+        return render(request,'accounts/home.html',{'userid':userid,'role':role,'home':home})
 
-    return render(request,'accounts/home.html')
+    return render(request,'accounts/home.html',{'home':home})
 
 
 def signup(request,role):

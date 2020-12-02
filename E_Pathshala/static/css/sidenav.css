@@ -3,16 +3,20 @@
     margin: 0;
     padding: 0;
     width: 200px;
-    background-color: #f1f1f1;
+    background-color:transparent;
     position: fixed;
     height: 100%;
     overflow: auto;
+    z-index: 1; /* Stay on top */
+    top: 0;
+    left: 0;
+    padding-top: 100px;
   }
   
   /* Sidebar links */
   .sidebar a {
     display: block;
-    color: black;
+    color: rgb(117, 175, 211);
     padding: 16px;
     text-decoration: none;
   }
@@ -25,7 +29,7 @@
   
   /* Links on mouse-over */
   .sidebar a:hover:not(.active) {
-    background-color: #555;
+    background-color: rgb(117, 175, 211);
     color: white;
   }
   
