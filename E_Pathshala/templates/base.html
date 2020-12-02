@@ -104,6 +104,8 @@
   background-size: cover;
   }
 
+ 
+
   .color-white{
     color:white;
 }
@@ -189,7 +191,7 @@
       <a href="{% url 'accounts:profile' %}" class="{% block profile_active1 %}{% endblock %} list-group-item list-group-item-action bg-light">Profile</a>
     {% if role == 'teacher' %}
       <a href="{% url 'courses:add_course'%}" class="{% block add_course_active1 %}{% endblock %} list-group-item list-group-item-action bg-light">Add Course</a>
-      <a href="{% url 'accounts:students' %}" class="{% block my_students_active1 %}{% endblock %} list-group-item list-group-item-action bg-light">My Students</a>
+      <a href="{% url 'accounts:students' %}" class="{% block my_students_active1 %}{% endblock %} list-group-item list-group-item-action bg-light">Statistics</a>
     {% elif role == 'student' %}
       <a href="{% url 'courses:enroll_course'%}" class="{% block enroll_course_active1 %}{% endblock %} list-group-item list-group-item-action bg-light">Add Course</a>
       <a href="{% url 'accounts:progress' %}" class="{% block my_progress_active1 %}{% endblock %} list-group-item list-group-item-action bg-light">My Progress</a>

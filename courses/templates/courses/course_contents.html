@@ -1,6 +1,70 @@
 {% extends 'base.html' %}
 {% block title %}Course Contents{% endblock %}
 {% block body %}
+
+<div class="modal fade" id="test{{course_id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header text-center">
+              
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+          </div>
+          <div class="modal-body mx-3">
+              <h5 class="modal-title w-100 font-weight-bold"  style="text-align:center">Delete this content permanently?</h5>
+              <form class="form-settings" action="{% url 'courses:del_course' course_id %}" method="POST">
+              {% csrf_token %}
+              
+              
+              <div class="modal-footer d-flex justify-content-center">
+                  <button class="btn btn-info btn-sm" type="submit">Confirm</button> 
+                  
+              </div>
+            </form>
+
+          </div>
+          
+      </div>
+  
+  </div>
+</div> 
+
+<div class="modal fade" id="contribute{{course_id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header text-center">
+              
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+          </div>
+          <div class="modal-body mx-3">
+              <h5 class="modal-title w-100 font-weight-bold"  style="text-align:center">Add Contributor</h5>
+              <form class="form-settings" action="{% url 'courses:contribute_course' course_id %}" method="POST">
+              {% csrf_token %}
+              
+              <div class="md-form mb-4">
+                  <label data-error="wrong" data-success="right" for="mail">Contributor's Mail ID</label>
+                  <input type="text" id='mail' name = 'mail' class="form-control validate" required>
+                  
+              </div>
+
+              <div class="modal-footer d-flex justify-content-center">
+                  <button class="btn btn-info btn-sm" type="submit">Confirm</button> 
+                  
+              </div>
+            </form>
+
+          </div>
+          
+      </div>
+  
+  </div>
+</div> 
+
+
+
 <div class="modal fade" id="modalCourseForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -50,6 +114,22 @@
 <div class="text-center">
   <button class="button" data-toggle="modal" data-target="#modalCourseForm"><span class="oi oi-pencil"></span>Edit</button>
 </div>
+
+<div class="row  pt-3  mydiv " >
+  
+  
+  <div class="col-md-3" style="pointer-events:auto" >
+      <a href="#contribute{{course_id}}" data-toggle="modal">Add Contributor</a>
+  </div>
+  {% if courseinfo.3 == 'owner' %}
+  <div class="col-md-3"style="pointer-events: auto;" >
+      <a href="#test{{course_id}}" data-toggle="modal">Delete</a>
+  </div>
+  {% endif %}
+
+     
+</div>
+
 <br>
 <h6>{{courseinfo.2}}</h6>
 

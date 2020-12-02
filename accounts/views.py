@@ -204,10 +204,9 @@ def profile(request):
                         WHERE T.ID=U.ID AND U.ID=:user_id"""
             c.execute(statement,{'user_id': userid})
             user,=c.fetchall()
-            statement="""select c.id,c.name,c.class,c.creation_time,c.course_description,t.role
-                        from courses c ,take_course t
-                        where c.id in (select course_id from take_course where teacher_id =:userid)
-                        AND t.TEACHER_ID = :userid AND t.COURSE_ID = c.id"""
+            statement="""select c.id,c.name,c.class
+                        from courses c
+                        where c.id in (select course_id from take_course where teacher_id =:userid)"""
             c.execute(statement,{'userid':userid})
             courses=c.fetchall()
 
@@ -359,18 +358,82 @@ def course_classes(request):
 
 
 """
-<div class="sidebar">
-  
-  <a href="{% url 'accounts:profile' %}">Profile</a>
-  {% if role == 'teacher' %}
-    <a href="{% url 'courses:add_course'%}">Add Course</a>
-    <a href="{% url 'accounts:students' %}">My Students</a>
-  {% elif role == 'student' %}
-    <a href="{% url 'courses:enroll_course'%}">Add Course</a>
-    <a href="{% url 'accounts:progress' %}">My Progress</a>
-  {% endif %}
-  <a href="{% url 'forum:main' %}">Forum</a>
-  <a href="{% url 'accounts:settings' %}">Settings</a>
-  
-</div>
+
+
+<div class="modal fade" id="test{{course.0}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
+                <div class="modal-body mx-3">
+                    <h5 class="modal-title w-100 font-weight-bold"  style="text-align:center">Delete this content permanently?</h5>
+                    <form class="form-settings" action="{% url 'courses:del_course' course.0 %}" method="POST">
+                    {% csrf_token %}
+                    
+                    
+                    <div class="modal-footer d-flex justify-content-center">
+                        <button class="btn btn-info btn-sm" type="submit">Confirm</button> 
+                        
+                    </div>
+                  </form>
+      
+                </div>
+                
+            </div>
+        
+        </div>
+    </div> 
+
+      <div class="modal fade" id="contribute{{course.0}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
+                <div class="modal-body mx-3">
+                    <h5 class="modal-title w-100 font-weight-bold"  style="text-align:center">Add Contributor</h5>
+                    <form class="form-settings" action="{% url 'courses:contribute_course' course.0 %}" method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="md-form mb-4">
+                        <label data-error="wrong" data-success="right" for="mail">Contributor's Mail ID</label>
+                        <input type="text" id='mail' name = 'mail' class="form-control validate" required>
+                        
+                    </div>
+
+                    <div class="modal-footer d-flex justify-content-center">
+                        <button class="btn btn-info btn-sm" type="submit">Confirm</button> 
+                        
+                    </div>
+                  </form>
+      
+                </div>
+                
+            </div>
+        
+        </div>
+      </div> 
+    
+
+    <div class="row  pt-3  mydiv " >
+        
+        
+        <div class="col-md-3" style="pointer-events:auto" >
+            <a href="#contribute{{course.0}}" data-toggle="modal">Add Contributor</a>
+        </div>
+        {% if course.5 == 'owner' %}
+        <div class="col-md-3"style="pointer-events: auto;" >
+            <a href="#test{{course.0}}" data-toggle="modal">Delete</a>
+        </div>
+        {% endif %}
+
+           
+    </div>
 """
