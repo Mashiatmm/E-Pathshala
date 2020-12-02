@@ -103,7 +103,7 @@
 <form class="form-settings" action="{% url 'courses:edit_ques' examinfo.2 ques.6  %}" method="POST" >
 
   {% csrf_token %}
-  <div class="card-body tab-content" style="background-color: #F8F9F9 ;">
+  <div class="card-body tab-content" >
 
     <div class="row pb-1" >
       <div class="col-md-9">
@@ -170,7 +170,7 @@
 <form class="form-settings" action="{% url 'courses:add_exams' course_id topic_id %}" method="POST" >
 
   {% csrf_token %}
-  <div class="container " style="background-color: #F8F9F9 ;">
+  <div class="container " >
 
     {% if error %}
     <div style="padding-top: 50px;"></div>
