@@ -66,6 +66,8 @@
     width: 100%;
     }​
 
+
+
   .label {
     padding: 8px;
     font-family: Helvetica;
@@ -83,8 +85,11 @@
   }
 
   .active1{
-    background: blue;
-    color:blue;
+    background-color: blue;
+    color:rgb(55, 0, 255);
+  }
+  .active{
+    background-color: rgba(0, 0, 255, 0.603);
   }
 
   
@@ -133,7 +138,7 @@
          
 
   
-          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup" style="padding-top: 25px;padding-bottom: 25px;">
 
             {%  if userid %}
 
@@ -146,7 +151,7 @@
 
 
             {%  else %}
-            <div class="navbar-nav ml-auto" style="padding-top: 25px;padding-bottom: 25px;">
+            <div class="navbar-nav ml-auto" >
               
               <a class="nav-item nav-link {% block courses_active1 %}{% endblock %} color-white" href="{% url 'accounts:course_classes' %}">Courses</a>
               <div class="dropdown {% block signup_active %}{% endblock %} ">

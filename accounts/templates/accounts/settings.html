@@ -10,7 +10,7 @@
 <form class="form-settings" action="{% url 'accounts:settings'%}" method="POST" >
 
   {% csrf_token %}
-  <div class="container " style="background-color: #F8F9F9 ;">
+  <div class="container container-fluid" style="padding-left: 300px;" >
 
     {% if error %}
     <div style="padding-top: 50px;"></div>
@@ -20,8 +20,8 @@
 
     <div class="row pb-3 pt-5">
 
-      <div class="col-md-4">
-    <div class="text-center mb-4"><h1 class="h3 mb-3 font-weight-normal" >Edit Account</h1></div>
+      <div class="col-md-6">
+    <div class="text-center mb-4"><h1 class="h3 mb-4 " >Edit Account</h1></div>
   
       </div>
     </div>
