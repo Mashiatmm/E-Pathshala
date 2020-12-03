@@ -86,28 +86,87 @@
                   <div class="post-container">
                     
                     <div class="post-detail">
-                      <div class="user-info">
-                        <h5><a href="#" class="profile-link">{{cmnt.1}}</a></h5>
-                        <h6>{{cmnt.3}}</h6>
+                      <div class="row user-info">
+                        <div class="col-md-2"><h5><a href="#" class="profile-link">{{cmnt.1}}</a></h5></div>
+                        <div class="col-md-4"></div>
+                        <div class="col-md-4"><h6>{{cmnt.3}}</h6></div>
                         
                       </div>
 
                       <div class="line-divider"></div>
-                      <div class="post-text">
-                        <p>{{cmnt.2}} <i class="em em-anguished"></i> <i class="em em-anguished"></i> <i class="em em-anguished"></i></p>
-                      </div>
+                      <div class="container">
+                        <div class="row">
+                          <div class="post-text">
+                            <p>{{cmnt.2}} <i class="em em-anguished"></i> <i class="em em-anguished"></i> <i class="em em-anguished"></i></p>
+                          </div>
+                        </div>
+                        {% if parent_id != cmnt.0 %}
+                        <div class="row">
+                          <form class="form-settings" name = "show_replies" action="{% url 'courses:show_video' video.5  %}" method="POST">
+                            {% csrf_token %}
+                          <div class="col-md-8"></div>
+                          <input type="hidden" name="parent_id" id="parent_id" value="{{cmnt.0}}">
+                          <div class="col-md-2"><button  type="submit">show&nbsp;replies</button></div>
+                        </form>
+                        </div>
+                        {% endif %}
                       
+
                       
-                      <div class="post-comment">
+                  
+                  {% if parent_id == cmnt.0 %}
+
+                     
+                    {% for reply in replies_to_comment %}
+                    <div class="container">
+                      <div class="row user-info">
+                        <div class="col-md-2"><h5><a href="#" class="profile-link">{{reply.1}}</a></h5></div>
+                        <div class="col-md-4"></div>
+                        <div class="col-md-4"><h6>{{reply.3}}</h6></div>
                         
-                        <input type="text" class="form-control" placeholder="reply">
                       </div>
+                      <div class="row">
+                        <div class="post-text">
+                          <p>{{reply.2}} <i class="em em-anguished"></i> <i class="em em-anguished"></i> <i class="em em-anguished"></i></p>
+                        </div>
+                      </div>
+                    </div>
+                      {% endfor %}
+                     
+                      
+                 
+                      <div class="row">
+                      <div class="post-comment">
+                        <form class="form-settings" name = "reply" action="{% url 'forum:post_reply' cmnt.0 %}" method="POST">
+                          {% csrf_token %}
+                          <div class="container">
+                            <div class="row">
+                              <input type="text" class="form-control" id="reply_text" name="reply_text" >
+                              <input type="hidden"  id="video_id1" name="video_id1" value="{{video.5}}">
+                              
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8"></div>
+                                <div class="col-md-2"><button type="submit">reply</button></div>
+                            </div>
+                            
+
+                          </div>
+                        
+
+                        </form>
+                      </div>
+                      
+                    </div>
+                    {% endif %}
+                    </div>
                     </div>
                   </div>
                 </div>
             </div>
         </div>
         {% endfor %}
+        
     </div>
 </div>
 
