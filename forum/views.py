@@ -13,12 +13,12 @@ def main(request):
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
 
     c = connection.cursor()
-    statement = """SELECT F.ID,F.TOPIC,F.QUESTION_DESCRIPTION,C.NAME,C.CLASS,S.NAME,A1.ANSWER_DESCRIPTION
-                FROM FORUM_QUES F,COURSES C,USERS S,FORUM_ANS A1
-                WHERE C.ID = F.COURSE_ID AND S.ID = F.ST_ID AND A1.FORUM_ID(+) = F.ID
-                AND A1.ANS_TIME>=ALL(SELECT FA.ANS_TIME FROM FORUM_ANS FA WHERE FA.FORUM_ID = F.ID)"""
+    statement = """SELECT F.ID,F.TOPIC,F.QUESTION_DESCRIPTION,F.QUESTION_TIME,C.NAME,C.CLASS,S.NAME
+                FROM FORUM_QUES F,COURSES C,USERS S
+                WHERE C.ID = F.COURSE_ID AND S.ID = F.ST_ID """
     c.execute(statement)
     forumset = c.fetchall()
+<<<<<<< HEAD
     if forumset != []:
         print(forumset)
   
@@ -51,3 +51,7 @@ def post_comment(request,video_id):
     connection.close()
 
     return redirect('/courses/course_contents/video/'+str(video_id))
+=======
+   
+    return render(request,'forum/forum.html',{'userid':userid,'role':role,'forumset':forumset})
+>>>>>>> 91b19f9ec0d6a840c03971a542169d4d003f044f
