@@ -68,12 +68,15 @@ def post_reply(request,parent_id):
         statement="SELECT VIDEO_ID FROM VIDEO_COMMENTS WHERE ID = :parent_id"
         c.execute(statement,{'parent_id':parent_id})
         video_id,= c.fetchone()
-        statement="""
-                    INSERT INTO VIDEO_COMMENTS
-                    VALUES(1,:0,:1,:2,:3,sysdate)
-                    """
+        if text:
+            
+            statement="""
+                        INSERT INTO VIDEO_COMMENTS
+                        VALUES(1,:0,:1,:2,:3,sysdate)
+                        """
         
-        c.execute(statement,(parent_id,video_id,userid,text))  
+            c.execute(statement,(parent_id,video_id,userid,text))  
+        request.session['parent_comment_id'] = parent_id
 
     connection.commit()
 
@@ -82,3 +85,25 @@ def post_reply(request,parent_id):
 
     return redirect('/courses/course_contents/video/'+str(video_id))
 
+
+def show_reply(request,parent_id):
+    if request.session.has_key('userid'):
+        userid = request.session['userid']
+        role= request.session['role']
+    else:
+        return render(request,'accounts/login.html',{'error': 'Not Logged In'})
+
+    request.session['parent_comment_id']=parent_id
+
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor()  
+    statement="SELECT VIDEO_ID FROM VIDEO_COMMENTS WHERE ID = :parent_id"
+    c.execute(statement,{'parent_id':parent_id})
+    video_id,= c.fetchone()
+    connection.commit()
+
+    c.close()
+    connection.close()
+
+    return redirect('/courses/course_contents/video/'+str(video_id))

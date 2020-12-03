@@ -102,12 +102,11 @@
                         </div>
                         {% if parent_id != cmnt.0 %}
                         <div class="row">
-                          <form class="form-settings" name = "show_replies" action="{% url 'courses:show_video' video.5  %}" method="POST">
-                            {% csrf_token %}
+                        
                           <div class="col-md-8"></div>
-                          <input type="hidden" name="parent_id" id="parent_id" value="{{cmnt.0}}">
-                          <div class="col-md-2"><button  type="submit">show&nbsp;replies</button></div>
-                        </form>
+                          
+                          <div class="col-md-4"><a  href="{% url 'forum:show_reply' cmnt.0 %}">show&nbsp;replies</a></div>
+                        
                         </div>
                         {% endif %}
                       
@@ -116,13 +115,13 @@
                   
                   {% if parent_id == cmnt.0 %}
 
-                     
+                  <div class="container">
                     {% for reply in replies_to_comment %}
-                    <div class="container">
-                      <div class="row user-info">
+                    
+                      <div class="row">
                         <div class="col-md-2"><h5><a href="#" class="profile-link">{{reply.1}}</a></h5></div>
                         <div class="col-md-4"></div>
-                        <div class="col-md-4"><h6>{{reply.3}}</h6></div>
+                        <div class="col-md-6"><h6>{{reply.3}}</h6></div>
                         
                       </div>
                       <div class="row">
@@ -130,10 +129,15 @@
                           <p>{{reply.2}} <i class="em em-anguished"></i> <i class="em em-anguished"></i> <i class="em em-anguished"></i></p>
                         </div>
                       </div>
-                    </div>
+                    
                       {% endfor %}
+
+                      <div class="row">
+                        <div class="col-md-8"></div>
+                        <div class="col-md-4"><a href="{% url 'courses:show_video' video.5  %}">hide&nbsp;replies</a></div>
+                      </div>
                      
-                      
+                    
                  
                       <div class="row">
                       <div class="post-comment">
@@ -158,6 +162,7 @@
                       </div>
                       
                     </div>
+                  </div>
                     {% endif %}
                     </div>
                     </div>
