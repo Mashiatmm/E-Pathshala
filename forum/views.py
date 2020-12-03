@@ -19,6 +19,9 @@ def main(request):
                 AND A1.ANS_TIME>=ALL(SELECT FA.ANS_TIME FROM FORUM_ANS FA WHERE FA.FORUM_ID = F.ID)"""
     c.execute(statement)
     forumset = c.fetchall()
-    print(forumset[0])
-    print(forumset[3])
+    if forumset != []:
+        print(forumset)
+  
+
+    
     return render(request,'forum/forum.html',{'userid':userid,'role':role,'forumset':forumset})
