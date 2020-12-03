@@ -18,7 +18,6 @@ def main(request):
                 WHERE C.ID = F.COURSE_ID AND S.ID = F.ST_ID """
     c.execute(statement)
     forumset = c.fetchall()
-<<<<<<< HEAD
     if forumset != []:
         print(forumset)
   
@@ -51,7 +50,3 @@ def post_comment(request,video_id):
     connection.close()
 
     return redirect('/courses/course_contents/video/'+str(video_id))
-=======
-   
-    return render(request,'forum/forum.html',{'userid':userid,'role':role,'forumset':forumset})
->>>>>>> 91b19f9ec0d6a840c03971a542169d4d003f044f
