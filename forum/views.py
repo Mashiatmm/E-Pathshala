@@ -18,13 +18,5 @@ def main(request):
                 WHERE C.ID = F.COURSE_ID AND S.ID = F.ST_ID """
     c.execute(statement)
     forumset = c.fetchall()
-<<<<<<< HEAD
    
-=======
-    if forumset != []:
-        print(forumset)
-  
-
-    
->>>>>>> a3ec24bea8a40238e45c90d32a0f8abfea8d9c0f
     return render(request,'forum/forum.html',{'userid':userid,'role':role,'forumset':forumset})
