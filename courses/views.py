@@ -570,10 +570,38 @@ def show_video(request,content_id):
     statement="SELECT CRS.NAME,T.TOPIC_TITLE,C.TITLE,C.DESCRIPTION,V.LINK,C.ID,T.ID,CRS.ID FROM VIDEOS V,CONTENTS C,TOPICS T, COURSES CRS WHERE V.ID = C.ID AND C.TOPIC_ID=T.ID AND T.COURSE_ID = CRS.ID AND V.ID= :content_id"
     c.execute(statement,{'content_id':content_id})
     video = c.fetchone()
+
+
+    #find the comments
+
+    statement="SELECT VC.ID,U.NAME,VC.COMMENT_DESCRIPTION,VC.COMMENT_TIME FROM VIDEO_COMMENTS VC , USERS U WHERE VC.VIDEO_ID = :content_id AND VC.PARENT_ID IS NULL AND VC.COMMENTER_ID = U.ID ORDER BY VC.COMMENT_TIME desc"
+    c.execute(statement,{'content_id':content_id})
+    video_comments = c.fetchall()
+
+
+
+
+    if request.session.has_key('parent_comment_id'):
+        parent_id = request.session['parent_comment_id']
+        del request.session['parent_comment_id']
+
+        statement="SELECT VC.ID,U.NAME,VC.COMMENT_DESCRIPTION,VC.COMMENT_TIME FROM VIDEO_COMMENTS VC , USERS U WHERE VC.VIDEO_ID = :content_id AND VC.PARENT_ID = :parent_id AND VC.COMMENTER_ID = U.ID ORDER BY VC.COMMENT_TIME desc"
+        c.execute(statement,{'content_id':content_id,'parent_id':parent_id})
+        replies_to_comment= c.fetchall()
+        print(replies_to_comment)
+        c.close()
+        connection.close()
+        return render(request,'contents/show_video.html',{'userid':userid,'video': video,'content_id':content_id,'role':role,'completed':completed,
+                                                    'video_comments':video_comments,'parent_id':parent_id,'replies_to_comment':replies_to_comment})
+
     c.close()
     connection.close() 
     
-    return render(request,'contents/show_video.html',{'userid':userid,'video': video,'content_id':content_id,'role':role,'completed':completed})
+    return render(request,'contents/show_video.html',{'userid':userid,'video': video,'content_id':content_id,'role':role,'completed':completed,
+                                                    'video_comments':video_comments})
+
+
+
 
 
 def give_exam(request,content_id):

@@ -28,9 +28,12 @@ urlpatterns = [
         path('course_topics/student/<int:course_id>',views.course_topics_student,name='course_topics_student'),
         path('course_contents/video/<int:content_id>',views.show_video,name='show_video'),
         path('course_contents/exam/<int:content_id>',views.give_exam,name='give_exam'),
+        #post_comment
+        
 
         path('next_content/student/<int:content_id>',views.next_content_student,name='next_content_student'),
         path('prev_content/student/<int:content_id>',views.prev_content_student,name='prev_content_student'),
+
         path('all_courses/class<int:course_class>',views.all_courses,name='all_courses'),
 
 ]

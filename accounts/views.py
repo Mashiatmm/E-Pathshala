@@ -37,7 +37,7 @@ def home(request):
     if request.session.has_key('userid'):
         userid = request.session['userid']
         role= request.session['role']
-        return render(request,'accounts/home.html',{'userid':userid,'role':role,'home':home})
+        return redirect('/accounts/profile',{'userid':userid,'role':role})
 
     return render(request,'accounts/home.html',{'home':home})
 
@@ -154,7 +154,7 @@ def login(request):
                 request.session['role'] = info[1]
                 
                 connection.close()
-                return redirect('/accounts/profile',{'userid':info[2]})
+                return redirect('/accounts/profile')
                 #return redirect('/accounts/'+info[1]+'/'+str(info[2]))
 
             else:
@@ -179,12 +179,13 @@ def profile(request):
 
     if request.session.has_key('userid'):
         userid = request.session['userid']
+        role = request.session['role']
 
         c = connection.cursor()
 
-        statement = "select role from USERS where id=:id"
-        c.execute(statement,{'id':userid})  
-        role,= c.fetchone()
+        #statement = "select role from USERS where id=:id"
+        #c.execute(statement,{'id':userid})  
+        #role,= c.fetchone()
         if role=="student":
             statement="""Select U.NAME,S.CLASS 
                         FROM USERS U, STUDENTS S 
