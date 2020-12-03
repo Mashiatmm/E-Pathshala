@@ -195,7 +195,7 @@
 {%  if userid %}
 <div class="bg-light border-right" id="sidebar-wrapper">
   <div class="list-group list-group-flush">
-      <a href="{% url 'accounts:profile' %}" class="{% block profile_active1 %}{% endblock %} list-group-item list-group-item-action bg-light">Profile</a>
+      <a href="{% url 'accounts:profile' %}" class="{% block profile_active1 %}{% endblock %} list-group-item list-group-item-action bg-light">My Courses</a>
     {% if role == 'teacher' %}
       <a href="{% url 'courses:add_course'%}" class="{% block add_course_active1 %}{% endblock %} list-group-item list-group-item-action bg-light">Add Course</a>
       <a href="{% url 'accounts:students' %}" class="{% block my_students_active1 %}{% endblock %} list-group-item list-group-item-action bg-light">Statistics</a>

@@ -726,6 +726,75 @@ def next_content_student(request,content_id):
     else:
         return redirect('/courses/course_contents/exam/'+str(next_cont_id))
 
+def prev_content_student(request,content_id):
+    if request.session.has_key('userid'):
+        userid = request.session['userid']
+        role= request.session['role']
+    else:
+        return render(request,'accounts/login.html',{'error': 'Not Logged In'})
+
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor() 
+
+
+   
+
+    statement="SELECT T.ID,T.SL_NO,CRS.ID,C.SL_NO,C.CONTENT_TYPE FROM CONTENTS C,TOPICS T,COURSES CRS WHERE C.ID = :content_id AND C.TOPIC_ID=T.ID AND T.COURSE_ID = CRS.ID"
+    c.execute(statement,{'content_id':content_id})
+    infos=c.fetchone()
+    current_topic=infos[0]
+    current_topic_sl=infos[1]
+    current_course=infos[2]
+    current_cont_sl=infos[3]
+    current_cont_type=infos[4]
+
+    statement="SELECT MAX(C.SL_NO) FROM CONTENTS C WHERE  C.TOPIC_ID = :current_topic  AND C.SL_NO < :current_cont_sl "
+    c.execute(statement,{'current_topic':current_topic,'current_cont_sl':current_cont_sl})
+    prev_cont_sl,=c.fetchone()
+        
+    if prev_cont_sl!= None:
+        statement="SELECT ID,CONTENT_TYPE FROM CONTENTS WHERE SL_NO = :prev_cont_sl"
+        c.execute(statement,{'prev_cont_sl':prev_cont_sl})
+        infos=c.fetchone()
+        prev_cont_id = infos[0]
+        prev_cont_type=infos[1]
+        #print(infos)
+    else:
+        statement="""SELECT MAX(T.SL_NO)
+                    FROM CONTENTS C, TOPICS T 
+                    WHERE T.ID = C.TOPIC_ID AND T.COURSE_ID = :current_course AND T.SL_NO< :current_topic_sl"""
+        c.execute(statement,{'current_course':current_course,'current_topic_sl':current_topic_sl})
+        prev_topic_sl,= c.fetchone()
+        if prev_topic_sl == None:
+            #print("No prev topic exist")
+            return redirect('/accounts/profile')
+        else:
+            statement = """SELECT ID,CONTENT_TYPE
+                            FROM CONTENTS 
+                            WHERE SL_NO = (SELECT MAX(C.SL_NO) 
+                            FROM TOPICS T, CONTENTS C 
+                            WHERE T.ID = C.TOPIC_ID AND T.SL_NO= :prev_topic_sl)"""
+            c.execute(statement,{'prev_topic_sl':prev_topic_sl})
+            infos=c.fetchone()
+            prev_cont_id = infos[0]
+            prev_cont_type=infos[1]
+            #print(infos)
+
+
+
+    if prev_cont_type == 'video':
+        return redirect('/courses/course_contents/video/'+str(prev_cont_id))
+    else:
+        return redirect('/courses/course_contents/exam/'+str(prev_cont_id))
+
+
+
+
+
+
+
+
 
     
 def all_courses(request,course_class):

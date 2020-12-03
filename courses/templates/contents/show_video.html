@@ -1,4 +1,4 @@
-{% extends 'base1.html' %}
+{% extends 'base.html' %}
 {% load embed_video_tags %}
 {% block title %}{% endblock %}
 {% block body %}
@@ -42,8 +42,18 @@
 -->
 
 <div class="row pt-3">
-    <div class="col " style="padding-left: padding-top: 50;" >
-        <a href="{% url 'courses:next_content_student' video.5 %}" class= "btn btn-lg btn-outline-primary " >DONE</a>
+    <div class="col-md " style="padding-left: padding-top: 50;" >
+        <a href="{% url 'courses:prev_content_student' video.5 %}" class= "btn btn-lg btn-outline-primary " >Prev</a>
+        
+        
+    </div>
+    <div class="col-md " style="padding-left: padding-top: 50;" >
+       
+        
+        
+    </div>
+    <div class="col-md " style="padding-left: padding-top: 50;" >
+        <a href="{% url 'courses:next_content_student' video.5 %}" class= "btn btn-lg btn-outline-primary " >Next</a>
         
         
     </div>
