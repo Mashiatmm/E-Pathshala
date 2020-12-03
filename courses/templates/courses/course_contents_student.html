@@ -22,14 +22,21 @@
             {% endif %}
         {% endif %}
             <div class="row  pt-2" >
-                <div class="col-6">
-
-                    
-                       <h4 style="color:#069">
+                <div class="col-md-8">
+                    <div class="container ">
+                        <div class="row">
+                    {% if content.3 == "video" %}
+                    <h2><span class="oi oi-video"></span></h2>&nbsp;&nbsp;
+                    {% else %}
+                    <h2><span class="oi oi-spreadsheet"></span></h2>&nbsp;&nbsp;
+                    {% endif %}
+                       <h4 style="color:#069">{{content.1}}
                         {% if content.5 >= 1 %} 
-                      <span class="oi oi-circle-check"></span> &nbsp;
-                      {% endif %}{{content.1}}
+                      <span class="oi oi-circle-check" style="color: rgb(67, 199, 33);"></span> &nbsp;
+                      {% endif %}
                     </h4>
+                </div>
+            </div>
                 </div>
 
                 
@@ -37,6 +44,9 @@
             </div>
             
             <div class="row  pt-2" >
+                <div class="col-1 ">
+                   
+                </div>
                 <div class="col-6 ">
                     {% if content.2 != None%}
            
@@ -49,9 +59,7 @@
 
 
             <div class="row  pt-2" >
-                <div class="col-6">
-                    <h4 style="color:#069">{{content.3}}</h4>
-                </div>
+               
               
             </div>        
         </div>         
