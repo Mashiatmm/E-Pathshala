@@ -130,8 +130,11 @@
         
       <nav class="navbar static-top navbar-expand-lg  navbar-dark" style="background-color: rgba(8, 8, 102, 0.89);">
         <div class="container  container-fluid" >
-
+          {% if userid %}
+          <a class="navbar-brand" href="{% url 'accounts:profile' %}">
+          {% else %}
           <a class="navbar-brand" href="{% url 'home' %}">
+          {% endif %}
 
 
             <img src="{% static 'images/logo4.png'%}" height="20%" width="20%" class="d-inline-block align-top">
@@ -195,7 +198,7 @@
 {%  if userid %}
 <div class="bg-light border-right" id="sidebar-wrapper">
   <div class="list-group list-group-flush">
-      <a href="{% url 'accounts:profile' %}" class="{% block profile_active1 %}{% endblock %} list-group-item list-group-item-action bg-light">Profile</a>
+      <a href="{% url 'accounts:profile' %}" class="{% block profile_active1 %}{% endblock %} list-group-item list-group-item-action bg-light">My Courses</a>
     {% if role == 'teacher' %}
       <a href="{% url 'courses:add_course'%}" class="{% block add_course_active1 %}{% endblock %} list-group-item list-group-item-action bg-light">Add Course</a>
       <a href="{% url 'accounts:students' %}" class="{% block my_students_active1 %}{% endblock %} list-group-item list-group-item-action bg-light">Statistics</a>
@@ -204,7 +207,7 @@
       <a href="{% url 'accounts:progress' %}" class="{% block my_progress_active1 %}{% endblock %} list-group-item list-group-item-action bg-light">My Progress</a>
     {% endif %}
     <a href="{% url 'forum:main' %}" class="{% block forum_active1 %}{% endblock %} list-group-item list-group-item-action bg-light">Forum</a>
-    <a href="{% url 'accounts:settings' %}" class="{% block settings_active1 %}{% endblock %} list-group-item list-group-item-action bg-light">Settings</a>
+    <a href="{% url 'accounts:settings' %}" class=" list-group-item list-group-item-action bg-light {% block settings_active1 %}{% endblock %}">Edit Account</a>
   </div>
 </div>
   
@@ -233,9 +236,14 @@
         <div class="col-md-6 panel">
           <div class="panel-body">
             <p class="simplenav">
-              <a class="color-white" href="index.html">Home</a> | 
+              {% if userid %}
+              <a class="color-white" href="{% url 'accounts:profile' %}">
+              {% else %}
+              <a class="color-white" href="{% url 'home' %}">
+              {% endif %}
+                Home&nbsp;| </a> 
             
-              <a class="color-white" href="courses.html">Courses</a> 
+              <a class="color-white" href="{% url 'accounts:course_classes' %}">Courses</a> 
 
             </p>
           </div>

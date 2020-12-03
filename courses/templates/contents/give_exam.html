@@ -1,4 +1,4 @@
-{% extends 'base1.html' %}
+{% extends 'base.html' %}
 {% block title %}{% endblock %}
 {% load static %}
 
@@ -156,11 +156,20 @@
 </form>
 
 
-    <div class="row pt-3">
-    <div class="col-lg-6" >
-        <a href="{% url 'courses:next_content_student' content_id %}" class= "btn btn-lg btn-outline-primary" style="float: right;">Go To Next</a>
+    <div class="row pt-3" style="padding-left: 100px;">
+        <div class="col-md-4" >
+            <a href="{% url 'courses:prev_content_student' content_id %}" class= "btn btn-lg btn-outline-primary" ><span class="oi oi-media-step-backward"></span>&nbsp;Prev</a>
+            
+        </div>
+        <div class="col-md-4" >
+            
+            
+        </div>
+    <div class="col-md-4" >
+        <a href="{% url 'courses:next_content_student' content_id %}" class= "btn btn-lg btn-outline-primary" >Next&nbsp;<span class="oi oi-media-step-forward"></span></a>
         
     </div>
+    
 </div>
 <br>
 <br>

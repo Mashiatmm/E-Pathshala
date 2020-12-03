@@ -30,6 +30,7 @@ urlpatterns = [
         path('course_contents/exam/<int:content_id>',views.give_exam,name='give_exam'),
 
         path('next_content/student/<int:content_id>',views.next_content_student,name='next_content_student'),
+        path('prev_content/student/<int:content_id>',views.prev_content_student,name='prev_content_student'),
         path('all_courses/class<int:course_class>',views.all_courses,name='all_courses'),
 
 ]
