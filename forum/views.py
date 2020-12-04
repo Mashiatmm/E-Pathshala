@@ -34,14 +34,10 @@ def addForumQues(request):
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
 
     c = connection.cursor()
-    if request.POST['course'] == 'No Course':
-        statement = """INSERT INTO FORUM_QUES(ID,TOPIC,ST_ID,QUESTION_DESCRIPTION,QUESTION_TIME)
+    
+    statement = """INSERT INTO FORUM_QUES(ID,TOPIC,ST_ID,QUESTION_DESCRIPTION,QUESTION_TIME)
                      VALUES(0,:0,:1,:2,SYSDATE)"""
-        c.execute(statement,(request.POST['topic'],st_id,request.POST['description']))
-    else:
-        statement = """INSERT INTO FORUM_QUES(ID,TOPIC,ST_ID,QUESTION_DESCRIPTION,QUESTION_TIME,COURSE_ID)
-                     VALUES(0,:0,:1,:2,SYSDATE,:3)"""
-        c.execute(statement,(request.POST['topic'],st_id,request.POST['description'],request.POST['course']))
+    c.execute(statement,(request.POST['topic'],st_id,request.POST['description']))
 
     connection.commit()
     c.close()
@@ -206,3 +202,17 @@ def show_reply(request,parent_id):
     connection.close()
 
     return redirect('/courses/course_contents/video/'+str(video_id))
+
+
+"""
+<select class="custom-select" id="course" name="course" placeholder = "Select Course">
+                      
+                      <option>No Course</option>
+                      {% for course in courses %}
+                        <option value="{{course.2}}">{{course.0}},Class {{course.1}}</option>
+                      {% endfor %}
+                      
+                    </select>
+                    
+                    <br><br>
+"""
