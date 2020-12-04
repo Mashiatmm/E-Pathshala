@@ -87,7 +87,7 @@ def contribute_course(request,course_id):
     request.session['error'] = error
     c.close()
     connection.close()
-    return redirect('/accounts/profile')
+    return redirect('/courses/course_contents/teacher/'+str(course_id)+'/')
 
     
     
@@ -108,7 +108,7 @@ def del_course(request,course_id):
     connection.commit()
     connection.close()
     
-    return redirect('/accounts/profile')
+    return redirect('/courses/course_contents/teacher/'+str(course_id)+'/')
 
 def edit_course(request,course_id):
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
@@ -149,25 +149,33 @@ def course_contents(request,course_id):
             print(e)
             error = "Topic name exists or empty" 
 
-    statement = """select c.name,c.class,c.course_description,t.role 
-                    from Courses c,take_course t 
-                    where c.id = :id  AND t.TEACHER_ID = :userid AND t.COURSE_ID = c.id"""
-    c.execute(statement,{'userid':userid,'id':course_id})
+    statement = """select c.name,c.class,c.course_description
+                    from Courses c
+                    where c.id = :id"""
+    c.execute(statement,{'id':course_id})
     courseinfo, = c.fetchall()
-    #WRITE FUNCTION TO RETURN CONTENT NUMBERS
+    
     statement = """SELECT T.ID,T.TOPIC_TITLE,T.TOPIC_DESCRIPTION,T.SL_NO
                     FROM TOPICS T
                     WHERE T.COURSE_ID = :course_id
                     ORDER BY T.SL_NO"""
     c.execute(statement,{'course_id':course_id})
     topics = c.fetchall()
+
+    statement = """SELECT U.NAME,T.ROLE
+                FROM USERS U,TAKE_COURSE T
+                WHERE T.COURSE_ID = :course_id AND T.TEACHER_ID = U.ID
+                ORDER BY ROLE DESC"""
+    c.execute(statement,{'course_id':course_id})
+    contributors = c.fetchall()
+
     c.close()
     connection.commit()
     connection.close()
     if error == "":
-        return render(request,'courses/course_contents.html',{'course_id':course_id,'courseinfo':courseinfo,'topics':topics,'userid':userid,'role':'teacher'})
+        return render(request,'courses/course_contents.html',{'course_id':course_id,'courseinfo':courseinfo,'topics':topics,'userid':userid,'role':'teacher','contributors':contributors})
     else:
-        return render(request,'courses/course_contents.html',{'course_id':course_id,'courseinfo':courseinfo,'topics':topics,'userid':userid,'error':error,'role':'teacher'})
+        return render(request,'courses/course_contents.html',{'course_id':course_id,'courseinfo':courseinfo,'topics':topics,'userid':userid,'error':error,'role':'teacher','contributors':contributors})
 
 def topic_serial(request,type,sl_no,topic_id,course_id):
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
