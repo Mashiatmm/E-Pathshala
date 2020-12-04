@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}Topics of {{course.1}}{% endblock %}
 {% block body %}
+{% load static %}
 
 <br>
 
@@ -18,9 +19,12 @@
 
 <li class="list-group-item list-group-item-action" >
 
-<div class="row  pt-3  mydiv " >
-    
-    <div class="col-md-12"  onclick="window.location='{% url 'courses:course_contents_student' topic.0 %}';" style="cursor:pointer;">
+<div class="row  pt-2  mydiv " onclick="window.location='{% url 'courses:course_contents_student' topic.0 %}';" style="cursor:pointer;">
+    <div class="col-md-1">
+        <img src="{% static 'images/course.png'%}" width="80px" style="border-radius: 50%;">
+    </div>
+
+    <div class="col-md-10"  >
         <div class="row  pt-2" >
             <div class="col-6">
                 <h4 style="color:#069">{{topic.1}}</h4>
@@ -84,8 +88,11 @@
     
     </div>
   </div> 
-<div class="col-md-3" >
-    <a href="#test{{course.0}}" class= "btn btn-lg btn-outline-primary btn-block" data-toggle="modal">Enroll</a>
+  <div class="row pt-3">
+<div class="col-md-4"></div>
+<div class="col-md-4" >
+    <a href="#test{{course.0}}" class= "btn btn-lg btn-outline-primary btn-block" data-toggle="modal">Enroll To The Course</a>
+</div>
 </div>
 <br><br>
 {% endif %}

@@ -6,25 +6,26 @@
 {% block body %}
 
 
-
+{% load static %}
 
 <h1>Classes</h1>
-<ul>
+<ul class="list-group list-group-flush mydiv">
 {% for course_class in classes %}
+<li class="list-group-item list-group-item-action">
+<div class="row  mydiv " onclick="window.location='{% url 'courses:all_courses' course_class %}';" style="cursor:pointer;">
+    <div class="col-md-1">
 
-<div class="row  pt-3  mydiv " >
-    
-    <div class="col-md-12"  onclick="window.location='{% url 'courses:all_courses' course_class %}';" style="cursor:pointer; padding-block-start: 20px;padding-block-end: 20px;padding-left: 50px;width: 400px;">
-        <div class="row  pt-2" >
-            <div class="col-6">
+        <img src="{% static 'images/class.JPG'%}" width="70px" style="border-radius: 50%;">
+
+    </div>
+    <div class="col-md-10" style="padding-top: 10px;">
+       
                 <h4 style="color:#069">class {{course_class}}</h4>
-            </div>
-
-        </div>
+           
 
     </div>
     </div>
-
+</li>
 {% endfor %}
 </ul>
 
