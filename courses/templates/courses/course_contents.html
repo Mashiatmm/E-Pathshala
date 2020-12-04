@@ -131,7 +131,9 @@
 </div>
 
 <br>
+{% if courseinfo.2 %}
 <h6>{{courseinfo.2}}</h6>
+{% endif %}
 
 {% if error %}
 <div style="padding-top: 50px;"></div>
@@ -141,7 +143,7 @@
 <form class="form-settings" action="{% url 'courses:course_contents' course_id %}" method="POST" >
 
     {% csrf_token %}
-    <div class="container " style="background-color: #F8F9F9 ;">
+    <div class="container " >
   
      
     <br>
