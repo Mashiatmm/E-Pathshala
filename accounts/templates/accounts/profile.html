@@ -71,12 +71,14 @@
       </div> 
 
 
-    <div class="row  pt-3  mydiv " style="padding-bottom: 10px;">
-        
-        <div class="col-md-12"  onclick="window.location='{% url 'courses:course_topics_student' course.0 %}';" style="cursor:pointer;">
+    <div class="row  pt-2  mydiv" onclick="window.location='{% url 'courses:course_topics_student' course.0 %}';" style="cursor:pointer;padding-bottom: 10px;">
+        <div class="col-md-1">
+            <img src="{% static 'images/course.png'%}" style="height: 70px; border-radius: 50%;" >
+        </div>
+        <div class="col-md-10"  >
             <div class="row  pt-2" >
                 <div class="col-8">
-                    <h4 style="color:#069"><img src="{% static 'images/pen.png'%}" style="height: 50px;" >&nbsp;&nbsp;{{course.1}}</h4>
+                    <h4 style="color:#069">{{course.1}}</h4>
                 </div>
 
             </div>
