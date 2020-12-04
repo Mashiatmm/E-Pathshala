@@ -162,7 +162,7 @@ def course_contents(request,course_id):
     c.execute(statement,{'course_id':course_id})
     topics = c.fetchall()
 
-    statement = """SELECT U.NAME,T.ROLE
+    statement = """SELECT U.ID,U.NAME,T.ROLE
                 FROM USERS U,TAKE_COURSE T
                 WHERE T.COURSE_ID = :course_id AND T.TEACHER_ID = U.ID
                 ORDER BY ROLE DESC"""
