@@ -10,13 +10,13 @@
 <h3>Topics of {{course.1}}</h3>
 
 
-<ul>
+<ul class="list-group list-group-flush mydiv">
 
 {% if topics %}
 {% for topic in topics %}
 
 
-
+<li class="list-group-item list-group-item-action" >
 
 <div class="row  pt-3  mydiv " >
     
@@ -48,7 +48,7 @@
        
 </div>
 
-
+</li>
 {% endfor %}
 {% else %}
 <h6>No Topic In This Course Yet</h6>
