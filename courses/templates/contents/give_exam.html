@@ -34,11 +34,13 @@
         <div class="col-md-12" style="cursor:pointer;">
         <li>
         <b>{{question.1}}</b>
+        {% if role == 'student'%}
         {% if not error and question.6 == question.7 %}
             <span class="label success "><span class="oi oi-circle-check "></span></span>
 
         {% elif not error %}
             <span class="label danger "><span class="  oi oi-circle-x"></span></span>
+        {% endif %}
         {% endif %}
         <br><br>
 
@@ -162,15 +164,15 @@
 
 
     <div class="row pt-3" style="padding-left: 100px;">
-        <div class="col-md-4" >
+        <div class="col-md-2" >
             <a href="{% url 'courses:prev_content_student' content_id %}" class= "btn btn-lg btn-outline-primary" >Prev</a>
             
         </div>
-        <div class="col-md-4" >
+        <div class="col-md-8" >
             
             
         </div>
-    <div class="col-md-4" >
+    <div class="col-md-2" >
         <a href="{% url 'courses:next_content_student' content_id %}" class= "btn btn-lg btn-outline-primary" >Next</a>
         
     </div>

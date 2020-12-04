@@ -118,7 +118,9 @@
 </div>
 
 <h4>Contents</h4>
+<ul class="list-group list-group-flush mydiv" >
 {% for content in contents %}
+<li class="list-group-item list-group-item-action" >
 <div class="modal fade" id="test{{content.7}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -218,5 +220,7 @@
 
     
 <br>
+</li>
 {% endfor %}
+</ul>
 {% endblock %}
