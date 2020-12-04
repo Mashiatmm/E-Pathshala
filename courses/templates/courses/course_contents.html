@@ -115,6 +115,9 @@
   <button class="button" data-toggle="modal" data-target="#modalCourseForm"><span class="oi oi-pencil"></span>Edit</button>
 </div>
 
+<b>Course Description:</b> {% if courseinfo.2 != None %}{{courseinfo.2}}{% endif %}<br>
+<b>Owner :</b> {% if contributors.0.0 == userid %} You {% else %} {{contributors.0.1}} {% endif %}
+
 <div class="row  pt-3  mydiv " >
   
   
