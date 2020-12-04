@@ -76,6 +76,34 @@ def searchForum(request):
     connection.close()
     return render(request,'forum/forum.html',{'userid':userid,'role':role,'forumset':forumset,'courses':courses})
 
+def sortbyUnanswered(request):
+    if request.session.has_key('userid') == False:
+            return render(request,'accounts/login.html',{'error': 'Not Logged In'})
+    userid = request.session['userid']
+    role = request.session['role']
+
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+
+    c = connection.cursor()
+    statement = """SELECT F.ID,F.TOPIC,F.QUESTION_DESCRIPTION,F.QUESTION_TIME,C.NAME,C.CLASS,S.NAME,
+                    (SELECT COUNT(*) FROM FORUM_ANS WHERE FORUM_ID = F.ID)
+                    FROM FORUM_QUES F,COURSES C,USERS S
+                    WHERE C.ID(+) = F.COURSE_ID AND S.ID = F.ST_ID 
+                    AND 0 = (SELECT COUNT(*) FROM FORUM_ANS WHERE FORUM_ID = F.ID)
+                    ORDER BY F.QUESTION_TIME DESC"""
+    c.execute(statement)
+    forumset = c.fetchall()
+    #print(forumset)
+
+    statement = "SELECT NAME,CLASS,ID FROM COURSES"
+    c.execute(statement)
+    courses = c.fetchall()
+
+    c.close()
+    connection.close()
+    return render(request,'forum/forum.html',{'userid':userid,'role':role,'forumset':forumset,'courses':courses})
+
 def addForumAns(request,forum_id):
     user_id = request.session['userid']
     
@@ -103,7 +131,7 @@ def ques_details(request,forum_id):
 
     c = connection.cursor()
 
-    statement = "SELECT A.FORUM_ID,U.NAME,A.ANSWER_DESCRIPTION,A.ANS_TIME FROM FORUM_ANS A,USERS U WHERE A.FORUM_ID = :i AND U.ID = A.PUBLISHER_ID ORDER BY A.ANS_TIME DESC"
+    statement = "SELECT A.FORUM_ID,U.NAME,A.ANSWER_DESCRIPTION,A.ANS_TIME,A.ID FROM FORUM_ANS A,USERS U WHERE A.FORUM_ID = :i AND U.ID = A.PUBLISHER_ID ORDER BY A.ANS_TIME DESC"
     c.execute(statement,{'i':forum_id})
     ReplySet = c.fetchall()
 
@@ -118,6 +146,26 @@ def ques_details(request,forum_id):
 
     return render(request,'forum/question.html',{'userid':userid,'role':role,'ReplySet':ReplySet,'QuesDetails':QuestionDetails})
 
+def upvote(request,forum_id,forum_ans_id):
+    userid = request.session['userid']
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+
+    c = connection.cursor()
+
+    try:
+        statement = """INSERT INTO VOTE
+                    VALUES(:0,:1,:2)"""
+        c.execute(statement,(forum_id,forum_ans_id,userid))
+    except Exception as e:
+        print(e)
+        statement = """DELETE FROM VOTE
+                    WHERE FORUM_ID = :f AND FORUM_ANS_ID = :a AND USER_ID = :u"""
+        c.execute(statement,{'f':forum_id,'a':forum_ans_id,'u':userid})
+    connection.commit()
+    c.close()
+    connection.close()
+    return redirect('/forum/ques_details/'+str(forum_id))
 
 
 def post_comment(request,video_id):

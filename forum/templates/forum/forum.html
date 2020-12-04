@@ -62,7 +62,7 @@
   <div class="dropdown-menu">
     <a class="dropdown-item" href="{% url 'forum:main' %}">Latest</a>
     <a class="dropdown-item" href="#">Top</a>
-    <a class="dropdown-item" href="#">Unanswered</a>
+    <a class="dropdown-item" href="{% url 'forum:sortByUnanswered' %}">Unanswered</a>
     
   </div>
 </div>
@@ -90,10 +90,8 @@
               <div class="post-detail">
                 <div class="user-info">
                   <h5><img src="{% static 'images/forum.JPG'%}" width = "25" height = "25"> {{ques.1}}</h5>
-                  {% if ques.4 != None %}
-                    <span class="badge badge-info">{{ques.4}},Class {{ques.5}}</span>
-                  {% endif %}
-                  <p class="text-muted">Published by <a href="#" class="profile-link">{{ques.6}}</a> on {{ques.3}}</p>
+                  
+                  <p class="text-muted">Published by <a href="#" class="profile-link">{{ques.6}}</a> on <span class="badge badge-secondary">{{ques.3}}</span></p>
                 </div>
                 
                 <div class="line-divider"></div>
