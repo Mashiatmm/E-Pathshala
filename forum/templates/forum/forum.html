@@ -30,20 +30,11 @@
                     </div>
                     <br>
                     
-                    <select class="custom-select" id="course" name="course" placeholder = "Select Course">
-                      
-                      <option>No Course</option>
-                      {% for course in courses %}
-                        <option value="{{course.2}}">{{course.0}},Class {{course.1}}</option>
-                      {% endfor %}
-                      
-                    </select>
                     
-                    <br><br>
                     <textarea class="form-control" id="description" name="description" rows="3" placeholder="Provide Supporting Details or Context" required></textarea>
                     <br>
                     
-                    <button class="btn btn-lg btn-primary" type="submit"><i class="fa fa-pencil fa-fw"></i> Ask this Question</button>
+                    <button class="btn btn-info" type="submit"><i class="fa fa-pencil fa-fw"></i> Ask this Question</button>
                      <br> 
                     
                   </form>
@@ -58,10 +49,25 @@
   </div>
 </div> 
 
+
 {% if role == 'student' %}
-  <button class="button" data-toggle="modal" data-target="#modalForumForm"><span class="oi oi-pencil"></span>Ask your question</button>
+  <button class="btn btn-info" data-toggle="modal" data-target="#modalForumForm"><span class="oi oi-pencil"></span>Ask your question</button>
 <br><br>
 {% endif %}
+
+<div class="btn-group">
+  <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Sort by
+  </button>
+  <div class="dropdown-menu">
+    <a class="dropdown-item" href="{% url 'forum:main' %}">Latest</a>
+    <a class="dropdown-item" href="{% url 'forum:sortByTop' %}">Top</a>
+    <a class="dropdown-item" href="{% url 'forum:sortByUnanswered' %}">Unanswered</a>
+    
+  </div>
+</div>
+<br><br>
+
 <div class = "col-14">
 <form class="form-inline active-cyan-3 active-cyan-4" name = "SearchForum" action="{% url 'forum:searchForum' %}" method="POST">
  {% csrf_token %} 
@@ -71,6 +77,7 @@
 </form>
 </div>
 <br>
+
 
 {% for ques in forumset %}
 
@@ -83,10 +90,8 @@
               <div class="post-detail">
                 <div class="user-info">
                   <h5><img src="{% static 'images/forum.JPG'%}" width = "25" height = "25"> {{ques.1}}</h5>
-                  {% if ques.4 != None %}
-                    <span class="badge badge-info">{{ques.4}},Class {{ques.5}}</span>
-                  {% endif %}
-                  <p class="text-muted">Published by <a href="#" class="profile-link">{{ques.6}}</a> on {{ques.3}}</p>
+                  
+                  <p class="text-muted">Published by <a href="#" class="profile-link">{{ques.6}}</a> on <span class="badge badge-secondary">{{ques.3}}</span></p>
                 </div>
                 
                 <div class="line-divider"></div>
@@ -97,7 +102,7 @@
                   <a href="{% url 'forum:ques_details' ques.0 %}" class="profile-link pull-right">View all {{ques.7}} replies <span class="oi oi-arrow-right"></span></a>
                 {% endif %}
                 <div class="line-divider"></div>
-                <form class="form-settings" name = "addForumAns" action="{% url 'forum:addForumAns' ques.0 %}" method="POST" >
+                <form class="form-settings" name = "addForumAns" action="{% url 'forum:addForumAns' ques.0 'main' %}" method="POST" >
                   {% csrf_token %}
                   <div class="post-comment">
                     <input type="text" id = "comment" name = "comment" class="form-control" placeholder="Post a comment">
