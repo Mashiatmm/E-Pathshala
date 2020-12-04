@@ -61,7 +61,7 @@
   </button>
   <div class="dropdown-menu">
     <a class="dropdown-item" href="{% url 'forum:main' %}">Latest</a>
-    <a class="dropdown-item" href="#">Top</a>
+    <a class="dropdown-item" href="{% url 'forum:sortByTop' %}">Top</a>
     <a class="dropdown-item" href="{% url 'forum:sortByUnanswered' %}">Unanswered</a>
     
   </div>
@@ -102,7 +102,7 @@
                   <a href="{% url 'forum:ques_details' ques.0 %}" class="profile-link pull-right">View all {{ques.7}} replies <span class="oi oi-arrow-right"></span></a>
                 {% endif %}
                 <div class="line-divider"></div>
-                <form class="form-settings" name = "addForumAns" action="{% url 'forum:addForumAns' ques.0 %}" method="POST" >
+                <form class="form-settings" name = "addForumAns" action="{% url 'forum:addForumAns' ques.0 'main' %}" method="POST" >
                   {% csrf_token %}
                   <div class="post-comment">
                     <input type="text" id = "comment" name = "comment" class="form-control" placeholder="Post a comment">
