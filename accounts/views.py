@@ -89,7 +89,7 @@ def signup(request,role):
                 print(E) 
                 c.close()  
                 connection.close()
-                return render(request,'accounts/signup.html',{'role':role,'error':"Email already taken!"})
+                return render(request,'accounts/signup.html',{'role':role,'error':"Email already taken/Grade not chosen!"})
         
         else:
             c.close()
