@@ -185,9 +185,14 @@
 </form>       
 
 <h3 style="color:#cf3046">Topics</h3><br>
+<<<<<<< HEAD
 <ul class ="list-group list-group-flush mydiv">
+=======
+<ul class="list-group list-group-flush mydiv" style="padding-right: 50px;" >
+>>>>>>> d85fa30aba57441ea17aecfd4f30fa2b9887aff5
     
 {% for topic in topics %}
+<li class="list-group-item list-group-item-action" >
 <div class="modal fade" id="test{{topic.0}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -215,6 +220,7 @@
   
   </div>
 </div> 
+<<<<<<< HEAD
 <li class="list-group-item list-group-item-action">
     <div class="row  pt-3 mydiv" >
       
@@ -224,6 +230,14 @@
         <div class = "col-md-1">
           <a href = "{% url 'courses:topic_serial' 'D' topic.3 topic.0 course_id %}"><span class="oi oi-caret-top"></span></a>
         </div> 
+=======
+
+
+
+
+
+    <div class="row  pt-3 mydiv" style="padding-left: 20px;">
+>>>>>>> d85fa30aba57441ea17aecfd4f30fa2b9887aff5
         
         <div class="col-md-9"  onclick="window.location='{% url 'courses:topic_details' topic.0 %}';" style="cursor:pointer;">
             <div class="row  pt-2" >
@@ -252,8 +266,13 @@
         
 
     </div>
+<<<<<<< HEAD
   </li>
     
+=======
+    <br>  
+  </li> 
+>>>>>>> d85fa30aba57441ea17aecfd4f30fa2b9887aff5
 {% endfor %}
 </ul>
 

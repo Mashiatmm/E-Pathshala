@@ -2,9 +2,13 @@
 {% block title %}{% endblock %}
 {% load static %}
 
-
 {% block body %}
-<a href ="{% url 'courses:course_contents_student' exam.0 %}"><span class="oi oi-arrow-left"></span>Back</a>
+{% if role == 'student'%}
+<a href ="{% url 'courses:course_contents_student' exam.0 %}">
+  {% else %}
+  <a href ="{% url 'courses:topic_details' exam.0 %}">
+  {% endif %}
+<span class="oi oi-arrow-left"></span>Back</a>
 <br>
 {% if error %}
 <div style="padding-top: 50px;"></div>
@@ -20,21 +24,23 @@
 
     <div class="container " >
         
-        {% if error or given_exam_now %}
+        {% if error or given_exam_now  %}
         <fieldset disabled="disabled">
         {% endif %}
         
-        {% if error or given_exam_now %}
+        {% if error or given_exam_now or role == 'teacher' %}
         <ol>
         {% for question in questions %}
         <div class="col-md-12" style="cursor:pointer;">
         <li>
         <b>{{question.1}}</b>
+        {% if role == 'student'%}
         {% if not error and question.6 == question.7 %}
             <span class="label success "><span class="oi oi-circle-check "></span></span>
 
         {% elif not error %}
             <span class="label danger "><span class="  oi oi-circle-x"></span></span>
+        {% endif %}
         {% endif %}
         <br><br>
 
@@ -139,13 +145,14 @@
             </ol>
 
         {% endif %}
-
+        {% if role == 'student' %}
         <div class="row  pt-3" >
       
             <div class="col-lg-7" style="padding-left: 400px;">
               <button class="btn btn-primary btn-lg "  type="submit">Submit Answer</button> 
             </div>
           </div>
+          {% endif %}
           {% if error or given_exam_now %}
         </fieldset>
         {% endif %}
@@ -157,16 +164,16 @@
 
 
     <div class="row pt-3" style="padding-left: 100px;">
-        <div class="col-md-4" >
-            <a href="{% url 'courses:prev_content_student' content_id %}" class= "btn btn-lg btn-outline-primary" ><span class="oi oi-media-step-backward"></span>&nbsp;Prev</a>
+        <div class="col-md-2" >
+            <a href="{% url 'courses:prev_content_student' content_id %}" class= "btn btn-lg btn-outline-primary" >Prev</a>
             
         </div>
-        <div class="col-md-4" >
+        <div class="col-md-8" >
             
             
         </div>
-    <div class="col-md-4" >
-        <a href="{% url 'courses:next_content_student' content_id %}" class= "btn btn-lg btn-outline-primary" >Next&nbsp;<span class="oi oi-media-step-forward"></span></a>
+    <div class="col-md-2" >
+        <a href="{% url 'courses:next_content_student' content_id %}" class= "btn btn-lg btn-outline-primary" >Next</a>
         
     </div>
     

@@ -118,7 +118,9 @@
 </div>
 
 <h4>Contents</h4>
+<ul class="list-group list-group-flush mydiv" >
 {% for content in contents %}
+<li class="list-group-item list-group-item-action" >
 <div class="modal fade" id="test{{content.7}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -198,10 +200,15 @@
         <div class="col-md-2" >
             <span class="align-right"><a href="#test{{content.7}}" class="button" data-toggle="modal">Delete</a></span>
         </div>
-
+        {% if content.3 == 'video' %}<!--content.6-->
         <div class="col-md-2" >
-            <span class="align-right"><a href="" class="button" data-toggle="modal">Explore</a></span>
+            <span class="align-right"><a href="{% url 'courses:show_video' content.7 %}" class="button" >Explore</a></span>
           </div>
+          {% else %}
+          <div class="col-md-2" >
+            <span class="align-right"><a href="{% url 'courses:give_exam' content.7 %}" class="button" >Explore</a></span>
+          </div>
+          {% endif %}
   
           
 
@@ -213,5 +220,7 @@
 
     
 <br>
+</li>
 {% endfor %}
+</ul>
 {% endblock %}
