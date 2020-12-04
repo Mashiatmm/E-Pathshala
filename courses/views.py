@@ -712,7 +712,7 @@ def next_content_student(request,content_id):
     current_cont_sl=infos[3]
     current_cont_type=infos[4]
 
-    if current_cont_type == 'video':
+    if role=='student' and current_cont_type == 'video':
         statement="SELECT CONTENT_ID FROM COMPLETED_CONTENT WHERE CONTENT_ID =:content_id AND ST_ID = :userid"
         c.execute(statement,{'content_id':content_id,'userid':userid})
         exist=c.fetchone()

@@ -198,10 +198,15 @@
         <div class="col-md-2" >
             <span class="align-right"><a href="#test{{content.7}}" class="button" data-toggle="modal">Delete</a></span>
         </div>
-
+        {% if content.3 == 'video' %}<!--content.6-->
         <div class="col-md-2" >
-            <span class="align-right"><a href="" class="button" data-toggle="modal">Explore</a></span>
+            <span class="align-right"><a href="{% url 'courses:show_video' content.7 %}" class="button" >Explore</a></span>
           </div>
+          {% else %}
+          <div class="col-md-2" >
+            <span class="align-right"><a href="{% url 'courses:give_exam' content.7 %}" class="button" >Explore</a></span>
+          </div>
+          {% endif %}
   
           
 
