@@ -79,7 +79,7 @@ def contribute_course(request,course_id):
             c.close()
             connection.commit()
             connection.close()
-            return redirect('/accounts/profile')
+            return redirect('/courses/course_contents/teacher/'+str(course_id)+'/')
 
     
     error = "Invalid email ID"
@@ -108,7 +108,7 @@ def del_course(request,course_id):
     connection.commit()
     connection.close()
     
-    return redirect('/courses/course_contents/teacher/'+str(course_id)+'/')
+    return redirect('/accounts/profile')
 
 def edit_course(request,course_id):
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
@@ -172,6 +172,10 @@ def course_contents(request,course_id):
     c.close()
     connection.commit()
     connection.close()
+    if request.session.has_key('error'):
+            error = request.session['error']
+            print(error)
+            del request.session['error']
     if error == "":
         return render(request,'courses/course_contents.html',{'course_id':course_id,'courseinfo':courseinfo,'topics':topics,'userid':userid,'role':'teacher','contributors':contributors})
     else:
