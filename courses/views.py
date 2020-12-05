@@ -263,19 +263,16 @@ def modify_content(request,topic_id,content_type,content_id):
                     WHERE ID = :i""" 
     c.execute(statement,{'i':content_id,'t':request.POST['title'],'d':request.POST['description']})
     connection.commit()
-    if content_type == 'exam':
-        c.close()
-        connection.close()
-        return redirect('/courses/add_ques/'+str(content_id)+'/')
-    else:
+    
+    if content_type == 'video':
         statement = """UPDATE VIDEOS
                     SET LINK = :l 
                     WHERE ID = :i""" 
         c.execute(statement,{'i':content_id,'l':request.POST['videourl']})
-        connection.commit()
-        c.close()
-        connection.close()
-        return redirect('/courses/topic_details/'+str(topic_id)+'/')
+    connection.commit()
+    c.close()
+    connection.close()
+    return redirect('/courses/topic_details/'+str(topic_id)+'/')
 
 def del_content(request,topic_id,content_id):
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
