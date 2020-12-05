@@ -12,7 +12,7 @@
                   </button>
           </div>
           <div class="modal-body mx-3">
-              <h5 class="modal-title w-100 font-weight-bold"  style="text-align:center">Delete this content permanently?</h5>
+              <h5 class="modal-title w-100 font-weight-bold"  style="text-align:center">Delete this course permanently?</h5>
               <form class="form-settings" action="{% url 'courses:del_course' course_id %}" method="POST">
               {% csrf_token %}
               
@@ -115,28 +115,34 @@
   <button class="button" data-toggle="modal" data-target="#modalCourseForm"><span class="oi oi-pencil"></span>Edit</button>
 </div>
 
-<b>Course Description:</b> {% if courseinfo.2 != None %}{{courseinfo.2}}{% endif %}<br>
-<b>Owner :</b> {% if contributors.0.0 == userid %} You {% else %} {{contributors.0.1}} {% endif %}
-
 <div class="row  pt-3  mydiv " >
   
   
   <div class="col-md-3" style="pointer-events:auto" >
       <a href="#contribute{{course_id}}" data-toggle="modal">Add Contributor</a>
   </div>
-  {% if courseinfo.3 == 'owner' %}
-  <div class="col-md-3"style="pointer-events: auto;" >
-      <a href="#test{{course_id}}" data-toggle="modal">Delete</a>
+  {% if contributors.0.0 == userid %}
+  <div class="col-md-7" style="pointer-events: auto;" >
+      <a href="#test{{course_id}}" class = "pull-right" data-toggle="modal">Delete this Course</a>
   </div>
   {% endif %}
-
      
 </div>
 
+<b>Course Description:</b> {% if courseinfo.2 != None %}{{courseinfo.2}}{% endif %}<br>
+<b>Owner :</b> {% if contributors.0.0 == userid %} You {% else %} {{contributors.0.1}} {% endif %}<br>
+<b>Contributors : </b>
+{% for contributor in contributors %}
+  {% if forloop.first %}
+  {% else %}
+    <i>{% if contributor.0 == userid %} You {% else %} {{contributor.1}} {% endif %}</i>
+  {% endif %}
+{% endfor %}
+
+
+
 <br>
-{% if courseinfo.2 %}
-<h6>{{courseinfo.2}}</h6>
-{% endif %}
+
 
 {% if error %}
 <div style="padding-top: 50px;"></div>
@@ -179,10 +185,10 @@
 </form>       
 
 <h3 style="color:#cf3046">Topics</h3><br>
-<ul class="list-group list-group-flush mydiv" style="padding-right: 50px;" >
+<ul class ="list-group list-group-flush mydiv">
     
 {% for topic in topics %}
-<li class="list-group-item list-group-item-action" >
+
 <div class="modal fade" id="test{{topic.0}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -210,16 +216,19 @@
   
   </div>
 </div> 
-
-
-
-
-
-    <div class="row  pt-3 mydiv" style="padding-left: 20px;">
+<li class="list-group-item list-group-item-action">
+    <div class="row pt-3 mydiv" >
+      
+        <div class = "col-md-1">
+          <a href = "{% url 'courses:topic_serial' 'I' topic.3 topic.0 course_id %}"><span class="oi oi-caret-bottom"></span></a>
+        </div>    
+        <div class = "col-md-1">
+          <a href = "{% url 'courses:topic_serial' 'D' topic.3 topic.0 course_id %}"><span class="oi oi-caret-top"></span></a>
+        </div> 
         
         <div class="col-md-9"  onclick="window.location='{% url 'courses:topic_details' topic.0 %}';" style="cursor:pointer;">
             <div class="row  pt-2" >
-                <h4 style="color:#069">{{topic.1}}</h4>
+                <b>{{topic.1}}</b>
             </div>
             {% if topic.2 != None %}
             <div class="row  pt-2" >
@@ -228,28 +237,19 @@
             {% endif %}
             
         </div>
+       
 
-        <div class="col-md-3" >
+        <div class="col-md-1" >
           <div class="row  pt-1" >
-            <div class = "col-md-1">
-              <div class = "float-right"><a href = "{% url 'courses:topic_serial' 'I' topic.3 topic.0 course_id %}"><span class="oi oi-caret-bottom"></span></a></div>
-            </div>    
-            <div class = "col-md-1">
-              <div class = "float-left"><a href = "{% url 'courses:topic_serial' 'D' topic.3 topic.0 course_id %}"><span class="oi oi-caret-top"></span></a></div>
-            </div>  
+            
             <div class="col-md-1" >
               <a href="#test{{topic.0}}" class= "button" data-toggle="modal">Delete</a>
             </div>
           </div>
           
         </div>
-           
-        
-        
-
     </div>
-    <br>  
-  </li> 
+  </li>
 {% endfor %}
 </ul>
 
