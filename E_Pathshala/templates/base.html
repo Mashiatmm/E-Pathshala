@@ -58,7 +58,7 @@
     width: 100%; 
     /* Height of the footer*/  
     height: 40px; 
-    background:  rgb(25,25,112);  
+    background:  rgba(8, 8, 102, 0.89);
     
    } 
 
@@ -171,8 +171,8 @@ div.scroll {
             <div class="navbar-nav ml-auto" >
               
               <a class="nav-item nav-link color-white {% block courses_active1 %}{% endblock %} " href="{% url 'accounts:course_classes' %}">Courses</a>
-              <div class="dropdown {% block signup_active %}{% endblock %} ">
-                <button class="btn dropdown-toggle color-white"  id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <div class="dropdown {% block signup_active %}{% endblock %} " >
+                <button class="btn dropdown-toggle" style="color: rgb(240, 248, 255);"  id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Sign Up 
                 </button>
                 <div class="dropdown-menu " aria-labelledby="dropdownMenuButton">
@@ -225,7 +225,7 @@ div.scroll {
 {% endif %}
 
 
-<div class="container">
+<div class="container" style="min-height: 600px;">
   
   <div class="container-fluid" style="padding-bottom: 40px;padding-top: 40px;">
 
@@ -238,7 +238,7 @@ div.scroll {
 </div>
 
 
-<footer id="footer">
+<footer id="footer" style="position:static;">
 
   <div >
     <div class="container">
