@@ -201,6 +201,33 @@ def upvote(request,forum_id,forum_ans_id):
     return redirect('/forum/ques_details/'+str(forum_id))
 
 
+def activity(request):
+    if request.session.has_key('userid')== False:
+        return render(request,'accounts/login.html',{'error': 'Not Logged In'})
+
+    userid = request.session['userid']
+    role= request.session['role']
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+
+    c = connection.cursor()
+
+    statement = """SELECT ID,TOPIC, QUESTION_DESCRIPTION,QUESTION_TIME 
+                FROM FORUM_QUES 
+                WHERE ST_ID = :userid
+                ORDER BY QUESTION_TIME DESC"""
+    c.execute(statement,{'userid':userid})
+    questions = c.fetchall()
+    
+    statement = """SELECT Q.ID, Q.TOPIC, Q.QUESTION_DESCRIPTION, A.ID, A.ANSWER_DESCRIPTION, A.ANS_TIME
+                FROM FORUM_QUES Q, FORUM_ANS A
+                WHERE A.PUBLISHER_ID = :userid AND A.FORUM_ID = Q.ID"""
+
+    c.execute(statement,{'userid':userid})
+    replies = c.fetchall()
+
+    return render(request,'forum/activity.html',{'userid':userid,'role':role,'questions':questions,'replies':replies})
+
 def post_comment(request,video_id):
     if request.session.has_key('userid'):
         userid = request.session['userid']

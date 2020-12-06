@@ -269,6 +269,7 @@ def modify_content(request,topic_id,content_type,content_id):
                     SET LINK = :l 
                     WHERE ID = :i""" 
         c.execute(statement,{'i':content_id,'l':request.POST['videourl']})
+        return redirect('/courses/course_contents/video/'+str(content_id))
     connection.commit()
     c.close()
     connection.close()
@@ -653,10 +654,11 @@ def give_exam(request,content_id):
         c.execute(statement,{'content_id':content_id})
         topic_id,= c.fetchone()
 
-        statement="SELECT C.TOPIC_ID,C.TITLE,E.TOTAL_MARKS FROM EXAMS E,CONTENTS C WHERE E.ID = C.ID AND E.ID= :content_id"
+        statement="SELECT C.TOPIC_ID,C.TITLE,E.TOTAL_MARKS,C.DESCRIPTION FROM EXAMS E,CONTENTS C WHERE E.ID = C.ID AND E.ID= :content_id"
         c.execute(statement,{'content_id':content_id})
         exam = c.fetchone()
-
+        print("Hello")
+        print(exam)
         statement="SELECT Q.ID,Q.QUESTION_DESCRIPTION,Q.OPTION1,Q.OPTION2,Q.OPTION3,Q.OPTION4,A.RIGHT_OPTION FROM QAS Q,QA_ANS A WHERE Q.EXAM_ID = :content_id AND A.ID=Q.ID ORDER BY Q.ID"
         c.execute(statement,{'content_id':content_id})
         questions= c.fetchall()

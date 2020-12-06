@@ -4,10 +4,12 @@
 {% block body %}
 {% if role == 'student'%}
 <a href ="{% url 'courses:course_contents_student' video.6 %}">
-  {% else %}
+{% else %}
   <a href ="{% url 'courses:topic_details' video.6 %}">
-  {% endif %}
+{% endif %}
 <span class="oi oi-arrow-left"></span>Back</a>
+
+
 <br>
 {% if completed %}
 <div style="padding-top: 50px;">
@@ -190,15 +192,7 @@
     </div>
 </div>
 
-
-
-
 </div>
-
-<br>
-<br>
-
-
 
 </div>
 

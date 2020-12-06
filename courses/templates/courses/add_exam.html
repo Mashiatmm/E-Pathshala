@@ -67,11 +67,12 @@
   </div>
  
 </form>
-<ul>
+
   <br>
 
   
 <h3>Questions</h3>
+<ul class="list-group list-group-flush mydiv" >
 {% for ques in ques_list %}
 <div class="modal fade" id="test{{ques.6}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -100,23 +101,20 @@
   
   </div>
 </div>  
+<li class="list-group-item list-group-item-action" >
 <form class="form-settings" action="{% url 'courses:edit_ques' examinfo.2 ques.6  %}" method="POST" >
 
   {% csrf_token %}
   <div class="card-body tab-content" >
 
-    <div class="row pb-1" >
-      <div class="col-md-9">
+    <div class="row pb-2" >
+      <div class="col-md-12">
         <input type="text" id="questitle" name="questitle" class="form-control" value = '{{ques.0}}'>
-      </div>
-
-      <div class="float-right" >
-        <span class="align-right"><a href="#test{{ques.6}}" class="btn btn-lg btn-outline-primary btn-default mb-5" data-toggle="modal">Delete</a></span>
-      </div>
+      </div>    
     </div>
    
     
-    <div class="row pb-3" >
+    <div class="row pb-1" >
       <div class="col-md-3">
         {% if ques.5 == 'option1' %}
         <input class="form-check-input" type="radio" name="Radios" id="Radios1" value="option1" checked>
@@ -154,15 +152,20 @@
       </div>
     </div>    
     
-    <div class="row  pt-3" >
-      <div class="col-md-6" >
+    <div class="row  pt-1" >
+      <div class="col-md-3" >
         <button class="btn btn-lg btn-outline-primary btn-default mb-5" type="submit"><span class="oi oi-pencil"></span>Modify</button> 
+      </div>
+
+      <div class="col-md-3" >
+        <span class="align-right"><a href="#test{{ques.6}}" class="btn btn-lg btn-outline-primary btn-default mb-5" data-toggle="modal">Delete</a></span>
       </div>
     </div>
 
   </div>
  
-</form>            
+</form>  
+</li>          
 {% endfor %}
 </ul>
 

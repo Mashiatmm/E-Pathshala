@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block title %}Forum{% endblock %}
+{% block more_text %}My Activity{% endblock %}
+{% block body %}
+{% load static %}
+
+<h4>My Questions</h4>
+
+{% if role == 'student' %}
+
+<ul class="list-group list-group-flush mydiv" >
+{% for question in questions %}
+
+
+<div class="container" onclick="window.location='{% url 'forum:ques_details' question.0 %}';">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="post-content">
+              <div class="post-container">
+                
+                <div class="post-detail">
+                  <div class="user-info">
+                    <h5><img src="{% static 'images/forum.JPG'%}" width = "25" height = "25"> {{question.1}}</h5>
+                    
+                    <p class="text-muted">Published on <span class="badge badge-secondary">{{question.3}}</span></p>
+                  </div>
+                  
+                  <div class="line-divider"></div>
+                  <div class="post-text">
+                    <p>{{question.2}}<i class="em em-anguished"></i> <i class="em em-anguished"></i> <i class="em em-anguished"></i></p>
+                  </div>
+                  
+                  <div class="line-divider"></div>
+                  
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+
+  </div>
+
+{% endfor %}
+</ul>
+
+{% endif %}
+
+<h4>My Replies</h4>
+
+{% for reply in replies %}
+
+<div class="container" onclick="window.location='{% url 'forum:ques_details' reply.0 %}';">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="post-content">
+              <div class="post-container">
+                
+                <div class="post-detail">
+                  <div class="user-info">
+                    <h5><img src="{% static 'images/forum.JPG'%}" width = "25" height = "25"> {{reply.1}}</h5>
+                  </div>
+                  
+                  <div class="line-divider"></div>
+                  <div class="post-text">
+                    <p>{{reply.2}}<i class="em em-anguished"></i> <i class="em em-anguished"></i> <i class="em em-anguished"></i></p>
+                  </div>
+                  
+                  <div class="line-divider"></div>
+                  
+                  <div class="user-info">
+                    <p class="text-muted">You replied on <span class="badge badge-secondary">{{reply.5}}</span></p>
+                  </div>
+                  
+                  <div class="line-divider"></div>
+                  <div class="post-text">
+                    <p>{{reply.4}}<i class="em em-anguished"></i> <i class="em em-anguished"></i> <i class="em em-anguished"></i></p>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+
+  </div>
+
+
+{% endfor %}
+
+
+{% endblock %} 

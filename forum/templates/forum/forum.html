@@ -67,7 +67,8 @@
   </div>
 </div>
 <br><br>
-
+<a href ="{% url 'forum:activity' %}" >My Activity</a>
+<br><br>
 <div class = "col-14">
 <form class="form-inline active-cyan-3 active-cyan-4" name = "SearchForum" action="{% url 'forum:searchForum' %}" method="POST">
  {% csrf_token %} 
