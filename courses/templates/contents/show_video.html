@@ -98,7 +98,7 @@
                     <div class="post-detail">
                       <div class="row user-info">
                         <div class="col-md-2"><h5><a href="#" class="profile-link">{{cmnt.1}}</a></h5></div>
-                        <div class="col-md-4"></div>
+                        <div class="col-md-6"></div>
                         <div class="col-md-4"><h6>{{cmnt.3}}</h6></div>
                         
                       </div>
@@ -106,9 +106,24 @@
                       <div class="line-divider"></div>
                       <div class="container">
                         <div class="row">
+                          <!--comment text-->
+                          <div class="col-md-10" >
                           <div class="post-text">
                             <p>{{cmnt.2}} <i class="em em-anguished"></i> <i class="em em-anguished"></i> <i class="em em-anguished"></i></p>
                           </div>
+                        </div>
+                        <!--
+                        <div class="col-md-1">
+
+                          &nbsp;&nbsp;<a href="">edit</a>
+
+                        </div>
+                        <div class="col-md-1">
+
+                          &nbsp;&nbsp;<a href="">delete</a>
+
+                        </div>
+                        -->
                         </div>
                         {% if parent_id != cmnt.0 %}
                         <div class="row">
@@ -137,9 +152,17 @@
                         
                       </div>
                       <div class="row" style="padding-left: 20px;">
-                        
+                        <div class="col-md-10">
                           <p>{{reply.2}} </p>
-                        
+                        </div>
+                        <!--
+                        <div class="col-md-1">
+                          &nbsp;&nbsp;<a href="">edit</a>
+                        </div>
+                        <div class="col-md-1">
+                          &nbsp;&nbsp;<a href="">delete</a>
+                        </div>
+                        -->
                       </div>
                     
                       {% endfor %}

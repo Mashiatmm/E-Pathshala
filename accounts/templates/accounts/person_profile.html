@@ -1,0 +1,120 @@
+
+<!--
+Author: WebThemez
+Author URL: http://webthemez.com
+License: Creative Commons Attribution 3.0 Unported
+License URL: http://creativecommons.org/licenses/by/3.0/
+-->
+{% extends 'base.html' %}
+
+
+
+{% block home_active %}active{% endblock %}
+
+{% block body %}
+
+{% load static %}
+<style>
+	.grey-box-icon
+	{
+		background-color:rgba(17, 51, 80, 0.616);
+		color: aliceblue;
+		text-align: center;
+		
+		padding-top: 20px;
+		padding-left: 5px;
+		padding-bottom: 5px;
+		padding-right: 5px;
+		height: 400px;
+	}
+    img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+ 
+}
+	
+</style>
+
+
+  <div class="container" style = "padding-top:50px">
+	<div class="row" style="padding-bottom: 30px;">
+		<div class="col-md-4">
+			
+		</div>
+		
+		<div class="col-md-4">
+            <div class="container-fluid" style="text-align: center;">
+                <div class="row pt-2">
+                    <img src="{% static 'images\profile.jpg' %}" style="height: 140px;border-radius: 50%">
+              
+                </div>
+                <div >
+                   <h3><a href="{% url 'accounts:person_profile' person_info.0 %}">{{person_info.1}}</a></h3>
+                   
+                </div>
+                <div>
+                    {{person_info.3}}
+                </div>
+                {% if person_info.3 == 'teacher' %}
+                <div>
+                   Specialty:&nbsp;{{person_info.4}}
+                </div>
+                {% else %}
+                <div>
+                    Class:&nbsp;{{person_info.4}}
+                 </div>
+                {% endif %}
+                <div>
+                    mail:&nbsp;{{person_info.2}}
+                </div>
+            </div>
+		</div>
+
+
+
+    </div>
+  
+{% if courses %}
+<div class="container " style="text-align: center;"><h3>Courses&nbsp;
+</h3> </div>
+{% else %}
+No course 
+{% endif %}
+<ul class="list-group list-group-flush mydiv" style="padding-top: 20px;">
+{% for course in courses %}
+<li class="list-group-item list-group-item-action">
+<div class="row  mydiv "onclick="window.location='{% url 'courses:course_topics_student' course.0 %}';" style="cursor:pointer;" >
+    <div class="col-md-1">
+        <img src="{% static 'images/course.png'%}" width="80px" style="border-radius: 50%;">
+    </div>
+    <div class="col-md-10" style="padding-top: 10px;">
+        <div class="row  pt-2" >
+            <div class="col-6">
+                <h4 style="color:#069">{{course.1}}</h4>
+            </div>
+
+        </div>
+        {% if course.3 %}
+        <div class="row  pt-2" >
+            <div class="col-6">
+                <h6 style="color:#069">{{course.3}}</h6>
+            </div>
+
+        </div>
+        {% endif %}
+
+    </div>
+  
+    </div>
+
+    
+</li>
+{% endfor %}
+</ul>
+
+    </div>
+    
+ 
+
+      {% endblock %}
