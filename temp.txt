@@ -1,210 +1,187 @@
+<!-- exam -->
+
 {% extends 'base.html' %}
-{% load embed_video_tags %}
 {% block title %}{% endblock %}
+{% load static %}
+
 {% block body %}
-<a href ="{% url 'courses:course_contents_student' video.6 %}"><span class="oi oi-arrow-left"></span>Back</a>
+{% if role == 'student'%}
+<a href ="{% url 'courses:course_contents_student' exam.0 %}">
+  {% else %}
+  <a href ="{% url 'courses:topic_details' exam.0 %}">
+  {% endif %}
+<span class="oi oi-arrow-left"></span>Back</a>
 <br>
-{% if completed %}
-<div style="padding-top: 50px;">
-<div class="alert alert-success" style="padding-left: 400px;padding-top: 50;">You Completed Watching This Video</div>
-</div>
+{% if error %}
+<div style="padding-top: 50px;"></div>
+<div class="alert alert-success" style="padding-left: 400px;padding-top: 50;">{{error}}</div>
 {% endif %}
-<!--show_video-->
 
-<div class="container" style="align-content: center;">
 
-<div class="row pt-2">
-  
-    <div class="col-md-8">
-<h1><a href="{% url 'courses:course_topics_student' video.7 %}">{{video.0}}</a></h1>
-<h2><a href="{% url 'courses:course_contents_student' video.6 %}">{{video.1}}</a></h2>
-</div>
-</div>
-<hr>
+<br><h4>{{exam.1}}&nbsp;</h4>
+        <div class="row"><div class="col-md-6"><H6 class="label success">{% if error or given_exam_now %}Obtained Marks:&nbsp;{{obtained_marks}}{% endif %}</H6></div></div>
 
-<div class="row pt-2">
-<div class="col-md-6">
-    <div class="container">
-        <div class="row">
-            {% video video.4 'small'%}
-        </div>
-        <div class="row pt-2">
-            <div class="col-md-12"><h3>{{video.2}}:</h3></div>
+<form class="form-settings" name = "give_exam" action="{% url 'courses:give_exam' content_id %}" method="POST" >
+{% csrf_token %}
+
+    <div class="container " >
         
-        </div>
-        <div class="row pt-2">
-            <div class="col-md-12"><h5>{{video.3}}</h5></div>
+        {% if error or given_exam_now  %}
+        <fieldset disabled="disabled">
+        {% endif %}
         
+        {% if error or given_exam_now or role == 'teacher' %}
+        <ol>
+        {% for question in questions %}
+        <div class="col-md-12" style="cursor:pointer;">
+        <li>
+        <b>{{question.1}}</b>
+        {% if role == 'student'%}
+        {% if not error and question.6 == question.7 %}
+            <span class="label success "><span class="oi oi-circle-check "></span></span>
+
+        {% elif not error %}
+            <span class="label danger "><span class="  oi oi-circle-x"></span></span>
+        {% endif %}
+        {% endif %}
+        <br><br>
+
+        <div class="row pb-3" >
+            <div class="col-md-3">
+            <input class="form-check-input" type="radio" name="q{{question.0}}" id="option1" value="option1"  >
+            {% if question.6 == 'option1'%}
+            <label class="success" for="option1">{{question.2}}</label> 
+            {% elif not error and question.7 == 'option1'%}
+            <label class="danger" for="option1">{{question.2}}</label>
+            {% else %}
+            <label  for="option1">{{question.2}}</label>
+            {% endif %}
+            </div>
+
+            <div class="col-md-3">
+                <input class="form-check-input" type="radio" name="q{{question.0}}" id="option2" value="option2" >
+                {% if question.6 == 'option2'%}
+                <label class="success" for="option2">{{question.3}}</label> 
+                {% elif not error and question.7 == 'option2'%}
+                <label class="danger" for="option2">{{question.3}}</label>
+                {% else %}
+                <label  for="option2">{{question.3}}</label>
+                {% endif %}
+            </div>
+
+            <div class="col-md-3">
+                <input class="form-check-input" type="radio" name="q{{question.0}}" id="option3" value="option3" >
+                {% if question.6 == 'option3'%}
+                <label class="success" for="option3">{{question.4}}</label> 
+                {% elif not error and question.7 == 'option3'%}
+                <label class="danger" for="option3">{{question.4}}</label>
+                {% else %}
+                <label  for="option3">{{question.4}}</label>
+
+                {% endif %}
+            </div>
+
+            <div class="col-md-3">
+                <input class="form-check-input" type="radio" name="q{{question.0}}" id="option4" value="option4" >
+                {% if question.6 == 'option4'%}
+                <label class="success" for="option4">{{question.5}}</label> 
+                {% elif not error and question.7 == 'option4'%}
+                <label class="danger" for="option4">{{question.5}}</label>
+                {% else %}
+                <label  for="option4">{{question.5}}</label>
+
+                {% endif %}
+            </div>
+
+
         </div>
+
+
+        </li>
+        <br>
         <hr>
-        
-<div class="row pt-3">
-    <div class="col-md-4"  >
-        <a href="{% url 'courses:prev_content_student' video.5 %}" class= "btn btn-lg btn-outline-primary " >Prev</a>
-        
-        
     </div>
-    <div class="col-md-4" >
-       
-        
-        
-    </div>
-    <div class="col-md-4" >
-        <a href="{% url 'courses:next_content_student' video.5 %}" class= "btn btn-lg btn-outline-primary " >Next</a>
-        
-        
-    </div>
-</div>
-    </div>
+
+
+        {% endfor %}
+        </ol>
+
+        {% else %}
+
+        <ol>
+            {% for question in questions %}
+            <div class="col-md-12" style="cursor:pointer;">
+            <li>
+                <b>{{question.1}}</b><br><br>
     
-</div>
-<div class="col-md-6" style="border-color: black;">
-    <!--comments-->
-    <h3 class ="text-center text-green" >Comments</h3>
-
-    <div class="panel">
-      <div class = "col-md-12">
-        <div class="panel-body">
-          <form class="form-settings" name = "comment" action="{% url 'forum:post_comment' video.5 %}" method="POST">
-            {% csrf_token %}
-          <textarea class="form-control" id="comment_text" name="comment_text" rows="3" placeholder="Post A Comment"></textarea>
-
-          <div class="mar-top clearfix">
-            <button class="btn btn-outline-primary pull-right" type="submit"> post </button>
-            <br>
-          </div>
-        </form>
-        </div>
-      </div>
-    </div>
-    <br>
+            <div class="row pb-3" >
+                <div class="col-md-3">
+                <input class="form-check-input" type="radio" name="q{{question.0}}" id="option1" value="option1"  >
+                <label for="option1">{{question.2}}</label> 
+                </div>
     
-    <div class="container" >
-      <div class="scroll" >
-      {% for cmnt in video_comments %}
-        <div class="row">
-            <div class="col-md-12">
-                <div class="post-content">
-                  <div class="post-container">
-                    
-                    <div class="post-detail">
-                      <div class="row user-info">
-                        <div class="col-md-2"><h5><a href="#" class="profile-link">{{cmnt.1}}</a></h5></div>
-                        <div class="col-md-4"></div>
-                        <div class="col-md-4"><h6>{{cmnt.3}}</h6></div>
-                        
-                      </div>
-
-                      <div class="line-divider"></div>
-                      <div class="container">
-                        <div class="row">
-                          <div class="post-text">
-                            <p>{{cmnt.2}} <i class="em em-anguished"></i> <i class="em em-anguished"></i> <i class="em em-anguished"></i></p>
-                          </div>
-                        </div>
-                        {% if parent_id != cmnt.0 %}
-                        <div class="row">
-                        
-                          <div class="col-md-8"></div>
-                          
-                          <div class="col-md-4"><a  href="{% url 'forum:show_reply' cmnt.0 %}">show&nbsp;replies</a></div>
-                        
-                        </div>
-                        {% endif %}
-                      
-
-                      
-                  
-                  {% if parent_id == cmnt.0 %}
-                  <hr>
-
-                  <div class="container ">
-                    
-                    {% for reply in replies_to_comment %}
-                    
-                      <div class="row">
-                        <div class="col-md-3"><h5><a href="#" class="profile-link">{{reply.1}}</a></h5></div>
-                        <div class="col-md-4"></div>
-                        <div class="col-md-5"><h6>{{reply.3}}</h6></div>
-                        
-                      </div>
-                      <div class="row">
-                        
-                          <p>{{reply.2}} </p>
-                        
-                      </div>
-                    
-                      {% endfor %}
-
-                      <div class="row">
-                        <div class="col-md-8"></div>
-                        <div class="col-md-4"><a href="{% url 'courses:show_video' video.5  %}">hide&nbsp;replies</a></div>
-                      </div>
-                     
-                    
-                 
-                      <div class="row">
-                      <div class="post-comment">
-                        <form class="form-settings" name = "reply" action="{% url 'forum:post_reply' cmnt.0 %}" method="POST">
-                          {% csrf_token %}
-                          <div class="container">
-
-                            <div class="row">
-                              <div class="col-md-12">
-                              
-                              <input type="text" class="form-control" id="reply_text" name="reply_text" >
-                              <input type="hidden"  id="video_id1" name="video_id1" value="{{video.5}}">
-                            </div>
-                              
-                            </div>
-                            <div class="row">
-                                <div class="col-md-8"></div>
-                                <div class="col-md-2"><button type="submit">reply</button></div>
-                            </div>
-                            
-
-                          </div>
-                        
-
-                        </form>
-                      </div>
-                      
-                    </div>
-                  </div>
-                    {% endif %}
-                    </div>
-                    </div>
-                  </div>
+                <div class="col-md-3">
+                    <input class="form-check-input" type="radio" name="q{{question.0}}" id="option2" value="option2" >
+                    <label for="option2">{{question.3}}</label> 
+                </div>
+    
+                <div class="col-md-3">
+                    <input class="form-check-input" type="radio" name="q{{question.0}}" id="option3" value="option3" >
+                    <label for="option3">{{question.4}}</label> 
+                </div>
+    
+                <div class="col-md-3">
+                    <input class="form-check-input" type="radio" name="q{{question.0}}" id="option4" value="option4" >
+                    <label for="option4">{{question.5}}</label> 
                 </div>
             </div>
+    
+    
+            </li>
+            <br>
+            <hr>
         </div>
-        {% endfor %}
-      </div>
+    
+    
+            {% endfor %}
+            </ol>
+
+        {% endif %}
+        {% if role == 'student' %}
+        <div class="row  pt-3" >
+      
+            <div class="col-lg-7" style="padding-left: 400px;">
+              <button class="btn btn-primary btn-lg "  type="submit">Submit Answer</button> 
+            </div>
+          </div>
+          {% endif %}
+          {% if error or given_exam_now %}
+        </fieldset>
+        {% endif %}
+
         
     </div>
-</div>
 
-</div>
-
-
-
-
-
-<!--
-<form class="form-show-video" action="{% url 'courses:next_content_student' video.5 %}" method="POST" >
-    {% csrf_token %}
-    <input type="hidden" id="course_id" value="{{courseNtopic.0}}" name="course_id" class="form-control" placeholder="Course ID">
-    <button class="btn btn-md btn-outline-primary btn-block mb-5" type="submit">DONE</button> 
 </form>
--->
-
-<br>
-<br>
 
 
-
+    <div class="row pt-3" style="padding-left: 100px;">
+        <div class="col-md-2" >
+            <a href="{% url 'courses:prev_content_student' content_id %}" class= "btn btn-lg btn-outline-primary" >Prev</a>
+            
+        </div>
+        <div class="col-md-8" >
+            
+            
+        </div>
+    <div class="col-md-2" >
+        <a href="{% url 'courses:next_content_student' content_id %}" class= "btn btn-lg btn-outline-primary" >Next</a>
+        
+    </div>
+    
 </div>
-
+<br>
+<br> 
 
 
 {% endblock %} 

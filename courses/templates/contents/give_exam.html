@@ -23,11 +23,11 @@
 {% csrf_token %}
 
     <div class="container " >
-        
+     
         {% if error or given_exam_now  %}
         <fieldset disabled="disabled">
         {% endif %}
-        
+  
         {% if error or given_exam_now or role == 'teacher' %}
         <ol>
         {% for question in questions %}
@@ -153,9 +153,11 @@
             </div>
           </div>
           {% endif %}
+       
           {% if error or given_exam_now %}
         </fieldset>
         {% endif %}
+ 
 
         
     </div>
