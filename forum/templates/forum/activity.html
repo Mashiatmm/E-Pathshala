@@ -4,9 +4,10 @@
 {% block body %}
 {% load static %}
 
-<h4>My Questions</h4>
+
 
 {% if role == 'student' %}
+<h4>My Questions</h4>
 
 <ul class="list-group list-group-flush mydiv" >
 {% for question in questions %}
