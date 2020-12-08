@@ -5,7 +5,7 @@
 {% block forum_active1 %}active1{% endblock %}
 {% block body %}
 {% load static %}
-<a href ="{% url 'forum:main' %}"><span class="oi oi-arrow-left"></span>Back</a>
+<a href ="{% url 'forum:main' %}"><span class="oi oi-arrow-left"></span>Back to Forum</a>
     <div class="row">
         <div class="col-md-12">
             <div class="post-content">
@@ -42,6 +42,17 @@
 
   <h6 class = "text-green">Previous Replies</h6>
 
+  <div class="btn-group">
+    <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Sort by
+    </button>
+    <div class="dropdown-menu">
+      <a class="dropdown-item" href="{% url 'forum:ques_details' QuesDetails.0 %}">Latest</a>
+      <a class="dropdown-item" href="{% url 'forum:quesSortByVotes' QuesDetails.0 %}">Votes</a>
+      
+    </div>
+  </div>
+  <br><br>
   <div class="row">
     <div class="col-md-12">
         <div class="post-content">

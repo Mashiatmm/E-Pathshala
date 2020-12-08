@@ -164,6 +164,35 @@ def ques_details(request,forum_id):
     statement = """SELECT A.FORUM_ID,U.NAME,A.ANSWER_DESCRIPTION,A.ANS_TIME,A.ID,
                     (SELECT COUNT(*) FROM VOTE WHERE FORUM_ID = A.FORUM_ID AND FORUM_ANS_ID = A.ID) AS VOTES
                     FROM FORUM_ANS A,USERS U 
+                    WHERE A.FORUM_ID = :i AND U.ID = A.PUBLISHER_ID ORDER BY A.ANS_TIME DESC"""
+    c.execute(statement,{'i':forum_id})
+    ReplySet = c.fetchall()
+
+    statement = """SELECT F.ID,F.TOPIC,F.QUESTION_DESCRIPTION,F.QUESTION_TIME,C.NAME,C.CLASS,S.NAME
+                    FROM FORUM_QUES F,COURSES C,USERS S
+                    WHERE F.ID = :i AND C.ID(+) = F.COURSE_ID AND S.ID = F.ST_ID"""
+    
+    c.execute(statement,{'i':forum_id})
+    QuestionDetails = c.fetchone()
+    c.close()
+    connection.close()
+
+    return render(request,'forum/question.html',{'userid':userid,'role':role,'ReplySet':ReplySet,'QuesDetails':QuestionDetails})
+
+def quesSortByVotes(request,forum_id):
+    if request.session.has_key('userid') == False:
+            return render(request,'accounts/login.html',{'error': 'Not Logged In'})
+    userid = request.session['userid']
+    role = request.session['role']
+
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+
+    c = connection.cursor()
+
+    statement = """SELECT A.FORUM_ID,U.NAME,A.ANSWER_DESCRIPTION,A.ANS_TIME,A.ID,
+                    (SELECT COUNT(*) FROM VOTE WHERE FORUM_ID = A.FORUM_ID AND FORUM_ANS_ID = A.ID) AS VOTES
+                    FROM FORUM_ANS A,USERS U 
                     WHERE A.FORUM_ID = :i AND U.ID = A.PUBLISHER_ID ORDER BY VOTES DESC"""
     c.execute(statement,{'i':forum_id})
     ReplySet = c.fetchall()
@@ -185,6 +214,11 @@ def upvote(request,forum_id,forum_ans_id):
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
 
     c = connection.cursor()
+    statement = "SELECT PUBLISHER_ID FROM FORUM_ANS WHERE ID = :i"
+    c.execute(statement,{'i':forum_ans_id})
+    replier, = c.fetchall()
+    if replier[0] == userid:
+        return redirect('/forum/ques_details/'+str(forum_id))
 
     try:
         statement = """INSERT INTO VOTE
@@ -227,6 +261,61 @@ def activity(request):
     replies = c.fetchall()
 
     return render(request,'forum/activity.html',{'userid':userid,'role':role,'questions':questions,'replies':replies})
+
+def ques_edit(request,forum_id):
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+
+    c = connection.cursor()
+    statement = "UPDATE FORUM_QUES SET TOPIC = :t, QUESTION_DESCRIPTION = :q WHERE ID = :f"
+    c.execute(statement,{'t':request.POST['title'],'q':request.POST['description'],'f':forum_id})
+    connection.commit()
+    c.close()
+    connection.close()
+
+    return redirect('/forum/activity')
+
+
+def ans_edit(request,forum_ans_id):
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+
+    c = connection.cursor()
+    statement = "UPDATE FORUM_ANS SET ANSWER_DESCRIPTION = :q WHERE ID = :f"
+    c.execute(statement,{'q':request.POST['description'],'f':forum_ans_id})
+    connection.commit()
+    c.close()
+    connection.close()
+
+    return redirect('/forum/activity')
+
+def ques_del(request,forum_id):
+    print("QUESTION DELETE")
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+
+    c = connection.cursor()
+    statement = "DELETE FORUM_QUES WHERE ID = :f"
+    c.execute(statement,{'f':forum_id})
+    connection.commit()
+    c.close()
+    connection.close()
+
+    return redirect('/forum/activity')
+
+def ans_del(request,forum_ans_id):
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+
+    c = connection.cursor()
+    statement = "DELETE FORUM_ANS WHERE ID = :f"
+    c.execute(statement,{'f':forum_ans_id})
+    connection.commit()
+    c.close()
+    connection.close()
+
+    return redirect('/forum/activity')
+
 
 def post_comment(request,video_id):
     if request.session.has_key('userid'):
