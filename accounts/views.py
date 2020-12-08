@@ -501,5 +501,51 @@ def seen_notifications(request):
     connection.close()
     return redirect('/accounts/notifications')
 
+def course_completed(request,course_id):
+    if request.session.has_key('userid') == False:
+        return render(request,'accounts/login.html',{'error': 'Not Logged In'})
+
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor()
+
+    userid = request.session['userid']
+    role = request.session['role']
+
+    statement = "SELECT TOTAL_MARKS FROM COURSES WHERE ID = :course_id"
+    c.execute(statement,{'course_id':course_id})
+    total_marks ,= c.fetchone()
+
+    statement ="""
+                SELECT SUM(CC.OBTAINED_MARKS)
+                FROM COURSES C, TOPICS T,CONTENTS CT, COMPLETED_CONTENT CC
+                WHERE C.ID = :course_id AND CC.ST_ID = :userid 
+                AND C.ID = T.COURSE_ID AND T.ID = CT.TOPIC_ID 
+                AND CT.ID = CC.CONTENT_ID """
+                
+            
+    c.execute(statement,{'course_id':course_id,'userid':userid})
+
+    total_obtained ,=c.fetchone()
+
+    statement="SELECT NAME FROM COURSES WHERE ID = :course_id"
+    c.execute(statement,{'course_id':course_id})
+    course_name ,= c.fetchone()
+    if total_marks>0:
+        percentage =round(total_obtained/total_marks*100) 
+    else:
+        percentage =100
+    home =1
+    return render(request,'accounts/course_completed.html',{'userid':userid,'role':role,
+                                                            'total_marks':total_marks,'total_obtained':total_obtained,
+                                                            'percentage':percentage,'home':home,'course_name':course_name})
+
+
+
+    c.close()
+    connection.close()    
+    
+
+
 
     

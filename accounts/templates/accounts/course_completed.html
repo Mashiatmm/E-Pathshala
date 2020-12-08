@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block bg %}
+
+      .bg {
+  /* The image used */
+  background-image: url({% static 'images\completed2.png' %});
+
+  /* Full height */
+  height: 100%; 
+
+  
+
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  }
+{% endblock %}
+
+{% block body %}
+
+<style>
+	.grey-box-icon
+	{
+		background-color:rgba(45, 77, 105, 0.849);
+	
+		text-align: center;
+        color: rgb(213, 213, 228);
+		
+		padding-top: 20px;
+		padding-left: 5px;
+		padding-bottom: 5px;
+		padding-right: 5px;
+		
+	}
+    table, th, td {
+        color:  rgb(213, 213, 228);
+  border: 1px solid black;
+    }
+
+	
+</style>
+
+
+  <div style="padding-top:50px;">
+	<div class="row">
+		<div class="col-md-2">
+			
+		</div><!--/span3-->
+		
+		<div class="col-md-8">
+			<div class="grey-box-icon"  style="width: 100%;height: 100%;align-items: center;padding-bottom: 40px;">
+				<div class="icon-box-top grey-box-icon-pos">
+                   
+				</div><!--icon box top -->
+				<h2>Congratulations!!!</h2>
+                <p>You have successfully completed the course.</p>
+                <div style="padding-left: 25%;" style="padding-bottom: 20%;">
+                <table class="table table-bordered table-striped" style="width: 70%;">
+                   <tr>
+                       <th>Course Name</th>
+                       <td>{{course_name}}</td>
+                   </tr>
+                   <tr>
+                       <th>Total Marks</th>
+                       <td>{{total_marks}}</td>
+                   </tr>
+                   <tr>
+                       <th>Obtained Marks</th>
+                       <td>{{total_obtained}}</td>
+                   </tr>
+                   <tr>
+                    <th>Achieved Percentage</th>
+                    <td>{{percentage}}</td>
+                    </tr>
+                </table>
+            </div>
+				 
+			</div><!--grey box -->
+		</div><!--/span3-->
+	
+		<div class="col-md-2">
+			
+		</div><!--/span3-->
+<!--/span3-->
+	</div>
+    
+    </div>
+
+
+
+{% endblock %}

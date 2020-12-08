@@ -15,6 +15,8 @@ urlpatterns = [
     path('notifications',views.notifications,name = 'notifications'),
     path('delete_notifications',views.delete_notifications,name = 'delete_notifications'),
     path('seen_notifications',views.seen_notifications,name = 'seen_notifications'),
+    path('course_completed/<int:course_id>',views.course_completed,name = 'course_completed'),
+    
     
     
     
