@@ -122,100 +122,19 @@
 
 <ul class="list-group list-group-flush mydiv" >
     {% for content in contents %}
-    <div class="modal fade" id="test{{content.7}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header text-center">
-                    
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                </div>
-                <div class="modal-body mx-3">
-                    <h5 class="modal-title w-100 font-weight-bold"  style="text-align:center">Delete this content permanently?</h5>
-                    <form class="form-settings" action="{% url 'courses:del_content' topic_details.0 content.7 %}" method="POST">
-                    {% csrf_token %}
-                    
-                    
-                    <div class="modal-footer d-flex justify-content-center">
-                        <button class="btn btn-info btn-sm" type="submit">Confirm</button> 
-                        
-                    </div>
-                  </form>
-      
-                </div>
-                
-            </div>
-        
-        </div>
-    </div>
-
-    <div class="modal fade" id="modify{{content.7}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header text-center">
-                    <h4 class="modal-title w-100 font-weight-bold text-uppercase">{{content.3}}</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                        </button>
-                </div>
-                <div class="modal-body mx-3">
-                    <form class="form-settings" action="{% url 'courses:modify_content' topic_details.0 content.3 content.7 %}" method="POST" >
-
-                    {% csrf_token %}
-                    <div class="card-body tab-content" > 
-                        <div class="row pb-1" >
-                            <div class="col-md-12">
-                                Title: <input type="text" id="title" name="title" class="form-control" value = '{{content.1}}'>
-                            </div>
-                        </div>
-
-                        <div class="row pb-1" >
-                            <div class="col-md-12">
-                                Description: <textarea class="form-control" id="description" name="description" rows="3">{{content.2}}</textarea>
-                                
-                            </div>
-                        </div>
-
-                        {% if content.3 == 'video' %}
-                        <div class="row pb-1" >
-                            <div class="col-md-12">
-                                URL: <input type="URL" id="videourl" name="videourl" class="form-control" value = '{{content.5}}'>
-                            </div>
-                        </div>
-                        {% else %}
-                        <div class="row pb-1" >
-                            <div class="col-md-12">
-                                <h6>Total Marks: {{content.4}}</h6>
-                            </div>
-                        </div> 
-                        {% endif %}
-
-                        <div class="row  pt-1" >
-                            <div class="col-md-3" >
-                                <button class="button btn-block" type="submit"><span class="oi oi-pencil"></span>Modify</button> 
-                            </div>
-                        </div>
-  
-                    </div>
-                    </form>    
-                </div>   
-            </div>
-        
-        </div>
-    </div>
 
     <li class="list-group-item list-group-item-action" >
             
               
-                <div class="card-body tab-content" > 
-                    {% if content.3 == 'video' %}<!--content.6-->
-                        <div class="row pb-2" onclick="window.location='{% url 'courses:show_video' content.7 %}';" >
-                        
-                    {% else %}
-                        <div class="row pb-2" onclick="window.location='{% url 'courses:give_exam' content.7 %}';" >
                 
-                    {% endif %} 
+                {% if content.3 == 'video' %}<!--content.6-->
+                <div class="card-body tab-content" onclick="window.location='{% url 'courses:show_video' content.7 %}';" >
+                        
+                {% else %}
+                 <div class="card-body tab-content" onclick="window.location='{% url 'courses:give_exam' content.7 %}';" >
+                {% endif %} 
+
+                    <div class="row pb-2">
 
                         <div class="col-md-1">
                             {% if content.3 == 'video' %}
@@ -243,33 +162,7 @@
                         </div> 
                          
                     </div>
-                   
-                
-                  
-            
-                  <div class="row  pt-1" >
-                      
-                    <div class="col-md-2" >
-                        <a href="#modify{{content.7}}" class="button" data-toggle="modal"><span class="oi oi-pencil"></span>Modify</a> 
-                    </div>
-
-                    {% if content.3 == 'exam' %}
-                      
-                      <div class="col-md-2" >
-                        <span class="align-right"><a href="{% url 'courses:add_ques' content.7 %}" class="button" >Edit questions</a></span>
-                      </div>
-
-                    {% endif %}
-            
-                    <div class="col-md-2" >
-                        <span class="align-right"><a href="#test{{content.7}}" class="button" data-toggle="modal">Delete</a></span>
-                    </div>
-   
-                  </div>
-              
                 </div>
-                   
-            <br>
         </li>
     {% endfor %}
 </ul>
