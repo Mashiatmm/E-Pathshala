@@ -13,6 +13,9 @@ urlpatterns = [
     path('course_classes',views.course_classes,name = 'course_classes'),
     path('person_profile/<int:id>',views.person_profile,name = 'person_profile'),
     path('notifications',views.notifications,name = 'notifications'),
+    path('delete_notifications',views.delete_notifications,name = 'delete_notifications'),
+    path('seen_notifications',views.seen_notifications,name = 'seen_notifications'),
+    
     
     
 ]

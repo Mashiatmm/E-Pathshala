@@ -43,25 +43,25 @@
 
     
     <ul class="list-group list-group-flush mydiv" >
-        <h5>Not Seen<a href="" style="float:right">Delete All</a></h5>
+        <h5>Not Seen<a href="{% url 'accounts:seen_notifications' %}" style="float:right">mark all as seen</a></h5>
         {% if not unseen_comments %}
         Nothing Left
         {% endif %}
     {% for comment in unseen_comments %}
 
-    <li class="list-group-item list-group-item-action" onclick="window.location='{% url 'courses:show_video' comment.0 %}';"> {{comment.3}}&nbsp;new&nbsp;comments&nbsp;in&nbsp;{{comment.1}}</li>
+    <li class="list-group-item list-group-item-action" onclick="window.location='{% url 'courses:show_video' comment.0 %}';"> {{comment.3}}&nbsp;new&nbsp;comment(s)&nbsp;in&nbsp;{{comment.1}}</li>
   
     {% endfor %}
     </ul>
 
     <ul class="list-group list-group-flush mydiv" style="padding-top: 30px;">
-        <h5>Seen<a href="" style="float:right">Delete All</a></h5>
+        <h5>Seen<a href="{% url 'accounts:delete_notifications' %}" style="float:right">Delete All</a></h5>
         {% if not seen_comments %}
         Nothing Left
         {% endif %}
     {% for comment in seen_comments %}
 
-    <li class="list-group-item list-group-item-action" onclick="window.location='{% url 'courses:show_video' comment.0 %}';"> {{comment.3}}&nbsp;comments&nbsp;in&nbsp;{{comment.1}}</li>
+    <li class="list-group-item list-group-item-action" onclick="window.location='{% url 'courses:show_video' comment.0 %}';"> {{comment.3}}&nbsp;comment(s)&nbsp;in&nbsp;{{comment.1}}</li>
   
     {% endfor %}
     </ul>
