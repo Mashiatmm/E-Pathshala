@@ -494,7 +494,28 @@ def notifications(request):
 
     userid = request.session['userid']
     role = request.session['role']
-    return render(request,'accounts/notifications.html',{'userid':userid,'role':role})
+
+    statement= """
+                SELECT VN.VIDEO_ID,C.TITLE,MAX(TIME),COUNT(*)
+                FROM VIDEO_NOTIFICATIONS VN, CONTENTS C
+                WHERE VN.USER_ID = :userid AND VN.VIDEO_ID = C.ID AND VN.SEEN = 0
+                GROUP BY VN.VIDEO_ID, C.TITLE
+                ORDER BY MAX(TIME)
+                """
+    c.execute(statement,{'userid':userid})
+    unseen_comments = c.fetchall()
+
+    statement= """
+                SELECT VN.VIDEO_ID,C.TITLE,MAX(TIME),COUNT(*)
+                FROM VIDEO_NOTIFICATIONS VN, CONTENTS C
+                WHERE VN.USER_ID = :userid AND VN.VIDEO_ID = C.ID AND VN.SEEN = 1
+                GROUP BY VN.VIDEO_ID, C.TITLE
+                ORDER BY MAX(TIME)
+                """
+    c.execute(statement,{'userid':userid})
+    seen_comments = c.fetchall()
+
+    return render(request,'accounts/notifications.html',{'userid':userid,'role':role,'unseen_comments':unseen_comments,'seen_comments':seen_comments})
 
     
 
