@@ -14,10 +14,7 @@
                 <div class="post-detail">
                   <div class="user-info">
                     <h5><img src="{% static 'images/forum.JPG'%}" width = "25" height = "25"> {{QuesDetails.1}}</a></h5>
-                    {% if QuesDetails.4 != None %}
-                        <span class="badge badge-info">{{QuesDetails.4}},Class {{QuesDetails.5}}</span>
-                    {% endif %}
-                    <p class="text-muted">Published by <a href="#" class="profile-link">{{QuesDetails.4}}</a> on {{QuesDetails.3}}</p>
+                    <p class="text-muted">Published by <a href="{% url 'accounts:person_profile' QuesDetails.5 %}" class="profile-link">{{QuesDetails.4}}</a> on {{QuesDetails.3}}</p>
                   </div>
                   
                   <div class="line-divider"></div>
@@ -67,7 +64,7 @@
 
                   {% for reply in ReplySet %}
                   <div class="post-text">
-                    <h5><a href="#" class="profile-link">{{reply.1}}</a><a href = "{% url 'forum:upvote' QuesDetails.0 reply.4 %}" class="btn text-black pull-right"><i class="fa fa-thumbs-up"></i> {{reply.5}}</a></h5>
+                    <h5><a href="{% url 'accounts:person_profile' reply.6 %}" class="profile-link">{{reply.1}}</a><a href = "{% url 'forum:upvote' QuesDetails.0 reply.4 %}" class="btn text-black pull-right"><i class="fa fa-thumbs-up"></i> {{reply.5}}</a></h5>
                     
                     <p class="text-muted">Replied on {{reply.3}}</p>
                   </div>

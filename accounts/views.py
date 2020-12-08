@@ -361,87 +361,6 @@ def course_classes(request):
 
 
 
-"""
-
-
-<div class="modal fade" id="test{{course.0}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header text-center">
-                    
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                </div>
-                <div class="modal-body mx-3">
-                    <h5 class="modal-title w-100 font-weight-bold"  style="text-align:center">Delete this content permanently?</h5>
-                    <form class="form-settings" action="{% url 'courses:del_course' course.0 %}" method="POST">
-                    {% csrf_token %}
-                    
-                    
-                    <div class="modal-footer d-flex justify-content-center">
-                        <button class="btn btn-info btn-sm" type="submit">Confirm</button> 
-                        
-                    </div>
-                  </form>
-      
-                </div>
-                
-            </div>
-        
-        </div>
-    </div> 
-
-      <div class="modal fade" id="contribute{{course.0}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header text-center">
-                    
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                </div>
-                <div class="modal-body mx-3">
-                    <h5 class="modal-title w-100 font-weight-bold"  style="text-align:center">Add Contributor</h5>
-                    <form class="form-settings" action="{% url 'courses:contribute_course' course.0 %}" method="POST">
-                    {% csrf_token %}
-                    
-                    <div class="md-form mb-4">
-                        <label data-error="wrong" data-success="right" for="mail">Contributor's Mail ID</label>
-                        <input type="text" id='mail' name = 'mail' class="form-control validate" required>
-                        
-                    </div>
-
-                    <div class="modal-footer d-flex justify-content-center">
-                        <button class="btn btn-info btn-sm" type="submit">Confirm</button> 
-                        
-                    </div>
-                  </form>
-      
-                </div>
-                
-            </div>
-        
-        </div>
-      </div> 
-    
-
-    <div class="row  pt-3  mydiv " >
-        
-        
-        <div class="col-md-3" style="pointer-events:auto" >
-            <a href="#contribute{{course.0}}" data-toggle="modal">Add Contributor</a>
-        </div>
-        {% if course.5 == 'owner' %}
-        <div class="col-md-3"style="pointer-events: auto;" >
-            <a href="#test{{course.0}}" data-toggle="modal">Delete</a>
-        </div>
-        {% endif %}
-
-           
-    </div>
-"""
-
 
 
 def person_profile(request,id):
@@ -498,6 +417,20 @@ def notifications(request):
     userid = request.session['userid']
     role = request.session['role']
 
+    statement = """SELECT Q.TOPIC,Q.QUESTION_TIME
+                    FROM FORUM_QUES Q,FORUM_NOTIFICATIONS N
+                    WHERE N.USER_ID = :userid AND N.FORUM_ID = Q.ID 
+                """
+    c.execute(statement,{'userid':userid})
+    unseen_post = c.fetchall()
+
+    statement = """SELECT A.FORUM_ID,U.NAME
+                    FROM FORUM_QUES Q,FORUM_ANS A,USERS U
+                    WHERE Q.ST_ID = :userid AND A.SEEN = 0 AND Q.ID = A.FORUM_ID AND A.PUBLISHER_ID = U.ID 
+                """
+    c.execute(statement,{'userid':userid})
+    unseen_replies = c.fetchall()
+
     statement= """
                 SELECT VN.VIDEO_ID,C.TITLE,MAX(TIME),COUNT(*)
                 FROM VIDEO_NOTIFICATIONS VN, CONTENTS C
@@ -520,7 +453,7 @@ def notifications(request):
 
     c.close()
     connection.close()
-    return render(request,'accounts/notifications.html',{'userid':userid,'role':role,'unseen_comments':unseen_comments,'seen_comments':seen_comments})
+    return render(request,'accounts/notifications.html',{'userid':userid,'role':role,'unseen_comments':unseen_comments,'seen_comments':seen_comments,'unseen_post':unseen_post,'unseen_replies':unseen_replies})
 
 
 def delete_all_notifications(request):

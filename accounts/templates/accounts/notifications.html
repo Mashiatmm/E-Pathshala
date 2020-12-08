@@ -44,12 +44,30 @@
     
     <ul class="list-group list-group-flush mydiv" >
         <h5>Not Seen<a href="" style="float:right">Delete All</a></h5>
-        {% if not unseen_comments %}
+        {% if not unseen_comments and not unseen_post and not unseen_replies %}
+           
         Nothing Left
+            
         {% endif %}
     {% for comment in unseen_comments %}
 
     <li class="list-group-item list-group-item-action" onclick="window.location='{% url 'courses:show_video' comment.0 %}';"> {{comment.3}}&nbsp;new&nbsp;comments&nbsp;in&nbsp;{{comment.1}}</li>
+  
+    {% endfor %}
+    </ul>
+
+    <ul class="list-group list-group-flush mydiv" >
+        {% for reply in unseen_replies %}
+    
+            <li class="list-group-item list-group-item-action" onclick="window.location='{% url 'forum:ques_details' reply.0 %}';"> 1&nbsp;new&nbsp;reply&nbsp;in&nbsp;your post by {{reply.1}}</li>
+      
+        {% endfor %}
+    </ul>
+
+    <ul class="list-group list-group-flush mydiv" >
+    {% for post in unseen_post %}
+
+        <li class="list-group-item list-group-item-action" onclick="window.location='{% url 'forum:main' %}';"> 1&nbsp;new&nbsp;post&nbsp;in&nbsp;forum on {{post.1}}: {{post.0}}</li>
   
     {% endfor %}
     </ul>
