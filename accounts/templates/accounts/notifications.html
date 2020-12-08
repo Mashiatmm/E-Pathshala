@@ -43,14 +43,8 @@
 
     
     <ul class="list-group list-group-flush mydiv" >
-<<<<<<< HEAD
-        <h5>Not Seen<a href="" style="float:right">Delete All</a></h5>
-        {% if not unseen_comments and not unseen_post and not unseen_replies %}
-           
-=======
         <h5>Not Seen<a href="{% url 'accounts:seen_notifications' %}" style="float:right">mark all as seen</a></h5>
-        {% if not unseen_comments %}
->>>>>>> 4ceecd94f2a2047296b42acdd50bf4770cfbff9b
+        {% if not unseen_comments and not unseen_post and not unseen_replies %}
         Nothing Left
             
         {% endif %}
