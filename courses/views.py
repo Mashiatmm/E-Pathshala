@@ -711,9 +711,6 @@ def next_content_student(request,content_id):
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
     c = connection.cursor() 
 
-
-   
-
     statement="SELECT T.ID,T.SL_NO,CRS.ID,C.SL_NO,C.CONTENT_TYPE FROM CONTENTS C,TOPICS T,COURSES CRS WHERE C.ID = :content_id AND C.TOPIC_ID=T.ID AND T.COURSE_ID = CRS.ID"
     c.execute(statement,{'content_id':content_id})
     infos=c.fetchone()
@@ -723,6 +720,8 @@ def next_content_student(request,content_id):
     current_cont_sl=infos[3]
     current_cont_type=infos[4]
 
+
+
     if role=='student' and current_cont_type == 'video':
         statement="SELECT CONTENT_ID FROM COMPLETED_CONTENT WHERE CONTENT_ID =:content_id AND ST_ID = :userid"
         c.execute(statement,{'content_id':content_id,'userid':userid})
@@ -731,6 +730,13 @@ def next_content_student(request,content_id):
             statement="INSERT INTO COMPLETED_CONTENT VALUES(:0,:1,:2)"
             c.execute(statement,(content_id,userid,0))
             c.callproc('PERCENTAGE_COMPLETED_UPDATE',[userid,content_id])
+    
+    if role == 'student':
+        statement= "SELECT PERCENTAGE_COMPLETED FROM ENROLL WHERE ST_ID = :userid AND COURSE_ID = :current_course"
+        c.execute(statement,{'userid':userid,'current_course':current_course})
+        completed ,= c.fetchone()
+        if completed == 100:
+            return redirect('/accounts/course_completed/'+str(current_course))
 
 
 
