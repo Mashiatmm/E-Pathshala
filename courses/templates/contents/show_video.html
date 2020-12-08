@@ -2,6 +2,7 @@
 {% load embed_video_tags %}
 {% block title %}{% endblock %}
 {% block body %}
+{% load static %}
 {% if role == 'student'%}
 <a href ="{% url 'courses:course_contents_student' video.6 %}">
 {% else %}
@@ -182,6 +183,72 @@
     <div class="container" >
       <div class="scroll" >
       {% for cmnt in video_comments %}
+      <!--modal start-->
+      <div class="modal fade" id="modify{{cmnt.0}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
+                <div class="modal-body mx-3">
+                    <form class="form-settings" action="{% url 'forum:edit_comment' cmnt.0 %}" method="POST" >
+      
+                    {% csrf_token %}
+                    <div class="card-body tab-content" > 
+                        <div class="row pb-1" >
+                            <div class="col-md-12">
+                                Edit: <input type="text" id="edited_text" name="edited_text" class="form-control" value="{{cmnt.2}}" >
+                            </div>
+                        </div>
+                        <div class="row  pt-1" >
+                            <div class="col-md-3" >
+                                <button class="button btn-block" type="submit">Done</button> 
+                            </div>
+                        </div>
+      
+                    </div>
+                    </form>    
+                </div>   
+            </div>
+        
+        </div>
+      </div>
+
+
+      <!--modal 2 for delete comment-->
+
+      <div class="modal fade" id="delete{{cmnt.0}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
+                <div class="modal-body mx-3">
+                  <p>Do you want to delete the comment?</p>
+                    <form class="form-settings" action="{% url 'forum:delete_comment' cmnt.0 %}" method="POST" >
+      
+                    {% csrf_token %}
+                    <div class="card-body tab-content" > 
+                        <div class="row  pt-1" >
+                            <div class="col-md-3" >
+                                <button class="button btn-block" type="submit">Confirm</button> 
+                            </div>
+                        </div>
+      
+                    </div>
+                    </form>    
+                </div>   
+            </div>
+        
+        </div>
+      </div>
+
+<!--modal end-->
+
         <div class="row">
             <div class="col-md-12">
                 <div class="post-content">
@@ -189,8 +256,8 @@
                     
                     <div class="post-detail">
                       <div class="row user-info">
-                        <div class="col-md-2"><h5><a href="#" class="profile-link">{{cmnt.1}}</a></h5></div>
-                        <div class="col-md-6"></div>
+                        <div class="col-md-4"><h5><img src="{% static 'images\profile.jpg' %}" style="height: 30px;border-radius: 50%">&nbsp;<a href="#" class="profile-link">{{cmnt.1}}</a></h5></div>
+                        <div class="col-md-4"></div>
                         <div class="col-md-4"><h6>{{cmnt.3}}</h6></div>
                         
                       </div>
@@ -204,18 +271,19 @@
                             <p>{{cmnt.2}} <i class="em em-anguished"></i> <i class="em em-anguished"></i> <i class="em em-anguished"></i></p>
                           </div>
                         </div>
-                        <!--
+                        {% if cmnt.4 == userid %}
                         <div class="col-md-1">
 
-                          &nbsp;&nbsp;<a href="">edit</a>
+                          &nbsp;&nbsp;<a href="#modify{{cmnt.0}}" data-toggle="modal">Edit</a>
 
                         </div>
                         <div class="col-md-1">
 
-                          &nbsp;&nbsp;<a href="">delete</a>
+                          &nbsp;&nbsp;<a href="#delete{{cmnt.0}}" data-toggle="modal">Delete</a>
 
                         </div>
-                        -->
+                        {% endif %}
+                       
                         </div>
                         {% if parent_id != cmnt.0 %}
                         <div class="row">
@@ -236,10 +304,76 @@
                   <div class="container " style="padding-left: 50px;">
                     
                     {% for reply in replies_to_comment %}
+   <!--modal start-->
+   <div class="modal fade" id="modify{{reply.0}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <div class="modal-body mx-3">
+                <form class="form-settings" action="{% url 'forum:edit_comment' reply.0 %}" method="POST" >
+  
+                {% csrf_token %}
+                <div class="card-body tab-content" > 
+                    <div class="row pb-1" >
+                        <div class="col-md-12">
+                            Edit: <input type="text" id="edited_text" name="edited_text" class="form-control" value="{{reply.2}}">
+                        </div>
+                    </div>
+                    <div class="row  pt-1" >
+                        <div class="col-md-3" >
+                            <button class="button btn-block" type="submit">Done</button> 
+                        </div>
+                    </div>
+  
+                </div>
+                </form>    
+            </div>   
+        </div>
+    
+    </div>
+  </div>
+
+
+  <!--modal 2 for delete comment-->
+
+  <div class="modal fade" id="delete{{reply.0}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <div class="modal-body mx-3">
+              <p>Do you want to delete the reply?</p>
+                <form class="form-settings" action="{% url 'forum:delete_comment' reply.0 %}" method="POST" >
+  
+                {% csrf_token %}
+                <div class="card-body tab-content" > 
+                    <div class="row  pt-1" >
+                        <div class="col-md-3" >
+                            <button class="button btn-block" type="submit">Confirm</button> 
+                        </div>
+                    </div>
+  
+                </div>
+                </form>    
+            </div>   
+        </div>
+    
+    </div>
+  </div>
+
+<!--modal end-->
+
                     
                       <div class="row">
-                        <div class="col-md-3"><h5><a href="#" class="profile-link">{{reply.1}}</a></h5></div>
-                        <div class="col-md-4"></div>
+                        <div class="col-md-4"><h5><img src="{% static 'images\profile.jpg' %}" style="height: 30px;border-radius: 50%">&nbsp;<a href="#" class="profile-link">{{reply.1}}</a></h5></div>
+                        <div class="col-md-3"></div>
                         <div class="col-md-5"><h6>{{reply.3}}</h6></div>
                         
                       </div>
@@ -247,14 +381,14 @@
                         <div class="col-md-10">
                           <p>{{reply.2}} </p>
                         </div>
-                        <!--
+                        {% if reply.4 == userid %}
                         <div class="col-md-1">
-                          &nbsp;&nbsp;<a href="">edit</a>
+                          &nbsp;&nbsp;<a href="#modify{{reply.0}}" data-toggle="modal">edit</a>
                         </div>
                         <div class="col-md-1">
-                          &nbsp;&nbsp;<a href="">delete</a>
+                          &nbsp;&nbsp;<a href="#delete{{reply.0}}" data-toggle="modal">delete</a>
                         </div>
-                        -->
+                        {% endif %}
                       </div>
                     
                       {% endfor %}

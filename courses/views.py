@@ -584,7 +584,7 @@ def show_video(request,content_id):
 
     #find the comments
 
-    statement="SELECT VC.ID,U.NAME,VC.COMMENT_DESCRIPTION,VC.COMMENT_TIME FROM VIDEO_COMMENTS VC , USERS U WHERE VC.VIDEO_ID = :content_id AND VC.PARENT_ID IS NULL AND VC.COMMENTER_ID = U.ID ORDER BY VC.COMMENT_TIME desc"
+    statement="SELECT VC.ID,U.NAME,VC.COMMENT_DESCRIPTION,VC.COMMENT_TIME,U.ID FROM VIDEO_COMMENTS VC , USERS U WHERE VC.VIDEO_ID = :content_id AND VC.PARENT_ID IS NULL AND VC.COMMENTER_ID = U.ID ORDER BY VC.COMMENT_TIME desc"
     c.execute(statement,{'content_id':content_id})
     video_comments = c.fetchall()
 
@@ -603,7 +603,7 @@ def show_video(request,content_id):
         parent_id = request.session['parent_comment_id']
         del request.session['parent_comment_id']
 
-        statement="SELECT VC.ID,U.NAME,VC.COMMENT_DESCRIPTION,VC.COMMENT_TIME FROM VIDEO_COMMENTS VC , USERS U WHERE VC.VIDEO_ID = :content_id AND VC.PARENT_ID = :parent_id AND VC.COMMENTER_ID = U.ID ORDER BY VC.COMMENT_TIME desc"
+        statement="SELECT VC.ID,U.NAME,VC.COMMENT_DESCRIPTION,VC.COMMENT_TIME,U.ID FROM VIDEO_COMMENTS VC , USERS U WHERE VC.VIDEO_ID = :content_id AND VC.PARENT_ID = :parent_id AND VC.COMMENTER_ID = U.ID ORDER BY VC.COMMENT_TIME desc"
         c.execute(statement,{'content_id':content_id,'parent_id':parent_id})
         replies_to_comment= c.fetchall()
         print(replies_to_comment)

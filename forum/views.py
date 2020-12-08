@@ -446,3 +446,65 @@ def show_reply(request,parent_id):
                     
                     <br><br>
 """
+
+def edit_comment(request,id):
+    if request.session.has_key('userid'):
+        userid = request.session['userid']
+        role= request.session['role']
+    else:
+        return render(request,'accounts/login.html',{'error': 'Not Logged In'})
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor()  
+
+    statement="SELECT VIDEO_ID FROM VIDEO_COMMENTS WHERE ID = :id"
+    c.execute(statement,{'id':id})
+    video_id ,=c.fetchone()
+
+    if request.method == 'POST':
+        statement="""UPDATE VIDEO_COMMENTS 
+                    SET COMMENT_DESCRIPTION = :edited_text
+                    WHERE ID = :id """
+        c.execute(statement,{'id':id,'edited_text':request.POST['edited_text']})
+
+
+
+    connection.commit()
+
+    c.close()
+    connection.close()   
+    return redirect('/courses/course_contents/video/'+str(video_id))
+
+def delete_comment(request,id):
+    if request.session.has_key('userid'):
+        userid = request.session['userid']
+        role= request.session['role']
+    else:
+        return render(request,'accounts/login.html',{'error': 'Not Logged In'})
+
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor()  
+    statement="SELECT COMMENT_TIME FROM VIDEO_COMMENTS WHERE ID = :id"
+    c.execute(statement,{'id':id})
+
+    comment_time = c.fetchone()
+    if comment_time:
+        comment_time=comment_time[0]
+        statement ="DELETE FROM VIDEO_NOTIFICATIONS WHERE TIME = :comment_time AND COMMENTER_ID = :userid"
+        c.execute(statement,{'comment_time':comment_time,'userid':userid})
+    
+    statement="SELECT VIDEO_ID FROM VIDEO_COMMENTS WHERE ID = :id"
+    c.execute(statement,{'id':id})
+    video_id ,=c.fetchone()
+
+    statement ="DELETE FROM VIDEO_COMMENTS WHERE ID = :id"
+    c.execute(statement,{'id':id})
+
+    connection.commit()
+
+    c.close()
+    connection.close()    
+   
+
+    return redirect('/courses/course_contents/video/'+str(video_id))
