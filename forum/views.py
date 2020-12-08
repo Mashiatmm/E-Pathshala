@@ -14,14 +14,18 @@ def main(request):
 
     c = connection.cursor()
     statement = """SELECT F.ID,F.TOPIC,F.QUESTION_DESCRIPTION,F.QUESTION_TIME,S.NAME,
-                (SELECT COUNT(*) FROM FORUM_ANS WHERE FORUM_ID = F.ID)
+                (SELECT COUNT(*) FROM FORUM_ANS WHERE FORUM_ID = F.ID),S.ID
                 FROM FORUM_QUES F,USERS S
                 WHERE S.ID = F.ST_ID 
                 ORDER BY F.QUESTION_TIME DESC"""
     c.execute(statement)
     forumset = c.fetchall()
+
+    statement = """DELETE FORUM_NOTIFICATIONS WHERE USER_ID = :u"""
+    c.execute(statement,{'u':userid})
     
     #print(forumset)
+    connection.commit()
     c.close()
     connection.close()
     return render(request,'forum/forum.html',{'userid':userid,'role':role,'forumset':forumset})
@@ -36,6 +40,14 @@ def addForumQues(request):
     statement = """INSERT INTO FORUM_QUES(ID,TOPIC,ST_ID,QUESTION_DESCRIPTION,QUESTION_TIME)
                      VALUES(0,:0,:1,:2,SYSDATE)"""
     c.execute(statement,(request.POST['topic'],st_id,request.POST['description']))
+
+    c.execute("select seq_forum_q.currval from dual")
+    forum_id,=c.fetchone()
+    statement = """INSERT INTO FORUM_NOTIFICATIONS
+                    SELECT :0,U.ID,:1
+                    FROM USERS U
+                    WHERE U.ROLE = 'teacher' """
+    c.execute(statement,(forum_id,st_id))
 
     connection.commit()
     c.close()
@@ -55,7 +67,7 @@ def searchForum(request):
     c = connection.cursor()
     searchkey = request.POST['SearchKey'].lower()
     statement = """SELECT F.ID,F.TOPIC,F.QUESTION_DESCRIPTION,F.QUESTION_TIME,S.NAME,
-                    (SELECT COUNT(*) FROM FORUM_ANS WHERE FORUM_ID = F.ID)
+                    (SELECT COUNT(*) FROM FORUM_ANS WHERE FORUM_ID = F.ID),S.ID
                     FROM FORUM_QUES F,USERS S
                     WHERE S.ID = F.ST_ID 
                     AND F.ID = ANY(SELECT FF.ID FROM FORUM_QUES FF
@@ -81,7 +93,7 @@ def sortbyUnanswered(request):
 
     c = connection.cursor()
     statement = """SELECT F.ID,F.TOPIC,F.QUESTION_DESCRIPTION,F.QUESTION_TIME,S.NAME,
-                    (SELECT COUNT(*) FROM FORUM_ANS WHERE FORUM_ID = F.ID)
+                    (SELECT COUNT(*) FROM FORUM_ANS WHERE FORUM_ID = F.ID),S.ID
                     FROM FORUM_QUES F,USERS S
                     WHERE S.ID = F.ST_ID 
                     AND 0 = (SELECT COUNT(*) FROM FORUM_ANS WHERE FORUM_ID = F.ID)
@@ -106,7 +118,7 @@ def sortByTop(request):
 
     c = connection.cursor()
     statement = """SELECT F.ID,F.TOPIC,F.QUESTION_DESCRIPTION,F.QUESTION_TIME,S.NAME,
-                    (SELECT COUNT(*) FROM FORUM_ANS WHERE FORUM_ID = F.ID) AS REPLIES
+                    (SELECT COUNT(*) FROM FORUM_ANS WHERE FORUM_ID = F.ID) AS REPLIES,S.ID
                     FROM FORUM_QUES F,USERS S
                     WHERE S.ID = F.ST_ID 
                     ORDER BY REPLIES DESC"""
@@ -127,7 +139,7 @@ def addForumAns(request,forum_id,page):
     c = connection.cursor()
     
     statement = """INSERT INTO FORUM_ANS
-                VALUES(:0,0,:1,:2,SYSDATE)"""
+                VALUES(:0,0,:1,:2,SYSDATE,0)"""
     c.execute(statement,(forum_id,user_id,request.POST['comment']))
     connection.commit()
     c.close()
@@ -148,14 +160,20 @@ def ques_details(request,forum_id):
 
     c = connection.cursor()
 
+    statement = """UPDATE FORUM_ANS SET SEEN = 1
+                    WHERE FORUM_ID = :i
+                """
+    c.execute(statement,{'i':forum_id})
+    connection.commit()
+    
     statement = """SELECT A.FORUM_ID,U.NAME,A.ANSWER_DESCRIPTION,A.ANS_TIME,A.ID,
-                    (SELECT COUNT(*) FROM VOTE WHERE FORUM_ID = A.FORUM_ID AND FORUM_ANS_ID = A.ID) AS VOTES
+                    (SELECT COUNT(*) FROM VOTE WHERE FORUM_ID = A.FORUM_ID AND FORUM_ANS_ID = A.ID) AS VOTES,U.ID
                     FROM FORUM_ANS A,USERS U 
                     WHERE A.FORUM_ID = :i AND U.ID = A.PUBLISHER_ID ORDER BY A.ANS_TIME DESC"""
     c.execute(statement,{'i':forum_id})
     ReplySet = c.fetchall()
 
-    statement = """SELECT F.ID,F.TOPIC,F.QUESTION_DESCRIPTION,F.QUESTION_TIME,S.NAME
+    statement = """SELECT F.ID,F.TOPIC,F.QUESTION_DESCRIPTION,F.QUESTION_TIME,S.NAME,S.ID
                     FROM FORUM_QUES F,USERS S
                     WHERE F.ID = :i AND S.ID = F.ST_ID"""
     
@@ -178,13 +196,13 @@ def quesSortByVotes(request,forum_id):
     c = connection.cursor()
 
     statement = """SELECT A.FORUM_ID,U.NAME,A.ANSWER_DESCRIPTION,A.ANS_TIME,A.ID,
-                    (SELECT COUNT(*) FROM VOTE WHERE FORUM_ID = A.FORUM_ID AND FORUM_ANS_ID = A.ID) AS VOTES
+                    (SELECT COUNT(*) FROM VOTE WHERE FORUM_ID = A.FORUM_ID AND FORUM_ANS_ID = A.ID) AS VOTES,U.ID
                     FROM FORUM_ANS A,USERS U 
                     WHERE A.FORUM_ID = :i AND U.ID = A.PUBLISHER_ID ORDER BY VOTES DESC"""
     c.execute(statement,{'i':forum_id})
     ReplySet = c.fetchall()
 
-    statement = """SELECT F.ID,F.TOPIC,F.QUESTION_DESCRIPTION,F.QUESTION_TIME,S.NAME
+    statement = """SELECT F.ID,F.TOPIC,F.QUESTION_DESCRIPTION,F.QUESTION_TIME,S.NAME,S.ID
                     FROM FORUM_QUES F,USERS S
                     WHERE F.ID = :i AND S.ID = F.ST_ID"""
     
