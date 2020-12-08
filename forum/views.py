@@ -28,7 +28,7 @@ def main(request):
     connection.commit()
     c.close()
     connection.close()
-    return render(request,'forum/forum.html',{'userid':userid,'role':role,'forumset':forumset})
+    return render(request,'forum/forum.html',{'userid':userid,'role':role,'forumset':forumset,'sort':'Sort By Latest'})
 
 def addForumQues(request):
     st_id = request.session['userid']
@@ -105,7 +105,7 @@ def sortbyUnanswered(request):
 
     c.close()
     connection.close()
-    return render(request,'forum/forum.html',{'userid':userid,'role':role,'forumset':forumset})
+    return render(request,'forum/forum.html',{'userid':userid,'role':role,'forumset':forumset,'sort':'Sort By Unanswered'})
 
 def sortByTop(request):
     if request.session.has_key('userid') == False:
@@ -128,7 +128,7 @@ def sortByTop(request):
 
     c.close()
     connection.close()
-    return render(request,'forum/forum.html',{'userid':userid,'role':role,'forumset':forumset})
+    return render(request,'forum/forum.html',{'userid':userid,'role':role,'forumset':forumset,'sort':'Sort By Top'})
 
 def addForumAns(request,forum_id,page):
     user_id = request.session['userid']
@@ -180,7 +180,7 @@ def ques_details(request,forum_id):
     c.close()
     connection.close()
 
-    return render(request,'forum/question.html',{'userid':userid,'role':role,'ReplySet':ReplySet,'QuesDetails':QuestionDetails})
+    return render(request,'forum/question.html',{'userid':userid,'role':role,'ReplySet':ReplySet,'QuesDetails':QuestionDetails,'sort':'Sort By Latest'})
 
 def quesSortByVotes(request,forum_id):
     if request.session.has_key('userid') == False:
@@ -209,7 +209,7 @@ def quesSortByVotes(request,forum_id):
     c.close()
     connection.close()
 
-    return render(request,'forum/question.html',{'userid':userid,'role':role,'ReplySet':ReplySet,'QuesDetails':QuestionDetails})
+    return render(request,'forum/question.html',{'userid':userid,'role':role,'ReplySet':ReplySet,'QuesDetails':QuestionDetails,'sort':'Sort By Votes'})
 
 def upvote(request,forum_id,forum_ans_id):
     userid = request.session['userid']

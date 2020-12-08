@@ -51,22 +51,24 @@
 
 
 {% if role == 'student' %}
-  <button class="btn btn-info" data-toggle="modal" data-target="#modalForumForm"><span class="oi oi-pencil"></span>Ask your question</button>
-<br><br>
+  <button class="btn btn-info pull-right" data-toggle="modal" data-target="#modalForumForm"><span class="oi oi-pencil"></span>Ask your question</button>
 {% endif %}
 
-<div class="btn-group">
-  <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Sort by
+
+
+<div class="dropdown">
+  <button class="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    {{sort}}
+    <span class="caret"></span>
   </button>
-  <div class="dropdown-menu">
-    <a class="dropdown-item" href="{% url 'forum:main' %}">Latest</a>
-    <a class="dropdown-item" href="{% url 'forum:sortByTop' %}">Top</a>
-    <a class="dropdown-item" href="{% url 'forum:sortByUnanswered' %}">Unanswered</a>
-    
-  </div>
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+    <li><a class="dropdown-item" href="{% url 'forum:main' %}">Sort By Latest</a></li>
+    <li><a class="dropdown-item" href="{% url 'forum:sortByTop' %}">Sort By Top</a></li>
+    <li><a class="dropdown-item" href="{% url 'forum:sortByUnanswered' %}">Sort By Unanswered</a></li>
+  </ul>
 </div>
-<br><br>
+<br>
+
 <a href ="{% url 'forum:activity' %}" >My Activity</a>
 <br><br>
 <div class = "col-14">
@@ -90,7 +92,7 @@
               
               <div class="post-detail">
                 <div class="user-info">
-                  <h5><img src="{% static 'images/forum.JPG'%}" width = "25" height = "25"> {{ques.1}}</h5>
+                  <h5><img src="{% static 'images\forum1.jpg' %}" width = "25" height = "25"> {{ques.1}}</h5>
                   
                   <p class="text-muted">Published by <a href="{% url 'accounts:person_profile' ques.6 %}" class="profile-link">{{ques.4}}</a> on <span class="badge badge-secondary">{{ques.3}}</span></p>
                 </div>
@@ -118,8 +120,6 @@
 
 
 {% endfor %}
-
-
 
 
 

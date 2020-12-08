@@ -3,7 +3,7 @@
 {% block body %}
 
 {% if examinfo %}
-<a href ="{% url 'courses:give_exam' examinfo.2 %}"><span class="oi oi-arrow-left"></span>Back</a>
+<a href ="{% url 'courses:give_exam' examinfo.2 %}"><span class="oi oi-arrow-left"></span>Show Exam Page</a>
 
 <form class="form-settings" name = "addQues" action="{% url 'courses:add_ques' examinfo.2 %}" method="POST" >
 
@@ -16,6 +16,7 @@
     {% endif %}
 
       <h2 class="text-center">{{examinfo.0}}</h2>
+      <h6 class="text-center">{{examinfo.1}}</h6>
       <h6 class="text-center">{{examinfo.1}}</h6>
 
       <div class="row pb-3" >
@@ -62,7 +63,7 @@
       <div class="row  pt-3" >
       
         <div class="col-md-6" >
-          <button class="btn btn-primary btn-lg"  type="submit">Add This Question</button> 
+          <button class="button btn-lg"  type="submit">Add This Question</button> 
         </div>
       </div>
   </div>
@@ -155,11 +156,11 @@
     
     <div class="row  pt-1" >
       <div class="col-md-3" >
-        <button class="btn btn-lg btn-outline-primary btn-default mb-5" type="submit"><span class="oi oi-pencil"></span>Modify</button> 
+        <button class="button" type="submit"><span class="oi oi-pencil"></span>Modify</button> 
       </div>
 
       <div class="col-md-3" >
-        <span class="align-right"><a href="#test{{ques.6}}" class="btn btn-lg btn-outline-primary btn-default mb-5" data-toggle="modal">Delete</a></span>
+        <span class="align-right"><a href="#test{{ques.6}}" class="button" data-toggle="modal">Delete</a></span>
       </div>
     </div>
 
@@ -203,7 +204,7 @@
     <div class="row  pt-3" >
       
       <div class="col-md-6" >
-        <button class="btn btn-lg btn-outline-primary btn-block mb-5" type="submit">Add Questions</button> 
+        <button class="button btn-block" type="submit">Add Questions</button> 
       </div>
     </div>    
 
