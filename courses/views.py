@@ -273,7 +273,7 @@ def modify_content(request,topic_id,content_type,content_id):
     connection.commit()
     c.close()
     connection.close()
-    return redirect('/courses/topic_details/'+str(topic_id)+'/')
+    return redirect('/courses/course_contents/exam/'+str(content_id))
 
 def del_content(request,topic_id,content_id):
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
@@ -685,7 +685,7 @@ def give_exam(request,content_id):
 
 
 
-    statement="SELECT C.TOPIC_ID,C.TITLE,E.TOTAL_MARKS FROM EXAMS E,CONTENTS C WHERE E.ID = C.ID AND E.ID= :content_id"
+    statement="SELECT C.TOPIC_ID,C.TITLE,E.TOTAL_MARKS,C.DESCRIPTION FROM EXAMS E,CONTENTS C WHERE E.ID = C.ID AND E.ID= :content_id"
     c.execute(statement,{'content_id':content_id})
     exam = c.fetchone()
 

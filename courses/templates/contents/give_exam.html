@@ -16,7 +16,100 @@
 {% endif %}
 
 {% if role == 'teacher' %}
-<div class="container" style="align-content: center;"> <a href="" class= "btn btn-lg btn-outline-primary" >Modify</a></div>
+
+<div class="modal fade" id="del{{content_id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <div class="modal-body mx-3">
+                <h5 class="modal-title w-100 font-weight-bold"  style="text-align:center">Delete this content permanently?</h5>
+                <form class="form-settings" action="{% url 'courses:del_content' exam.0 content_id %}" method="POST">
+                {% csrf_token %}
+                
+                
+                <div class="modal-footer d-flex justify-content-center">
+                    <button class="btn btn-info btn-sm" type="submit">Confirm</button> 
+                    
+                </div>
+              </form>
+  
+            </div>
+            
+        </div>
+    
+    </div>
+</div>
+
+<div class="modal fade" id="modify{{content_id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold text-uppercase">Edit Exam Details</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <div class="modal-body mx-3">
+                <form class="form-settings" action="{% url 'courses:modify_content' exam.0 'exam' content_id %}" method="POST" >
+
+                {% csrf_token %}
+                <div class="card-body tab-content" > 
+                    <div class="row pb-1" >
+                        <div class="col-md-12">
+                            Title: <input type="text" id="title" name="title" class="form-control" value = '{{exam.1}}'>
+                        </div>
+                    </div>
+
+                    <div class="row pb-1" >
+                        <div class="col-md-12">
+                            Description: <textarea class="form-control" id="description" name="description" rows="3">{{exam.3}}</textarea>
+                            
+                        </div>
+                    </div>
+
+                    
+                    <div class="row pb-1" >
+                        <div class="col-md-12">
+                            <h6>Total Marks: {{exam.2}}</h6>
+                        </div>
+                    </div> 
+                  
+
+                    <div class="row  pt-1" >
+                        <div class="col-md-3" >
+                            <button class="button btn-block" type="submit"><span class="oi oi-pencil"></span>Modify</button> 
+                        </div>
+                    </div>
+
+                </div>
+                </form>    
+            </div>   
+        </div>
+    
+    </div>
+</div>
+
+<div class="container" style="align-content: center;">
+  <div class = "row-pt-1">
+    <div class = "col-md-3">
+      <a href="#modify{{content_id}}" class= "button" data-toggle="modal">Modify Title</a>
+    </div>
+
+    <div class = "col-md-3">
+        <a href="{% url 'courses:add_ques' content_id %}" class= "button" >Edit Questions</a>
+      </div>
+
+    <div class = "col-md-3">
+      <a href="#del{{content_id}}" class= "button" data-toggle="modal" >Delete</a>
+    </div>
+
+  </div>
+</div>
 {% endif %}
 
 <br><h4>{{exam.1}}&nbsp;</h4>
