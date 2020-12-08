@@ -711,6 +711,8 @@ def next_content_student(request,content_id):
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
     c = connection.cursor() 
 
+    
+
 
    
 
@@ -723,6 +725,8 @@ def next_content_student(request,content_id):
     current_cont_sl=infos[3]
     current_cont_type=infos[4]
 
+
+
     if role=='student' and current_cont_type == 'video':
         statement="SELECT CONTENT_ID FROM COMPLETED_CONTENT WHERE CONTENT_ID =:content_id AND ST_ID = :userid"
         c.execute(statement,{'content_id':content_id,'userid':userid})
@@ -731,6 +735,9 @@ def next_content_student(request,content_id):
             statement="INSERT INTO COMPLETED_CONTENT VALUES(:0,:1,:2)"
             c.execute(statement,(content_id,userid,0))
             c.callproc('PERCENTAGE_COMPLETED_UPDATE',[userid,content_id])
+    
+    if role == 'student':
+        pass
 
 
 

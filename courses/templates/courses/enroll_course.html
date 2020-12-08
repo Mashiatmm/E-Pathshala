@@ -17,7 +17,6 @@ No course available to enroll from your class...
 
 <ul class ="list-group list-group-flush mydiv">
     {% for course in available_courses_from_class %}
-<li class="list-group-item list-group-item-action">
     <div class="modal fade" id="test{{course.0}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -46,6 +45,8 @@ No course available to enroll from your class...
         
         </div>
       </div> 
+
+<li class="list-group-item list-group-item-action">
 
 
     <div class="row  pt-3  mydiv " >
