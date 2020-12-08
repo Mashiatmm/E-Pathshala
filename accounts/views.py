@@ -190,7 +190,7 @@ def profile(request):
         #c.execute(statement,{'id':userid})  
         #role,= c.fetchone()
         if role=="student":
-            statement="""Select U.NAME,S.CLASS 
+            statement="""Select U.NAME,U.EMAIL,S.CLASS 
                         FROM USERS U, STUDENTS S 
                         WHERE S.ID=U.ID AND U.ID=:user_id"""
             c.execute(statement,{'user_id': userid})
@@ -203,7 +203,7 @@ def profile(request):
 
             
         else:
-            statement="""Select U.NAME,T.Specialty 
+            statement="""Select U.NAME,U.EMAIL,T.Specialty 
                         FROM USERS U, TEACHERS T
                         WHERE T.ID=U.ID AND U.ID=:user_id"""
             c.execute(statement,{'user_id': userid})
@@ -220,8 +220,8 @@ def profile(request):
             error = request.session['error']
             print(error)
             del request.session['error']
-            return render(request,'accounts/profile.html',{'userid':userid,'role':role,'name':user[0],'courses':courses,'error':error})
-        return render(request,'accounts/profile.html',{'userid':userid,'role':role,'name':user[0],'courses':courses})    
+            return render(request,'accounts/profile.html',{'userid':userid,'role':role,'name':user[0],'extra':user[2],'mail':user[1],'courses':courses,'error':error})
+        return render(request,'accounts/profile.html',{'userid':userid,'role':role,'name':user[0],'extra':user[2],'mail':user[1],'courses':courses})    
 
         
     
@@ -441,3 +441,62 @@ def course_classes(request):
            
     </div>
 """
+
+
+
+def person_profile(request,id):
+    if request.session.has_key('userid') == False:
+        return render(request,'accounts/login.html',{'error': 'Not Logged In'})
+
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor()
+
+    userid = request.session['userid']
+    role = request.session['role']
+
+
+    statement = "SELECT ROLE FROM USERS WHERE ID = :id"
+    c.execute(statement,{'id':id})
+    person_role = c.fetchone()
+
+    if person_role:
+        person_role=person_role[0]
+        if person_role == 'teacher':
+            statement="SELECT U.ID,U.NAME,U.EMAIL,U.ROLE,T.SPECIALTY FROM USERS U , TEACHERS T WHERE U.ID = :id AND U.ID = T.ID"
+            c.execute(statement,{'id':id})
+            person_info= c.fetchone()
+
+            statement="SELECT C.ID,C.NAME,C.CLASS,C.COURSE_DESCRIPTION FROM COURSES C, TAKE_COURSE T WHERE T.TEACHER_ID =: id  AND T.COURSE_ID = C.ID"
+            c.execute(statement,{'id':id})
+            courses = c.fetchall()
+
+        elif person_role == 'student':
+            statement="SELECT U.ID,U.NAME,U.EMAIL,U.ROLE ,S.CLASS FROM USERS U , STUDENTS S WHERE U.ID = :id AND U.ID = S.ID"
+            c.execute(statement,{'id':id})
+            person_info= c.fetchone()
+
+            statement="SELECT C.ID,C.NAME,C.CLASS,C.COURSE_DESCRIPTION FROM COURSES C, ENROLL E WHERE E.ST_ID = :id  AND E.COURSE_ID = C.ID"
+            c.execute(statement,{'id':id})
+            courses = c.fetchall()
+
+        return render(request,'accounts/person_profile.html',{'person_info':person_info,'courses':courses,'userid':userid,'role':role}) 
+    return redirect('/accounts/profile',{'userid':userid,'role':role})
+
+
+def notifications(request):
+    if request.session.has_key('userid') == False:
+        return render(request,'accounts/login.html',{'error': 'Not Logged In'})
+
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor()
+
+    userid = request.session['userid']
+    role = request.session['role']
+    return render(request,'accounts/notifications.html',{'userid':userid,'role':role})
+
+    
+
+
+    

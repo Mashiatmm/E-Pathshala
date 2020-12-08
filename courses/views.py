@@ -589,6 +589,14 @@ def show_video(request,content_id):
     video_comments = c.fetchall()
 
 
+    #seen the comments
+
+    statement="""
+                UPDATE VIDEO_NOTIFICATIONS
+                SET SEEN = 1
+                WHERE VIDEO_ID = :content_id AND USER_ID = :userid
+                """
+    c.execute(statement,{'content_id':content_id,'userid':userid})
 
 
     if request.session.has_key('parent_comment_id'):
@@ -603,7 +611,7 @@ def show_video(request,content_id):
         connection.close()
         return render(request,'contents/show_video.html',{'userid':userid,'video': video,'content_id':content_id,'role':role,'completed':completed,
                                                     'video_comments':video_comments,'parent_id':parent_id,'replies_to_comment':replies_to_comment})
-
+    connection.commit()
     c.close()
     connection.close() 
     

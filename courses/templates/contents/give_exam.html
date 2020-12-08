@@ -15,6 +15,9 @@
 <div class="alert alert-success" style="padding-left: 400px;padding-top: 50;">{{error}}</div>
 {% endif %}
 
+{% if role == 'teacher' %}
+<div class="container" style="align-content: center;"> <a href="" class= "btn btn-lg btn-outline-primary" >Modify</a></div>
+{% endif %}
 
 <br><h4>{{exam.1}}&nbsp;</h4>
         <div class="row"><div class="col-md-6"><H6 class="label success">{% if error or given_exam_now %}Obtained Marks:&nbsp;{{obtained_marks}}{% endif %}</H6></div></div>
