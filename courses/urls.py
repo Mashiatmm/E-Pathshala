@@ -35,5 +35,7 @@ urlpatterns = [
         path('prev_content/student/<int:content_id>',views.prev_content_student,name='prev_content_student'),
 
         path('all_courses/class<int:course_class>',views.all_courses,name='all_courses'),
+        path('all_courses/search_course',views.search_course,name='search_course'),
+    
 
 ]

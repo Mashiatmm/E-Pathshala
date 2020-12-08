@@ -456,7 +456,7 @@ def notifications(request):
     return render(request,'accounts/notifications.html',{'userid':userid,'role':role,'unseen_comments':unseen_comments,'seen_comments':seen_comments,'unseen_post':unseen_post,'unseen_replies':unseen_replies})
 
 
-def delete_all_notifications(request):
+def delete_notifications(request):
     if request.session.has_key('userid') == False:
         return render(request,'accounts/login.html',{'error': 'Not Logged In'})
 
@@ -490,8 +490,9 @@ def seen_notifications(request):
     role = request.session['role']
 
     statement="""
-                DELETE FROM VIDEO_NOTIFICATIONS
-                WHERE USER_ID =:userid
+                UPDATE VIDEO_NOTIFICATIONS
+                SET SEEN=1
+                WHERE SEEN=0 AND USER_ID =:userid
             """
     c.execute(statement,{'userid':userid})
     connection.commit()

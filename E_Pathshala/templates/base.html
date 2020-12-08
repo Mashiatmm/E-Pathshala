@@ -58,7 +58,7 @@
     width: 100%; 
     /* Height of the footer*/  
     height: 40px; 
-    background:  rgba(8, 8, 102, 0.89);
+    background:  rgb(8, 8, 102);
     
    } 
 
@@ -148,10 +148,12 @@ div.scroll {
           {% endif %}
 
 
-            <img src="{% static 'images/logo4.png'%}" height="20%" width="20%" class="d-inline-block align-top">
+            <img src="{% static 'images/logo4.png'%}" height="50px" class="d-inline-block align-top">
             
           </a>
-
+          <div style="padding-right: 20px;" >
+         
+          </div>
          
 
   
@@ -160,6 +162,11 @@ div.scroll {
             {%  if userid %}
 
             <div class="navbar-nav ml-auto">
+              <form class="d-flex" action="{% url 'courses:search_course' %}" method="POST">
+                {% csrf_token %}
+                <input class="form-control me-2" type="search" name="searchkey" id="searchkey" placeholder="Search" aria-label="Search" style="width: 200px;">
+                <button class="btn" type="submit" style="color: aliceblue;"><span class="oi oi-magnifying-glass"></span></button>
+              </form>
               <a class="nav-item nav-link  color-white {% block courses_active %}{% endblock %}" href="{% url 'accounts:course_classes' %}">Courses</a>
               
               <a class="nav-item nav-link  color-white {% block noti_active %}{% endblock %}" href="{% url 'accounts:notifications' %}"><span class="oi oi-bell"></span></a>
@@ -170,6 +177,11 @@ div.scroll {
 
             {%  else %}
             <div class="navbar-nav ml-auto" >
+              <form class="d-flex" action="{% url 'courses:search_course' %}" method="POST">
+                {% csrf_token %}
+                <input class="form-control me-2" type="search" name="searchkey" id="searchkey" placeholder="Search" aria-label="Search" style="width: 200px;">
+                <button class="btn" type="submit" style="color: aliceblue;"><span class="oi oi-magnifying-glass"></span></button>
+              </form>
               
               <a class="nav-item nav-link color-white {% block courses_active1 %}{% endblock %} " href="{% url 'accounts:course_classes' %}">Courses</a>
               <div class="dropdown {% block signup_active %}{% endblock %} " >
@@ -226,7 +238,7 @@ div.scroll {
 {% endif %}
 
 
-<div class="container" style="min-height: 600px;">
+<div class="container" style="min-height: 700px;">
   
   <div class="container-fluid" style="padding-bottom: 40px;padding-top: 40px;">
 
