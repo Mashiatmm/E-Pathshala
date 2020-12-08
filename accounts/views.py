@@ -479,8 +479,11 @@ def person_profile(request,id):
             statement="SELECT C.ID,C.NAME,C.CLASS,C.COURSE_DESCRIPTION FROM COURSES C, ENROLL E WHERE E.ST_ID = :id  AND E.COURSE_ID = C.ID"
             c.execute(statement,{'id':id})
             courses = c.fetchall()
-
+        c.close()
+        connection.close()
         return render(request,'accounts/person_profile.html',{'person_info':person_info,'courses':courses,'userid':userid,'role':role}) 
+    c.close()
+    connection.close()
     return redirect('/accounts/profile',{'userid':userid,'role':role})
 
 
@@ -515,9 +518,54 @@ def notifications(request):
     c.execute(statement,{'userid':userid})
     seen_comments = c.fetchall()
 
+    c.close()
+    connection.close()
     return render(request,'accounts/notifications.html',{'userid':userid,'role':role,'unseen_comments':unseen_comments,'seen_comments':seen_comments})
 
-    
+
+def delete_all_notifications(request):
+    if request.session.has_key('userid') == False:
+        return render(request,'accounts/login.html',{'error': 'Not Logged In'})
+
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor()
+
+    userid = request.session['userid']
+    role = request.session['role']
+
+    statement="""
+                DELETE FROM VIDEO_NOTIFICATIONS
+                WHERE USER_ID =:userid
+            """
+    c.execute(statement,{'userid':userid})
+    connection.commit()
+
+    c.close()
+    connection.close()
+    return redirect('/accounts/notifications')
+
+def seen_notifications(request):
+    if request.session.has_key('userid') == False:
+        return render(request,'accounts/login.html',{'error': 'Not Logged In'})
+
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor()
+
+    userid = request.session['userid']
+    role = request.session['role']
+
+    statement="""
+                DELETE FROM VIDEO_NOTIFICATIONS
+                WHERE USER_ID =:userid
+            """
+    c.execute(statement,{'userid':userid})
+    connection.commit()
+
+    c.close()
+    connection.close()
+    return redirect('/accounts/notifications')
 
 
     

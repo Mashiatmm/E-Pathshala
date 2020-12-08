@@ -75,7 +75,19 @@
         <h5>My Courses<a href="{% url 'courses:add_course'%}" style="float:right">Add a new Course</a></h5>
     {% for course in courses %}
 
-    <li class="list-group-item list-group-item-action" onclick="window.location='{% url 'courses:course_contents' course.0 %}';"><img src="{% static 'images/Capture.JPG'%}" width = "50" height = "50" style="border-radius: 20%;">  {{course.1}} : Class {{course.2}}</li>
+    <li class="list-group-item list-group-item-action" onclick="window.location='{% url 'courses:course_contents' course.0 %}';">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-1">
+                    <img src="{% static 'images/Capture.JPG'%}" width = "50" height = "50" style="border-radius: 20%;"> 
+                </div>
+                <div class="col-md-9" style="padding-top: 10px;">
+                    {{course.1}} : Class {{course.2}}
+                </div>
+            </div>
+        </div>
+         
+    </li>
   
     {% endfor %}
     </ul>

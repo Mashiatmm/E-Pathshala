@@ -1,8 +1,20 @@
 {% extends 'base.html' %}
 {% block title %}{% endblock %}
 {% load static %}
-
+<style>
+    .sammy-nowrap-1 {
+    border-radius: 6px;
+    background-color: aliceblue;
+    border: 2px dashed gray;
+    max-width: 70%;
+    padding: 1em;
+    margin-bottom: .4em;
+    white-space: nowrap;
+}
+</style>
 {% block body %}
+
+
 {% if role == 'student'%}
 <a href ="{% url 'courses:course_contents_student' exam.0 %}">
   {% else %}
@@ -94,22 +106,24 @@
     </div>
 </div>
 
-<div class="container" style="align-content: center;">
-  <div class = "row-pt-1">
-    <div class = "col-md-3">
-      <a href="#modify{{content_id}}" class= "button" data-toggle="modal">Modify Title</a>
-    </div>
-
-    <div class = "col-md-3">
-        <a href="{% url 'courses:add_ques' content_id %}" class= "button" >Edit Questions</a>
+<div class="container">
+    <div class = "row pt-3">
+      <div class = "col-md-2" >
+        <a href="#modify{{content_id}}" class= "button " data-toggle="modal" style="float: left;">Modify Title</a>
       </div>
-
-    <div class = "col-md-3">
-      <a href="#del{{content_id}}" class= "button" data-toggle="modal" >Delete</a>
+  
+      <div class = "col-md-6" >
+          <a href="{% url 'courses:add_ques' content_id %}" class= "button" >Edit Questions</a>
+        </div>
+  
+      <div class = "col-md-3" >
+        <a href="#del{{content_id}}" class= "button" data-toggle="modal" style="float: right;">Delete</a>
+      </div>
+  
     </div>
-
   </div>
-</div>
+
+
 {% endif %}
 
 <br><h4>{{exam.1}}&nbsp;</h4>
@@ -261,13 +275,34 @@
 </form>
 
 
+
+
     <div class="row pt-3" style="padding-left: 100px;">
         <div class="col-md-2" >
             <a href="{% url 'courses:prev_content_student' content_id %}" class= "btn btn-lg btn-outline-primary" >Prev</a>
             
         </div>
         <div class="col-md-8" >
-            
+            <!--
+            {% if role == 'teacher' %}
+<div class="container" style="align-content: center;">
+    <div class = "row pt-3">
+      <div class = "col-md-3" >
+        <a href="#modify{{content_id}}" class= "button " data-toggle="modal" style="float: left;">Modify Title</a>
+      </div>
+  
+      <div class = "col-md-3" >
+          <a href="{% url 'courses:add_ques' content_id %}" class= "button" >Edit Questions</a>
+        </div>
+  
+      <div class = "col-md-3" >
+        <a href="#del{{content_id}}" class= "button" data-toggle="modal" style="float: right;">Delete</a>
+      </div>
+  
+    </div>
+  </div>
+{% endif %}
+-->
             
         </div>
     <div class="col-md-2" >

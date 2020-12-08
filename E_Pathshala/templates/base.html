@@ -161,7 +161,7 @@ div.scroll {
 
             <div class="navbar-nav ml-auto">
               <a class="nav-item nav-link  color-white {% block courses_active %}{% endblock %}" href="{% url 'accounts:course_classes' %}">Courses</a>
-              <a class="nav-item nav-link  color-white {% block profile_active %}{% endblock %}" href="{% url 'accounts:profile' %}"> My&nbsp;Courses</a>
+              
               <a class="nav-item nav-link  color-white {% block noti_active %}{% endblock %}" href="{% url 'accounts:notifications' %}"><span class="oi oi-bell"></span></a>
               <a class="nav-item nav-link  color-white {% block logout_active %}{% endblock %} " href="{% url 'accounts:login' %}">Logout</a>
 
@@ -210,7 +210,7 @@ div.scroll {
 {%  if userid %}
 <div class="bg-light border-right" id="sidebar-wrapper">
   <div class="list-group list-group-flush">
-      <a href="{% url 'accounts:profile' %}" class="{% block profile_active1 %}{% endblock %} list-group-item list-group-item-action bg-light">My Courses</a>
+      <a href="{% url 'accounts:profile' %}" class="{% block profile_active1 %}{% endblock %} list-group-item list-group-item-action bg-light">My Profile</a>
     {% if role == 'teacher' %}
       <a href="{% url 'courses:add_course'%}" class="{% block add_course_active1 %}{% endblock %} list-group-item list-group-item-action bg-light">Add Course</a>
       <a href="{% url 'accounts:students' %}" class="{% block my_students_active1 %}{% endblock %} list-group-item list-group-item-action bg-light">Statistics</a>

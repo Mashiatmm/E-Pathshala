@@ -61,7 +61,7 @@
         {% endif %}
     {% for comment in seen_comments %}
 
-    <li class="list-group-item list-group-item-action" onclick="window.location='{% url 'courses:show_video' comment.0 %}';"> {{comment.3}}&nbsp;new&nbsp;comments&nbsp;in&nbsp;{{comment.1}}</li>
+    <li class="list-group-item list-group-item-action" onclick="window.location='{% url 'courses:show_video' comment.0 %}';"> {{comment.3}}&nbsp;comments&nbsp;in&nbsp;{{comment.1}}</li>
   
     {% endfor %}
     </ul>
