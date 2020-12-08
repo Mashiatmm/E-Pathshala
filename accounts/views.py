@@ -446,7 +446,7 @@ def course_classes(request):
 
 def person_profile(request,id):
     if request.session.has_key('userid') == False:
-            return render(request,'accounts/login.html',{'error': 'Not Logged In'})
+        return render(request,'accounts/login.html',{'error': 'Not Logged In'})
 
     dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
