@@ -13,20 +13,18 @@ def main(request):
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
 
     c = connection.cursor()
-    statement = """SELECT F.ID,F.TOPIC,F.QUESTION_DESCRIPTION,F.QUESTION_TIME,C.NAME,C.CLASS,S.NAME,
+    statement = """SELECT F.ID,F.TOPIC,F.QUESTION_DESCRIPTION,F.QUESTION_TIME,S.NAME,
                 (SELECT COUNT(*) FROM FORUM_ANS WHERE FORUM_ID = F.ID)
-                FROM FORUM_QUES F,COURSES C,USERS S
-                WHERE C.ID(+) = F.COURSE_ID AND S.ID = F.ST_ID 
+                FROM FORUM_QUES F,USERS S
+                WHERE S.ID = F.ST_ID 
                 ORDER BY F.QUESTION_TIME DESC"""
     c.execute(statement)
     forumset = c.fetchall()
-    statement = "SELECT NAME,CLASS,ID FROM COURSES"
-    c.execute(statement)
-    courses = c.fetchall()
+    
     #print(forumset)
     c.close()
     connection.close()
-    return render(request,'forum/forum.html',{'userid':userid,'role':role,'forumset':forumset,'courses':courses})
+    return render(request,'forum/forum.html',{'userid':userid,'role':role,'forumset':forumset})
 
 def addForumQues(request):
     st_id = request.session['userid']
@@ -56,10 +54,10 @@ def searchForum(request):
 
     c = connection.cursor()
     searchkey = request.POST['SearchKey'].lower()
-    statement = """SELECT F.ID,F.TOPIC,F.QUESTION_DESCRIPTION,F.QUESTION_TIME,C.NAME,C.CLASS,S.NAME,
+    statement = """SELECT F.ID,F.TOPIC,F.QUESTION_DESCRIPTION,F.QUESTION_TIME,S.NAME,
                     (SELECT COUNT(*) FROM FORUM_ANS WHERE FORUM_ID = F.ID)
-                    FROM FORUM_QUES F,COURSES C,USERS S
-                    WHERE C.ID(+) = F.COURSE_ID AND S.ID = F.ST_ID 
+                    FROM FORUM_QUES F,USERS S
+                    WHERE S.ID = F.ST_ID 
                     AND F.ID = ANY(SELECT FF.ID FROM FORUM_QUES FF
                     WHERE LOWER(FF.TOPIC) LIKE :s OR LOWER(FF.QUESTION_DESCRIPTION) LIKE :s)
                     ORDER BY F.QUESTION_TIME DESC"""
@@ -68,13 +66,9 @@ def searchForum(request):
     forumset = c.fetchall()
     #print(forumset)
 
-    statement = "SELECT NAME,CLASS,ID FROM COURSES"
-    c.execute(statement)
-    courses = c.fetchall()
-
     c.close()
     connection.close()
-    return render(request,'forum/forum.html',{'userid':userid,'role':role,'forumset':forumset,'courses':courses})
+    return render(request,'forum/forum.html',{'userid':userid,'role':role,'forumset':forumset})
 
 def sortbyUnanswered(request):
     if request.session.has_key('userid') == False:
@@ -86,23 +80,20 @@ def sortbyUnanswered(request):
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
 
     c = connection.cursor()
-    statement = """SELECT F.ID,F.TOPIC,F.QUESTION_DESCRIPTION,F.QUESTION_TIME,C.NAME,C.CLASS,S.NAME,
+    statement = """SELECT F.ID,F.TOPIC,F.QUESTION_DESCRIPTION,F.QUESTION_TIME,S.NAME,
                     (SELECT COUNT(*) FROM FORUM_ANS WHERE FORUM_ID = F.ID)
-                    FROM FORUM_QUES F,COURSES C,USERS S
-                    WHERE C.ID(+) = F.COURSE_ID AND S.ID = F.ST_ID 
+                    FROM FORUM_QUES F,USERS S
+                    WHERE S.ID = F.ST_ID 
                     AND 0 = (SELECT COUNT(*) FROM FORUM_ANS WHERE FORUM_ID = F.ID)
                     ORDER BY F.QUESTION_TIME DESC"""
     c.execute(statement)
     forumset = c.fetchall()
     #print(forumset)
 
-    statement = "SELECT NAME,CLASS,ID FROM COURSES"
-    c.execute(statement)
-    courses = c.fetchall()
 
     c.close()
     connection.close()
-    return render(request,'forum/forum.html',{'userid':userid,'role':role,'forumset':forumset,'courses':courses})
+    return render(request,'forum/forum.html',{'userid':userid,'role':role,'forumset':forumset})
 
 def sortByTop(request):
     if request.session.has_key('userid') == False:
@@ -114,22 +105,18 @@ def sortByTop(request):
     connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
 
     c = connection.cursor()
-    statement = """SELECT F.ID,F.TOPIC,F.QUESTION_DESCRIPTION,F.QUESTION_TIME,C.NAME,C.CLASS,S.NAME,
+    statement = """SELECT F.ID,F.TOPIC,F.QUESTION_DESCRIPTION,F.QUESTION_TIME,S.NAME,
                     (SELECT COUNT(*) FROM FORUM_ANS WHERE FORUM_ID = F.ID) AS REPLIES
-                    FROM FORUM_QUES F,COURSES C,USERS S
-                    WHERE C.ID(+) = F.COURSE_ID AND S.ID = F.ST_ID 
+                    FROM FORUM_QUES F,USERS S
+                    WHERE S.ID = F.ST_ID 
                     ORDER BY REPLIES DESC"""
     c.execute(statement)
     forumset = c.fetchall()
     #print(forumset)
 
-    statement = "SELECT NAME,CLASS,ID FROM COURSES"
-    c.execute(statement)
-    courses = c.fetchall()
-
     c.close()
     connection.close()
-    return render(request,'forum/forum.html',{'userid':userid,'role':role,'forumset':forumset,'courses':courses})
+    return render(request,'forum/forum.html',{'userid':userid,'role':role,'forumset':forumset})
 
 def addForumAns(request,forum_id,page):
     user_id = request.session['userid']
@@ -168,9 +155,9 @@ def ques_details(request,forum_id):
     c.execute(statement,{'i':forum_id})
     ReplySet = c.fetchall()
 
-    statement = """SELECT F.ID,F.TOPIC,F.QUESTION_DESCRIPTION,F.QUESTION_TIME,C.NAME,C.CLASS,S.NAME
-                    FROM FORUM_QUES F,COURSES C,USERS S
-                    WHERE F.ID = :i AND C.ID(+) = F.COURSE_ID AND S.ID = F.ST_ID"""
+    statement = """SELECT F.ID,F.TOPIC,F.QUESTION_DESCRIPTION,F.QUESTION_TIME,S.NAME
+                    FROM FORUM_QUES F,USERS S
+                    WHERE F.ID = :i AND S.ID = F.ST_ID"""
     
     c.execute(statement,{'i':forum_id})
     QuestionDetails = c.fetchone()
@@ -197,9 +184,9 @@ def quesSortByVotes(request,forum_id):
     c.execute(statement,{'i':forum_id})
     ReplySet = c.fetchall()
 
-    statement = """SELECT F.ID,F.TOPIC,F.QUESTION_DESCRIPTION,F.QUESTION_TIME,C.NAME,C.CLASS,S.NAME
-                    FROM FORUM_QUES F,COURSES C,USERS S
-                    WHERE F.ID = :i AND C.ID(+) = F.COURSE_ID AND S.ID = F.ST_ID"""
+    statement = """SELECT F.ID,F.TOPIC,F.QUESTION_DESCRIPTION,F.QUESTION_TIME,S.NAME
+                    FROM FORUM_QUES F,USERS S
+                    WHERE F.ID = :i AND S.ID = F.ST_ID"""
     
     c.execute(statement,{'i':forum_id})
     QuestionDetails = c.fetchone()
