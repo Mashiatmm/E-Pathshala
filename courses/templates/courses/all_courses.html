@@ -8,8 +8,14 @@
 <a href ="{% url 'accounts:course_classes' %}"><span class="oi oi-arrow-left"></span>Back</a>
 
 
+{% if course_class%}
+<h1>courses of class {{course_class}}:</h1>
+{% else %}
+<h1>courses relevent to your search:</h1>
+{% endif %}
 
-<h1>courses of class {{course_class}}</h1>
+<br>
+
 <ul class="list-group list-group-flush mydiv">
 {% for course in courses %}
 <li class="list-group-item list-group-item-action">

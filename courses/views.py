@@ -863,6 +863,30 @@ def all_courses(request,course_class):
     
     return render(request,'courses/all_courses.html',{'courses':courses,'userid':userid,'role':role,'course_class':course_class})
 
+def search_course(request):
+    if request.session.has_key('userid'):
+        userid = request.session['userid']
+        role = request.session['role']
+    else:
+        userid = None
+        role = None
+
+    dsn_tns  = cx_Oracle.makedsn('localhost','1521',service_name='ORCL')
+    connection = cx_Oracle.connect(user='EPATHSHALA',password='123',dsn=dsn_tns)
+    c = connection.cursor()
+
+    if request.method == 'POST':
+
+        statement="""select id,name,class,course_description 
+                    from courses where 
+                    (class like '%' || :searchkey || '%' ) or ( lower(name) like lower('%' || :searchkey || '%') ) or ( lower(course_description) like lower('%' || :searchkey || '%') ) """
+        c.execute(statement,{'searchkey':request.POST['searchkey']})
+        courses=c.fetchall()
+    c.close()
+    connection.close()
+    
+    return render(request,'courses/all_courses.html',{'courses':courses,'userid':userid,'role':role})
+
    
 
     

@@ -15,9 +15,9 @@
 No course available to enroll from your class...
 {% endif %}
 
-<ul>
+<ul class ="list-group list-group-flush mydiv">
     {% for course in available_courses_from_class %}
-
+<li class="list-group-item list-group-item-action">
     <div class="modal fade" id="test{{course.0}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -81,7 +81,7 @@ No course available to enroll from your class...
            
     </div>
 
-
+</li>
     {% endfor %}
     </ul>
 
@@ -94,8 +94,9 @@ No course available to enroll from your class...
 No course available to enroll from other classes...
 {% endif %}
 
-<ul>
+<ul class ="list-group list-group-flush mydiv">
     {% for course in available_courses_from_others %}
+    <li class="list-group-item list-group-item-action">
 
     <div class="modal fade" id="test{{course.0}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -169,7 +170,7 @@ No course available to enroll from other classes...
            
     </div>
 
-
+</li>
     {% endfor %}
     </ul>
 </div>  
