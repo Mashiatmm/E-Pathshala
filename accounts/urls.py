@@ -12,6 +12,7 @@ urlpatterns = [
     path('progress',views.progress,name = 'progress'),
     path('course_classes',views.course_classes,name = 'course_classes'),
     path('person_profile/<int:id>',views.person_profile,name = 'person_profile'),
+    path('notifications',views.notifications,name = 'notifications'),
     
     
 ]

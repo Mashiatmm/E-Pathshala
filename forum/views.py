@@ -249,18 +249,24 @@ def post_comment(request,video_id):
         
         if text:
             c.execute(statement,(video_id,userid,text))
-            if role == 'student':
-                statement="""SELECT TC.TEACHER_ID
-                            FROM CONTENTS C, TOPICS T, TAKE_COURSE TC 
-                            WHERE C.ID = :video_id AND C.TOPIC_ID = T.ID AND T.COURSE_ID = TC.COURSE_ID"""
-                c.execute(statement,{'video_id':video_id})
-                teachers = c.fetchall()
-                statement="""
-                        INSERT INTO VIDEO_NOTIFICATIONS
-                        VALUES(:0,:1,:2,SYSDATE,0)
-                        """
-                for teacher_id in teachers:
-                    c.execute(statement,(video_id,teacher_id[0],userid))
+            #find related teacher id
+            statement="""SELECT TC.TEACHER_ID
+                        FROM CONTENTS C, TOPICS T, TAKE_COURSE TC 
+                        WHERE C.ID = :video_id AND C.TOPIC_ID = T.ID AND T.COURSE_ID = TC.COURSE_ID"""
+            c.execute(statement,{'video_id':video_id})
+            teachers = c.fetchall()
+
+            
+
+            statement="""
+                    INSERT INTO VIDEO_NOTIFICATIONS
+                    VALUES(:0,:1,:2,SYSDATE,0)
+                    """
+            for teacher in teachers:
+                if teacher[0] != userid:
+                    c.execute(statement,(video_id,teacher[0],userid))
+            
+
         
     connection.commit()
 
@@ -294,18 +300,30 @@ def post_reply(request,parent_id):
                         """
         
             c.execute(statement,(parent_id,video_id,userid,text))  
-            if role == 'student':
-                statement="""SELECT TC.TEACHER_ID
-                            FROM CONTENTS C, TOPICS T, TAKE_COURSE TC 
-                            WHERE C.ID = :video_id AND C.TOPIC_ID = T.ID AND T.COURSE_ID = TC.COURSE_ID"""
-                c.execute(statement,{'video_id':video_id})
-                teachers = c.fetchall()
-                statement="""
-                        INSERT INTO VIDEO_NOTIFICATIONS
-                        VALUES(:0,:1,:2,SYSDATE,0)
-                        """
-                for teacher_id in teachers:
-                    c.execute(statement,(video_id,teacher_id[0],userid))
+            #find related teacher id
+            statement="""SELECT TC.TEACHER_ID
+                        FROM CONTENTS C, TOPICS T, TAKE_COURSE TC 
+                        WHERE C.ID = :video_id AND C.TOPIC_ID = T.ID AND T.COURSE_ID = TC.COURSE_ID"""
+            c.execute(statement,{'video_id':video_id})
+            teachers = c.fetchall()
+
+            #find parent commenter_id
+            statement="""SELECT COMMENTER_ID
+                        FROM VIDEO_COMMENTS  
+                        WHERE ID = :parent_id """
+            c.execute(statement,{'parent_id':parent_id})
+            parent_commenter ,= c.fetchone()
+
+            statement="""
+                    INSERT INTO VIDEO_NOTIFICATIONS
+                    VALUES(:0,:1,:2,SYSDATE,0)
+                    """
+            for teacher in teachers:
+                if teacher[0] != userid:
+                    c.execute(statement,(video_id,teacher[0],userid))
+            
+            if  parent_commenter != userid:
+                c.execute(statement,(video_id,parent_commenter,userid))
 
         request.session['parent_comment_id'] = parent_id
 

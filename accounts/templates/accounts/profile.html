@@ -5,7 +5,18 @@
 {% block profile_active1 %}active1{% endblock %}
   
 {% block body %}
+
 {% load static %}
+<style>
+
+    img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+ 
+}
+	
+</style>
 
 <div class="container " style="background-color: #F8F9F9 ;">
 
@@ -16,9 +27,46 @@
     
 </div>
 
-  
-<h2 class="text-center">{{name}}</h2>
-<h2 class="text-center">{{role}}</h2>
+
+
+<div class="container" style = "padding-top:20px">
+	<div class="row" style="padding-bottom: 30px;">
+		<div class="col-md-4">
+			
+		</div>
+		
+		<div class="col-md-4">
+            <div class="container-fluid" style="text-align: center;">
+                <div class="row pt-2">
+                    <img src="{% static 'images\profile.jpg' %}" style="height: 140px;border-radius: 50%">
+              
+                </div>
+                <div >
+                   <h3><a href="{% url 'accounts:profile'%}">{{name}}</a></h3>
+                   
+                </div>
+                <div>
+                    {{role}}
+                </div>
+                {% if role == 'teacher' %}
+                <div>
+                   Specialty:&nbsp;{{extra}}
+                </div>
+                {% else %}
+                <div>
+                    Class:&nbsp;{{extra}}
+                 </div>
+                {% endif %}
+                <div>
+                    mail:&nbsp;{{mail}}
+                </div>
+            </div>
+		</div>
+
+
+
+    </div>
+    </div>
 
 {% if role == 'teacher' %}
     
