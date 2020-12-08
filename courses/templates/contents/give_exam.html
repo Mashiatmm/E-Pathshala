@@ -127,6 +127,7 @@
 {% endif %}
 
 <br><h4>{{exam.1}}&nbsp;</h4>
+{% if role == 'teacher' %}Total Marks: {{exam.2}}<br> {% endif %}
         <div class="row"><div class="col-md-6"><H6 class="label success">{% if error or given_exam_now %}Obtained Marks:&nbsp;{{obtained_marks}}{% endif %}</H6></div></div>
 
 <form class="form-settings" name = "give_exam" action="{% url 'courses:give_exam' content_id %}" method="POST" >
