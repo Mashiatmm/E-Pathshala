@@ -4,11 +4,11 @@
 {% block body %}
 {% load static %}
 {% if role == 'student'%}
-<a href ="{% url 'courses:course_contents_student' video.6 %}" style="color: black;">
+<a href ="{% url 'courses:course_contents_student' video.6 %}">
 {% else %}
-  <a href ="{% url 'courses:topic_details' video.6 %}" style="color: black;">
+  <a href ="{% url 'courses:topic_details' video.6 %}">
 {% endif %}
-<span class="oi oi-arrow-left"></span>Back</a>
+<span class="oi oi-arrow-left"></span>Back To All Contents</a>
 
 {% if role == 'teacher' %}
 <div class="modal fade" id="del{{content_id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

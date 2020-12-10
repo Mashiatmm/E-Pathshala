@@ -3,7 +3,7 @@
 {% block body %}
 
 {% if examinfo %}
-<a href ="{% url 'courses:give_exam' examinfo.2 %}"><span class="oi oi-arrow-left" style="color: black;"></span>Show Exam Page</a>
+<a href ="{% url 'courses:give_exam' examinfo.2 %}"><span class="oi oi-arrow-left" ></span>Show Exam Page</a>
 
 <form class="form-settings" name = "addQues" action="{% url 'courses:add_ques' examinfo.2 %}" method="POST" >
 
@@ -17,10 +17,6 @@
 
       <h2 class="text-center">{{examinfo.0}}</h2>
       <h6 class="text-center">{{examinfo.1}}</h6>
-<<<<<<< HEAD
-=======
-
->>>>>>> bd89ba5d228d01dae1dffe08fb5f36142d428db0
 
       <div class="row pb-3" >
         <div class="col-md-9">
