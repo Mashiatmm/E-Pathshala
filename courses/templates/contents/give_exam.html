@@ -133,7 +133,9 @@
         </div>
         <div class="col-md-2">
             <div class="row">
+                {% if exam.4 %}
                 <b><span class="oi oi-clock"></span>&nbsp;{{exam.4}}&nbsp;minutes</b>
+                {% endif %}
             </div>
             <div class="row">
                 <b>Total Marks&nbsp;:&nbsp;</b>{{exam.2}}<br> 
