@@ -4,9 +4,9 @@
 {% block body %}
 {% load static %}
 {% if role == 'student'%}
-<a href ="{% url 'courses:course_contents_student' video.6 %}">
+<a href ="{% url 'courses:course_contents_student' video.6 %}" style="color: black;">
 {% else %}
-  <a href ="{% url 'courses:topic_details' video.6 %}">
+  <a href ="{% url 'courses:topic_details' video.6 %}" style="color: black;">
 {% endif %}
 <span class="oi oi-arrow-left"></span>Back</a>
 
@@ -118,6 +118,15 @@
 <h1><a href="{% url 'courses:course_topics_student' video.7 %}">{{video.0}}</a></h1>
 <h2><a href="{% url 'courses:course_contents_student' video.6 %}">{{video.1}}</a></h2>
 </div>
+<div class="col-md-1">
+
+</div>
+<DIV class="col-md-2" style="padding-top: 20px;">
+{% if video.8 %}
+  <b><span class="oi oi-clock"></span>&nbsp;{{video.8}}&nbsp;minutes</b>
+{% endif %}
+
+</DIV>
 </div>
 <hr>
 

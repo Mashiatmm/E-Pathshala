@@ -16,15 +16,16 @@
 
 
 {% if role == 'student'%}
-<a href ="{% url 'courses:course_contents_student' exam.0 %}">
+<a href ="{% url 'courses:course_contents_student' exam.0 %}" style="color: black;">
   {% else %}
-  <a href ="{% url 'courses:topic_details' exam.0 %}">
+  <a href ="{% url 'courses:topic_details' exam.0 %}"  style="color: black;">
   {% endif %}
 <span class="oi oi-arrow-left"></span>Back</a>
-<br>
+<br><br><br>
 {% if error %}
 <div style="padding-top: 50px;"></div>
 <div class="alert alert-success" style="padding-left: 400px;padding-top: 50;">{{error}}</div>
+<div style="padding-top: 50px;"></div>
 {% endif %}
 
 {% if role == 'teacher' %}
@@ -125,10 +126,29 @@
 
 
 {% endif %}
+<div class="container" style="padding-bottom: 50px;">
+    <div class="row">
+        <div class="col-md-10">
+            <h4>{{exam.1}}&nbsp;</h4>
+        </div>
+        <div class="col-md-2">
+            <div class="row">
+                {% if exam.4 %}
+                <b><span class="oi oi-clock"></span>&nbsp;{{exam.4}}&nbsp;minutes</b>
+                {% endif %}
+            </div>
+            <div class="row">
+                <b>Total Marks&nbsp;:&nbsp;</b>{{exam.2}}<br> 
+            </div>
+            <div class="row">
+                {% if error or given_exam_now %}<p class="label success"> <b >Obtained Marks:</b> &nbsp;{{obtained_marks}}{% endif %}</p>
+            </div>
+        </div>
+    </div>
+</div>
 
-<br><h4>{{exam.1}}&nbsp;</h4>
-{% if role == 'teacher' %}Total Marks: {{exam.2}}<br> {% endif %}
-        <div class="row"><div class="col-md-6"><H6 class="label success">{% if error or given_exam_now %}Obtained Marks:&nbsp;{{obtained_marks}}{% endif %}</H6></div></div>
+
+
 
 <form class="form-settings" name = "give_exam" action="{% url 'courses:give_exam' content_id %}" method="POST" >
 {% csrf_token %}
@@ -258,9 +278,10 @@
         {% endif %}
         {% if role == 'student' %}
         <div class="row  pt-3" >
+            <div class="col-md-4"></div>
       
-            <div class="col-lg-7" style="padding-left: 400px;">
-              <button class="btn btn-primary btn-lg "  type="submit">Submit Answer</button> 
+            <div class="col-md-4" style="padding-left: 80px;">
+              <button class="btn btn-outline-success btn-lg "  type="submit">Submit Answer</button> 
             </div>
           </div>
           {% endif %}
