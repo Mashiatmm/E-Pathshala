@@ -16,12 +16,12 @@
 
 
 {% if role == 'student'%}
-<a href ="{% url 'courses:course_contents_student' exam.0 %}">
+<a href ="{% url 'courses:course_contents_student' exam.0 %}" style="color: black;">
   {% else %}
-  <a href ="{% url 'courses:topic_details' exam.0 %}">
+  <a href ="{% url 'courses:topic_details' exam.0 %}"  style="color: black;">
   {% endif %}
 <span class="oi oi-arrow-left"></span>Back</a>
-<br>
+<br><br><br>
 {% if error %}
 <div style="padding-top: 50px;"></div>
 <div class="alert alert-success" style="padding-left: 400px;padding-top: 50;">{{error}}</div>
@@ -276,9 +276,10 @@
         {% endif %}
         {% if role == 'student' %}
         <div class="row  pt-3" >
+            <div class="col-md-4"></div>
       
-            <div class="col-lg-7" style="padding-left: 400px;">
-              <button class="btn btn-primary btn-lg "  type="submit">Submit Answer</button> 
+            <div class="col-md-4" style="padding-left: 80px;">
+              <button class="btn btn-outline-success btn-lg "  type="submit">Submit Answer</button> 
             </div>
           </div>
           {% endif %}

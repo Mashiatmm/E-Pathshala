@@ -2,7 +2,7 @@
 {% block title %}Contents of {{courseNtopic.1}} : {{courseNtopic.2}}{% endblock %}
 {% block body %}
 {% load static %}
-<a href ="{% url 'courses:course_topics_student' courseNtopic.0 %}"><span class="oi oi-arrow-left"></span>Back</a>
+<a href ="{% url 'courses:course_topics_student' courseNtopic.0 %}" style="color: black;"><span class="oi oi-arrow-left"></span>Back</a>
 <br>
 <h1>Contents of {{courseNtopic.1}} : </h1>
 <h2>Topic :&nbsp;{{courseNtopic.2}}</h2>

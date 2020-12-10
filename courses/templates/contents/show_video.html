@@ -4,9 +4,9 @@
 {% block body %}
 {% load static %}
 {% if role == 'student'%}
-<a href ="{% url 'courses:course_contents_student' video.6 %}">
+<a href ="{% url 'courses:course_contents_student' video.6 %}" style="color: black;">
 {% else %}
-  <a href ="{% url 'courses:topic_details' video.6 %}">
+  <a href ="{% url 'courses:topic_details' video.6 %}" style="color: black;">
 {% endif %}
 <span class="oi oi-arrow-left"></span>Back</a>
 
