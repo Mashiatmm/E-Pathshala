@@ -597,7 +597,7 @@ def show_video(request,content_id):
     c.execute(statement,{'content_id':content_id,'userid':userid})
     completed=c.fetchone()
 
-    statement="SELECT CRS.NAME,T.TOPIC_TITLE,C.TITLE,C.DESCRIPTION,V.LINK,C.ID,T.ID,CRS.ID FROM VIDEOS V,CONTENTS C,TOPICS T, COURSES CRS WHERE V.ID = C.ID AND C.TOPIC_ID=T.ID AND T.COURSE_ID = CRS.ID AND V.ID= :content_id"
+    statement="SELECT CRS.NAME,T.TOPIC_TITLE,C.TITLE,C.DESCRIPTION,V.LINK,C.ID,T.ID,CRS.ID,C.DURATION FROM VIDEOS V,CONTENTS C,TOPICS T, COURSES CRS WHERE V.ID = C.ID AND C.TOPIC_ID=T.ID AND T.COURSE_ID = CRS.ID AND V.ID= :content_id"
     c.execute(statement,{'content_id':content_id})
     video = c.fetchone()
 
@@ -705,7 +705,7 @@ def give_exam(request,content_id):
 
 
 
-    statement="SELECT C.TOPIC_ID,C.TITLE,E.TOTAL_MARKS,C.DESCRIPTION FROM EXAMS E,CONTENTS C WHERE E.ID = C.ID AND E.ID= :content_id"
+    statement="SELECT C.TOPIC_ID,C.TITLE,E.TOTAL_MARKS,C.DESCRIPTION,C.DURATION FROM EXAMS E,CONTENTS C WHERE E.ID = C.ID AND E.ID= :content_id"
     c.execute(statement,{'content_id':content_id})
     exam = c.fetchone()
 
