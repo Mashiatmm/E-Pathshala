@@ -80,7 +80,7 @@ def searchForum(request):
 
     c.close()
     connection.close()
-    return render(request,'forum/forum.html',{'userid':userid,'role':role,'forumset':forumset})
+    return render(request,'forum/forum.html',{'userid':userid,'role':role,'forumset':forumset,'sort':'Sort By'})
 
 def sortbyUnanswered(request):
     if request.session.has_key('userid') == False:
