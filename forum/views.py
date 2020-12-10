@@ -486,6 +486,11 @@ def edit_comment(request,id):
 
 
     connection.commit()
+    statement="SELECT PARENT_ID FROM VIDEO_COMMENTS WHERE ID = :id"
+    c.execute(statement,{'id':id})
+    parent_id = c.fetchone()
+    if parent_id:
+        request.session['parent_comment_id'] =parent_id[0]
 
     c.close()
     connection.close()   
@@ -513,6 +518,12 @@ def delete_comment(request,id):
     statement="SELECT VIDEO_ID FROM VIDEO_COMMENTS WHERE ID = :id"
     c.execute(statement,{'id':id})
     video_id ,=c.fetchone()
+
+    statement="SELECT PARENT_ID FROM VIDEO_COMMENTS WHERE ID = :id"
+    c.execute(statement,{'id':id})
+    parent_id = c.fetchone()
+    if parent_id:
+        request.session['parent_comment_id'] =parent_id[0]
 
     statement ="DELETE FROM VIDEO_COMMENTS WHERE ID = :id"
     c.execute(statement,{'id':id})
