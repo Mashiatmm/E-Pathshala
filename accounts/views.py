@@ -37,6 +37,8 @@ def home(request):
     if request.session.has_key('userid'):
         userid = request.session['userid']
         role= request.session['role']
+        if request.session.has_key('parent_comment_id'):
+            del request.session['parent_comment_id']
         return redirect('/accounts/profile',{'userid':userid,'role':role})
 
     return render(request,'accounts/home.html',{'home':home})
@@ -182,6 +184,8 @@ def profile(request):
     if request.session.has_key('userid'):
         userid = request.session['userid']
         role = request.session['role']
+        if request.session.has_key('parent_comment_id'):
+            del request.session['parent_comment_id']
 
         
 

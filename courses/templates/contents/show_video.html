@@ -256,11 +256,11 @@
                     
                     <div class="post-detail">
                       <div class="row user-info">
-                        <div class="col-md-4"><h5><img src="{% static 'images\profile.jpg' %}" style="height: 30px;border-radius: 50%">&nbsp;<a href="#" class="profile-link">{{cmnt.1}}</a></h5></div>
-                        <div class="col-md-4"></div>
-                        <div class="col-md-4"><h6>{{cmnt.3}}</h6></div>
-                        
+                        <h5><img src="{% static 'images\profile.jpg' %}" style="height: 30px;border-radius: 50%">&nbsp;<a href="{% url 'accounts:person_profile' cmnt.4 %}" class="profile-link">{{cmnt.1}}</a> <b style="font-size: 10pt;">on {{cmnt.3}}</b></h5>
                       </div>
+                     
+                        
+                     
 
                       <div class="line-divider"></div>
                       <div class="container">
@@ -372,9 +372,8 @@
 
                     
                       <div class="row">
-                        <div class="col-md-4"><h5><img src="{% static 'images\profile.jpg' %}" style="height: 30px;border-radius: 50%">&nbsp;<a href="#" class="profile-link">{{reply.1}}</a></h5></div>
-                        <div class="col-md-3"></div>
-                        <div class="col-md-5"><h6>{{reply.3}}</h6></div>
+                        <h5><img src="{% static 'images\profile.jpg' %}" style="height: 30px;border-radius: 50%">&nbsp;<a href="{% url 'accounts:person_profile' reply.4 %}" class="profile-link">{{reply.1}}</a><b style="font-size: 10pt;"> on {{reply.3}}</b></h5>
+                        
                         
                       </div>
                       <div class="row" style="padding-left: 20px;">
@@ -390,6 +389,7 @@
                         </div>
                         {% endif %}
                       </div>
+                      <hr>
                     
                       {% endfor %}
 
