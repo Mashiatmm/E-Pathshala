@@ -16,11 +16,11 @@
 
 
 {% if role == 'student'%}
-<a href ="{% url 'courses:course_contents_student' exam.0 %}" style="color: black;">
+<a href ="{% url 'courses:course_contents_student' exam.0 %}" >
   {% else %}
-  <a href ="{% url 'courses:topic_details' exam.0 %}"  style="color: black;">
+  <a href ="{% url 'courses:topic_details' exam.0 %}" >
   {% endif %}
-<span class="oi oi-arrow-left"></span>Back</a>
+<span class="oi oi-arrow-left"></span>Back To All Contents</a>
 <br><br><br>
 {% if error %}
 <div style="padding-top: 50px;"></div>
@@ -335,6 +335,8 @@
 </div>
 <br>
 <br> 
+
+<script src="{% static 'js\radioUnclick.js'%}"></script>
 
 
 {% endblock %} 

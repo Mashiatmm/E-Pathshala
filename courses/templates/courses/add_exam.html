@@ -3,7 +3,7 @@
 {% block body %}
 
 {% if examinfo %}
-<a href ="{% url 'courses:give_exam' examinfo.2 %}"><span class="oi oi-arrow-left" style="color: black;"></span>Show Exam Page</a>
+<a href ="{% url 'courses:give_exam' examinfo.2 %}"><span class="oi oi-arrow-left" ></span>Show Exam Page</a>
 
 <form class="form-settings" name = "addQues" action="{% url 'courses:add_ques' examinfo.2 %}" method="POST" >
 
