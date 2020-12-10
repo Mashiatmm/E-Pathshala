@@ -374,6 +374,9 @@ def person_profile(request,id):
     userid = request.session['userid']
     role = request.session['role']
 
+    if id == userid:
+        return redirect('/accounts/profile')
+
 
     statement = "SELECT ROLE FROM USERS WHERE ID = :id"
     c.execute(statement,{'id':id})
@@ -403,7 +406,7 @@ def person_profile(request,id):
         return render(request,'accounts/person_profile.html',{'person_info':person_info,'courses':courses,'userid':userid,'role':role}) 
     c.close()
     connection.close()
-    return redirect('/accounts/profile',{'userid':userid,'role':role})
+    return redirect('/accounts/profile')
 
 
 def notifications(request):

@@ -514,22 +514,42 @@ def course_topics_student(request,course_id):
 
         
 
-    statement= "SELECT ID,NAME FROM COURSES WHERE ID = :course_id"
+    statement= "SELECT ID,NAME,CLASS,TOTAL_MARKS,COURSE_DESCRIPTION FROM COURSES WHERE ID = :course_id"
     c.execute(statement,{'course_id':course_id})
     course = c.fetchone()
 
-    statement = "SELECT * FROM ENROLL WHERE ST_ID = :userid AND COURSE_ID = :course_id"
+    statement = "SELECT PERCENTAGE_COMPLETED FROM ENROLL WHERE ST_ID = :userid AND COURSE_ID = :course_id"
     c.execute(statement,{'userid':userid,'course_id':course_id})
-    enroll_record = c.fetchone()   
+    enroll_record = c.fetchone() 
+    total_obtained= None
+    if enroll_record:
+        statement ="""
+            SELECT SUM(CC.OBTAINED_MARKS)
+            FROM COURSES C, TOPICS T,CONTENTS CT, COMPLETED_CONTENT CC
+            WHERE C.ID = :course_id AND CC.ST_ID = :userid 
+            AND C.ID = T.COURSE_ID AND T.ID = CT.TOPIC_ID 
+            AND CT.ID = CC.CONTENT_ID """
+                
+            
+        c.execute(statement,{'course_id':course_id,'userid':userid})
+
+        total_obtained ,=c.fetchone()  
     
 
     statement= "SELECT ID,TOPIC_TITLE,TOPIC_DESCRIPTION FROM TOPICS WHERE COURSE_ID = :course_id ORDER BY SL_NO"
     c.execute(statement,{'course_id':course_id})
     topics= c.fetchall()
+
+    statement= "SELECT U.ID,U.NAME,T.ROLE FROM TAKE_COURSE T, USERS U WHERE T.COURSE_ID = :course_id AND U.ID = T.TEACHER_ID ORDER BY T.ROLE,U.NAME"
+    c.execute(statement,{'course_id':course_id})
+    teachers= c.fetchall()
+
+    print(teachers)
+
     c.close()
     connection.close() 
 
-    return render(request,'courses/course_topics_student.html',{'userid':userid,'topics': topics,'course':course,'role':role,'enroll_record':enroll_record})
+    return render(request,'courses/course_topics_student.html',{'userid':userid,'topics': topics,'course':course,'role':role,'enroll_record':enroll_record,'teachers':teachers,'total_obtained':total_obtained})
 
 
 
@@ -735,7 +755,7 @@ def next_content_student(request,content_id):
         statement= "SELECT PERCENTAGE_COMPLETED FROM ENROLL WHERE ST_ID = :userid AND COURSE_ID = :current_course"
         c.execute(statement,{'userid':userid,'current_course':current_course})
         completed ,= c.fetchone()
-        if completed == 100:
+        if round(completed) == 100:
             return redirect('/accounts/course_completed/'+str(current_course))
 
 

@@ -38,19 +38,19 @@
                    
                 </div>
                 <div>
-                    {{person_info.3}}
+                    <b>{{person_info.3}}</b>
                 </div>
                 {% if person_info.3 == 'teacher' %}
                 <div>
-                   Specialty:&nbsp;{{person_info.4}}
+                   <b>Specialty :&nbsp;</b>{{person_info.4}}
                 </div>
                 {% else %}
                 <div>
-                    Class:&nbsp;{{person_info.4}}
+                    <b>Class :&nbsp;</b>{{person_info.4}}
                  </div>
                 {% endif %}
                 <div>
-                    mail:&nbsp;{{person_info.2}}
+                    <b>mail :&nbsp;</b><a href="https://mailto.{{mail}}" style="color: black;">{{person_info.2}}</a>
                 </div>
             </div>
 		</div>

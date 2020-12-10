@@ -46,19 +46,19 @@
                    
                 </div>
                 <div>
-                    {{role}}
+                    <b>{{role}}</b>
                 </div>
                 {% if role == 'teacher' %}
                 <div>
-                   Specialty:&nbsp;{{extra}}
+                   <b>Specialty :</b>&nbsp;{{extra}}
                 </div>
                 {% else %}
                 <div>
-                    Class:&nbsp;{{extra}}
+                   <b> Class :</b>&nbsp;{{extra}}
                  </div>
                 {% endif %}
                 <div>
-                    mail:&nbsp;{{mail}}
+                    <b>mail :</b>&nbsp;<a href="https://mailto.{{mail}}" style="color: black;">{{mail}}</a>
                 </div>
             </div>
 		</div>
