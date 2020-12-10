@@ -3,13 +3,17 @@
 {% block body %}
 {% load static %}
 
-<br>
+
 <DIV class="container" style="text-align: center;align-items: center;align-content: center;">
 <h3><a href="{% url 'courses:course_topics_student' course.0 %}">{{course.1}}</a></h3>
 <h5>for class {{course.2}}<br></h5>
 {% if course.4 %}
 <b>about course:</b>
-<p>{{course.4}}</p><br>
+<div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4"><p>{{course.4}}</p></div>
+
+</div>
 {% endif %}
 <b>Total Marks : </b>{{course.3}}<br><br>
 {% if enroll_record %}

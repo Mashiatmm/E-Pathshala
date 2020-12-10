@@ -524,7 +524,7 @@ def course_topics_student(request,course_id):
     total_obtained= None
     if enroll_record:
         statement ="""
-            SELECT SUM(CC.OBTAINED_MARKS)
+            SELECT NVL(SUM(CC.OBTAINED_MARKS),0)
             FROM COURSES C, TOPICS T,CONTENTS CT, COMPLETED_CONTENT CC
             WHERE C.ID = :course_id AND CC.ST_ID = :userid 
             AND C.ID = T.COURSE_ID AND T.ID = CT.TOPIC_ID 
