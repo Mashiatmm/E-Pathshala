@@ -49,25 +49,10 @@
   </div>
 </div> 
 
-
 {% if role == 'student' %}
-  <button class="btn btn-info pull-right" data-toggle="modal" data-target="#modalForumForm"><span class="oi oi-pencil"></span>Ask your question</button>
+  <button class="btn btn-info" data-toggle="modal" data-target="#modalForumForm"><span class="oi oi-pencil"></span>Ask your question</button>
 {% endif %}
-
-
-
-<div class="dropdown">
-  <button class="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-    {{sort}}
-    <span class="caret"></span>
-  </button>
-  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-    <li><a class="dropdown-item" href="{% url 'forum:main' %}">Sort By Latest</a></li>
-    <li><a class="dropdown-item" href="{% url 'forum:sortByTop' %}">Sort By Top</a></li>
-    <li><a class="dropdown-item" href="{% url 'forum:sortByUnanswered' %}">Sort By Unanswered</a></li>
-  </ul>
-</div>
-<br>
+<br><br>
 
 <a href ="{% url 'forum:activity' %}" >My Activity</a>
 <br><br>
@@ -81,6 +66,18 @@
 </div>
 <br>
 
+<div class="dropdown">
+  <button class="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    {{sort}}
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+    <li><a class="dropdown-item" href="{% url 'forum:main' %}">Sort By Latest</a></li>
+    <li><a class="dropdown-item" href="{% url 'forum:sortByTop' %}">Sort By Top</a></li>
+    <li><a class="dropdown-item" href="{% url 'forum:sortByUnanswered' %}">Sort By Unanswered</a></li>
+  </ul>
+</div>
+<br><br>
 
 {% for ques in forumset %}
 
