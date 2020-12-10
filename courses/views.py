@@ -682,7 +682,7 @@ def give_exam(request,content_id):
         c.execute(statement,{'content_id':content_id})
         topic_id,= c.fetchone()
 
-        statement="SELECT C.TOPIC_ID,C.TITLE,E.TOTAL_MARKS,C.DESCRIPTION FROM EXAMS E,CONTENTS C WHERE E.ID = C.ID AND E.ID= :content_id"
+        statement="SELECT C.TOPIC_ID,C.TITLE,E.TOTAL_MARKS,C.DESCRIPTION,C.DURATION FROM EXAMS E,CONTENTS C WHERE E.ID = C.ID AND E.ID= :content_id"
         c.execute(statement,{'content_id':content_id})
         exam = c.fetchone()
         print("Hello")
