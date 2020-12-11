@@ -424,7 +424,7 @@ def notifications(request):
     userid = request.session['userid']
     role = request.session['role']
 
-    statement = """SELECT Q.TOPIC,Q.QUESTION_TIME
+    statement = """SELECT Q.TOPIC,Q.QUESTION_TIME,Q.ID
                     FROM FORUM_QUES Q,FORUM_NOTIFICATIONS N
                     WHERE N.USER_ID = :userid AND N.FORUM_ID = Q.ID 
                 """

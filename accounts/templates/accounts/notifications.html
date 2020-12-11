@@ -66,7 +66,7 @@
     <ul class="list-group list-group-flush mydiv" >
     {% for post in unseen_post %}
 
-        <li class="list-group-item list-group-item-action" onclick="window.location='{% url 'forum:main' %}';"> 1&nbsp;new&nbsp;post&nbsp;in&nbsp;forum on {{post.1}}: {{post.0}}</li>
+        <li class="list-group-item list-group-item-action" onclick="window.location='{% url 'forum:ques_details' post.2 %}';"> 1&nbsp;new&nbsp;post&nbsp;in&nbsp;forum on {{post.1}}: {{post.0}}</li>
   
     {% endfor %}
     </ul>
