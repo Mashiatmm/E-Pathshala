@@ -437,7 +437,6 @@ def notifications(request):
                 """
     c.execute(statement,{'userid':userid})
     unseen_replies = c.fetchall()
-
     statement= """
                 SELECT VN.VIDEO_ID,C.TITLE,MAX(TIME),COUNT(*)
                 FROM VIDEO_NOTIFICATIONS VN, CONTENTS C
