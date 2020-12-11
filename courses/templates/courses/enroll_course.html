@@ -3,14 +3,15 @@
 {% block enroll_course_active %}active{% endblock %}
 {% block enroll_course_active1 %}active1{% endblock %}
 {% block body %}
-<a href ="{% url 'accounts:profile' %}" style="color: black;"><span class="oi oi-arrow-left"></span>Back</a>
+{% load static %}
+<a href ="{% url 'accounts:profile' %}" ><span class="oi oi-arrow-left"></span>Back To My Profile</a><br>
 <br>
 
 
 
-<h4>Available Courses</h4>
+<h4>Available Courses</h4><br>
 <div class="container">
-<h5>From Your Class:</h5>
+<h5>From Your Class:</h5><br>
 {% if not available_courses_from_class %}
 No course available to enroll from your class...
 {% endif %}
@@ -50,8 +51,12 @@ No course available to enroll from your class...
 
 
     <div class="row  pt-3  mydiv " >
+
+        <div class="col-md-1" style="padding-right: 20px;">
+            <img src="{% static 'images/course.png'%}" width="80px" style="border-radius: 50%;">
+        </div>
         
-        <div class="col-md-12"  onclick="window.location='{% url 'courses:course_topics_student' course.0 %}';" style="cursor:pointer;">
+        <div class="col-md-10"  onclick="window.location='{% url 'courses:course_topics_student' course.0 %}';" style="cursor:pointer;padding-left: 40px;" >
             <div class="row  pt-2" >
                 <div class="col-6">
                     <h4 style="color:#069">{{course.1}}</h4>
@@ -71,12 +76,18 @@ No course available to enroll from your class...
               
             </div>
 
+           
+
             
         </div>
 
-        <div class="col-md-3" >
-            <a href="#test{{course.0}}" class= "btn btn-lg btn-outline-primary btn-block" data-toggle="modal">Enroll</a>
-        </div><br><br>
+        <br>
+            <div class="col-md-4" style="padding-top: 10px;padding-left: 100px;" >
+                <a href="#test{{course.0}}" class= "btn btn-lg btn-outline-primary btn-block" data-toggle="modal">Enroll</a>
+            </div><br><br>
+        
+
+        
 
 
            
@@ -90,7 +101,7 @@ No course available to enroll from your class...
 
 <div class="container">
 <br><br>
-    <h5>From Other Classes:</h5>
+    <h5>From Other Classes:</h5><br>
 {% if not available_courses_from_others %}
 No course available to enroll from other classes...
 {% endif %}
@@ -133,8 +144,12 @@ No course available to enroll from other classes...
 
 
     <div class="row  pt-3  mydiv " >
+
+        <div class="col-md-1">
+            <img src="{% static 'images/course.png'%}" width="80px" style="border-radius: 50%;">
+        </div>
         
-        <div class="col-md-12"  onclick="window.location='{% url 'courses:course_topics_student' course.0 %}';" style="cursor:pointer;">
+        <div class="col-md-10"  onclick="window.location='{% url 'courses:course_topics_student' course.0 %}';" style="cursor:pointer;padding-left: 40px;" >
             <div class="row  pt-2" >
                 <div class="col-6">
                     <h4 style="color:#069">{{course.1}}</h4>
@@ -162,13 +177,18 @@ No course available to enroll from other classes...
    
               
             </div>
+            
 
             
         </div>
 
-        <div class="col-md-3" >
-            <a href="#test{{course.0}}" class= "btn btn-lg btn-outline-primary btn-block" data-toggle="modal">Enroll</a>
-        </div><br><br>
+            <br>
+            <div class="col-md-4" style="padding-top: 10px;padding-left: 100px;" >
+                <a href="#test{{course.0}}" class= "btn btn-lg btn-outline-primary btn-block" data-toggle="modal">Enroll</a>
+            </div><br><br>
+        
+
+        
 
 
            
