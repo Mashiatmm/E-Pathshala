@@ -6,4 +6,5 @@ Contributors to this Project :
 1. Mashiat Mustaq
 2. Naeem Ahmed
 
-A brief details of the functionality of our project is described in the following video link : https://youtu.be/3H8uK-D62wE
+A brief details of the functionality of our project is described in the following video link :
+https://youtu.be/3H8uK-D62wE
