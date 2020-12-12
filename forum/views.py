@@ -166,8 +166,11 @@ def ques_details(request,forum_id):
     if userid == st_id:
         statement = "UPDATE FORUM_ANS SET SEEN = 1 WHERE FORUM_ID = :i"
         c.execute(statement,{'i':forum_id})
-        connection.commit()
-
+        
+    if role == 'teacher':
+        statement = """DELETE FORUM_NOTIFICATIONS WHERE USER_ID = :u AND FORUM_ID = :i"""
+        c.execute(statement,{'i':forum_id,'u':userid})
+    connection.commit()
     statement = """SELECT A.FORUM_ID,U.NAME,A.ANSWER_DESCRIPTION,A.ANS_TIME,A.ID,
                     (SELECT COUNT(*) FROM VOTE WHERE FORUM_ID = A.FORUM_ID AND FORUM_ANS_ID = A.ID) AS VOTES,U.ID
                     FROM FORUM_ANS A,USERS U 
